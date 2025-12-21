@@ -4,6 +4,7 @@ icon: lucide/help-circle
 
 # FAQ
 
+
 Frequently asked questions about Caution.
 
 ## General
@@ -56,7 +57,7 @@ Traditional TEEs rely on hardware attestation and trust in CPU manufacturers. Ca
 
 ### How does networking work?
 
-All traffic is end-to-end encrypted. See [Networking Architecture](concepts/networking.md).
+All traffic is end-to-end encrypted. See [Networking architecture](concepts/networking.md).
 
 ## Deployment
 
@@ -66,4 +67,4 @@ A Procfile defines how your application runs. See the [Procfile reference](refer
 
 ### Can I deploy on-premises?
 
-Yes! See [Managed On-Premises](guides/managed-on-premises.md).
+Yes! See [Managed on-premises](guides/managed-on-premises.md).

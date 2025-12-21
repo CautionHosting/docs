@@ -2,7 +2,8 @@
 icon: lucide/rocket
 ---
 
-# Getting Started
+# Getting started
+
 
 Get up and running with Caution in minutes.
 
@@ -10,10 +11,10 @@ Get up and running with Caution in minutes.
 
 - :material-rocket-launch: **[Quickstart](quickstart.md)**
 
-    Deploy your first verifiable application with the Caution CLI.
+    Lorem ipsum dolor sit amet.
 
-- :material-check-decagram: **[Verifying Apps](verifying-apps.md)**
+- :material-check-decagram: **[Verifying apps](verifying-apps.md)**
 
-    Learn how to verify a deployed application.
+    Lorem ipsum dolor sit amet.
 
 </div>

@@ -4,6 +4,7 @@ icon: lucide/info
 
 # What is Caution?
 
+
 Caution is the generalized verifiable compute platform for deploying, proving, and scaling confidential workloads anywhere.
 
 Unlike traditional cloud platforms where you trust the provider to run your code correctly, Caution provides **cryptographic proof** that your application is running exactly as deployed. This enables:

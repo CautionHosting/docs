@@ -2,13 +2,14 @@
 icon: lucide/git-branch
 ---
 
-# Deploying with Git Push
+# Deploying with git push
+
 
 Deploy applications using familiar git workflows.
 
 ## Overview
 
-Caution uses git push for deployments, similar to Heroku. When you push to the `caution` remote, your code is built into a verifiable enclave and deployed.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Prerequisites
 
@@ -41,50 +42,43 @@ git push caution main
                   │
                   ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 1. SSH authentication via your registered key               │
+│ 1. Lorem ipsum dolor sit amet                               │
 └─────────────────┬───────────────────────────────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 2. Code received by Caution gateway                         │
+│ 2. Lorem ipsum dolor sit amet                               │
 └─────────────────┬───────────────────────────────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 3. Enclave built (reproducibly)                             │
-│    - Docker image created                                   │
-│    - EIF packaged                                           │
-│    - PCRs extracted                                         │
+│ 3. Lorem ipsum dolor sit amet                               │
 └─────────────────┬───────────────────────────────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 4. Infrastructure provisioned                               │
-│    - EC2 instance launched                                  │
-│    - Nitro Enclave started                                  │
+│ 4. Lorem ipsum dolor sit amet                               │
 └─────────────────┬───────────────────────────────────────────┘
                   │
                   ▼
 ┌─────────────────────────────────────────────────────────────┐
-│ 5. Application running                                      │
-│    - Attestation service available                          │
-│    - Traffic routed to your app                             │
+│ 5. Lorem ipsum dolor sit amet                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ## The Procfile
 
-Your `Procfile` tells Caution how to run your application:
+Lorem ipsum dolor sit amet:
 
 ```procfile
 web: ./my-app --port $PORT
 ```
 
-See [Procfile Reference](../reference/procfile.md) for all options.
+See [Procfile reference](../reference/procfile.md) for all options.
 
 ## Branches
 
-By default, only `main` triggers deployments:
+Lorem ipsum dolor sit amet:
 
 ```bash
 # This deploys
@@ -96,7 +90,7 @@ git push caution feature-branch
 
 ## Viewing logs
 
-After deployment, view your application's output:
+Lorem ipsum dolor sit amet:
 
 ```bash
 caution logs <app-id>
@@ -104,14 +98,14 @@ caution logs <app-id>
 
 ## Rollbacks
 
-To rollback, push a previous commit:
+Lorem ipsum dolor sit amet:
 
 ```bash
 git revert HEAD
 git push caution main
 ```
 
-Or reset and force push (use with caution):
+Lorem ipsum dolor sit amet:
 
 ```bash
 git reset --hard HEAD~1
@@ -120,19 +114,17 @@ git push caution main --force
 
 ## Verification after deploy
 
-Always verify your deployment:
+Lorem ipsum dolor sit amet:
 
 ```bash
 caution verify --reproduce <app-id>
 ```
 
-This confirms the running code matches your source.
-
 ## Troubleshooting
 
 ### "Permission denied (publickey)"
 
-Your SSH key isn't registered:
+Lorem ipsum dolor sit amet:
 
 ```bash
 caution ssh-keys add ~/.ssh/id_ed25519.pub
@@ -140,16 +132,15 @@ caution ssh-keys add ~/.ssh/id_ed25519.pub
 
 ### Build fails
 
-Check your Procfile syntax and ensure your app builds locally:
+Lorem ipsum dolor sit amet:
 
 ```bash
-# Test your build command locally first
 ./build.sh
 ```
 
 ### Deployment stuck
 
-Check app status:
+Lorem ipsum dolor sit amet:
 
 ```bash
 caution apps get <app-id>
@@ -157,6 +148,6 @@ caution apps get <app-id>
 
 ## Learn more
 
-- [Quickstart](../get-started/quickstart.md) - Full tutorial
-- [Procfile Reference](../reference/procfile.md) - Configuration options
-- [caution verify](../cli/verify.md) - Verify deployments
+- [Quickstart](../get-started/quickstart.md)
+- [Procfile reference](../reference/procfile.md)
+- [caution verify](../cli/verify.md)

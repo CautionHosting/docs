@@ -4,6 +4,7 @@ icon: lucide/home
 
 # Documentation
 
+
 Welcome to the Caution documentation.
 
 <div class="grid cards" markdown>

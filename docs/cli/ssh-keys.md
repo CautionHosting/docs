@@ -4,6 +4,7 @@ icon: lucide/key
 
 # caution ssh-keys
 
+
 Manage SSH keys for git deployment.
 
 ## Usage
@@ -16,7 +17,7 @@ caution ssh-keys <command>
 
 ### list
 
-List all registered SSH keys.
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution ssh-keys list
@@ -24,13 +25,13 @@ caution ssh-keys list
 
 ### add
 
-Add a new SSH key.
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution ssh-keys add <path-to-public-key>
 ```
 
-Or pipe from stdin:
+Lorem ipsum dolor sit amet:
 
 ```bash
 cat ~/.ssh/id_ed25519.pub | caution ssh-keys add -
@@ -38,7 +39,7 @@ cat ~/.ssh/id_ed25519.pub | caution ssh-keys add -
 
 ### remove
 
-Remove an SSH key.
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution ssh-keys remove <key-id>
@@ -57,9 +58,9 @@ ID                                    FINGERPRINT                           ADDE
 
 ## Why SSH keys?
 
-SSH keys are used to authenticate `git push` operations to the Caution deployment server. When you run `git push caution main`, your SSH key proves your identity.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## See also
 
-- [Deploying with Git Push](../guides/git-push-deploy.md) - The deployment workflow
-- [caution init](init.md) - Set up git remote
+- [Deploying with Git Push](../guides/git-push-deploy.md)
+- [caution init](init.md)

@@ -4,28 +4,29 @@ icon: lucide/file-text
 
 # Reference
 
+
 Technical reference documentation.
 
 <div class="grid cards" markdown>
 
 - :lucide-file-code: **[Procfile](procfile.md)**
 
-    Configure how your application runs with Procfile options.
+    Lorem ipsum dolor sit amet.
 
-- :lucide-file-key: **[Attestation Format](attestation-format.md)**
+- :lucide-file-key: **[Attestation format](attestation-format.md)**
 
-    Technical specification of Nitro Enclave attestation documents.
+    Lorem ipsum dolor sit amet.
 
-- :lucide-hash: **[PCR Values](pcr-values.md)**
+- :lucide-hash: **[PCR values](pcr-values.md)**
 
-    Understanding Platform Configuration Registers.
+    Lorem ipsum dolor sit amet.
 
-- :lucide-variable: **[Environment Variables](environment-variables.md)**
+- :lucide-variable: **[Environment variables](environment-variables.md)**
 
-    Configuration options for Caution applications.
+    Lorem ipsum dolor sit amet.
 
-- :lucide-server: **[On-Premises](../guides/managed-on-premises.md)**
+- :lucide-server: **[On-premises](../guides/managed-on-premises.md)**
 
-    Deploy Caution in your own infrastructure.
+    Lorem ipsum dolor sit amet.
 
 </div>

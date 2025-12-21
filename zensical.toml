@@ -15,15 +15,15 @@ Copyright &copy; 2025 Caution SEZC
 
 nav = [
 { "Get started" = [
-{ "Get started" = "get-started/quickstart.md" },
+"get-started/quickstart.md",
 { "Configuration" = "get-started/configuration.md" },
 { "Verifying apps" = "get-started/verifying-apps.md" },
 { "Requirements" = "get-started/requirements.md" },
 { "Roadmap" = "get-started/roadmap.md" },
 { "License" = "license.md" },
 ]},
-{ "Usage" = [
-{ "CLI" = "cli/index.md" },
+{ "CLI" = [
+"cli/overview.md",
 { "caution register" = "cli/register.md" },
 { "caution login" = "cli/login.md" },
 { "caution init" = "cli/init.md" },
@@ -31,27 +31,25 @@ nav = [
 { "caution verify" = "cli/verify.md" },
 { "caution ssh-keys" = "cli/ssh-keys.md" },
 { "caution describe" = "cli/describe.md" },
-{ "Git Push Deploy" = "guides/git-push-deploy.md" },
+{ "git push deploy" = "guides/git-push-deploy.md" },
 ]},
 { "Concepts" = [
-{ "Overview" = "concepts/index.md" },
+"concepts/verifiability.md",
 { "Reproducibility" = "concepts/reproducibility.md" },
-{ "Verifiability" = "concepts/verifiability.md" },
-{ "Nitro Enclaves" = "concepts/nitro-enclaves.md" },
+{ "Secure enclaves" = "concepts/nitro-enclaves.md" },
 { "Networking" = "concepts/networking.md" },
 { "Authentication" = "concepts/authentication.md" },
-{ "Deterministic Apps" = "guides/deterministic-apps.md" },
+{ "Deterministic apps" = "guides/deterministic-apps.md" },
 ]},
 { "Reference" = [
-{ "Overview" = "reference/index.md" },
-{ "Procfile" = "reference/procfile.md" },
-{ "Attestation Format" = "reference/attestation-format.md" },
-{ "PCR Values" = "reference/pcr-values.md" },
-{ "Environment Variables" = "reference/environment-variables.md" },
-{ "On-Premises" = "guides/managed-on-premises.md" },
+"reference/procfile.md",
+{ "Attestation format" = "reference/attestation-format.md" },
+{ "PCR values" = "reference/pcr-values.md" },
+{ "Environment variables" = "reference/environment-variables.md" },
+{ "On-premises" = "guides/managed-on-premises.md" },
 ]},
 { "Community" = [
-{ "Get involved" = "community/index.md" },
+"community/get-involved.md",
 { "How we work" = "community/how-we-work.md" },
 { "Contribute" = [
 { "Bug reports" = "community/bug-reports.md" },
@@ -203,6 +201,7 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
     # in the rendered HTML, reducing the size of the built site by 33% or more.
     # https://zensical.org/docs/setup/navigation/#navigation-pruning
     #"navigation.prune",
+
 
     # When sections are enabled, top-level sections are rendered as groups in
     # the sidebar for viewports above 1220px, but remain as-is on mobile.

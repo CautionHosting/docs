@@ -4,6 +4,7 @@ icon: lucide/scale
 
 # License
 
+
 Caution is fully open source software, dual-licensed to support both the open source community and commercial users.
 
 !!! warning "Early Alpha"
@@ -14,12 +15,12 @@ Caution is fully open source software, dual-licensed to support both the open so
 
 Caution is available under two licenses:
 
-| License | For | Cost |
-|---------|-----|------|
-| **AGPL-3.0** | Open source, personal, non-commercial | Free |
+| License        | For                                      | Cost       |
+| -------------- | ---------------------------------------- | ---------- |
+| **AGPL-3.0**   | Open source, personal, non-commercial    | Free       |
 | **Commercial** | Proprietary, hosted services, enterprise | Contact us |
 
-## AGPL-3.0 (Open Source)
+## AGPL-3.0 (open source)
 
 For open source projects, personal use, and non-commercial use, Caution is licensed under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html).
 
@@ -37,38 +38,9 @@ For open source projects, personal use, and non-commercial use, Caution is licen
 
 The AGPL includes the "network use" clause: if you run Caution as a hosted service, you must provide the complete source code to anyone who interacts with it over a network.
 
-### Good for
-
-- Open source projects that already share their code
-- Personal projects and learning
-- Academic research
-- Contributing back to the community
-
-### Not ideal for
-
-- Businesses wanting to keep infrastructure proprietary
-- Companies offering competing PaaS services
-- Organizations with proprietary modifications
-
 ## Commercial license
 
-For businesses, proprietary use, and hosted services without source code obligations.
-
-### Benefits
-
-- Keep your code proprietary
-- No obligation to share modifications
-- Run as a hosted service without disclosure
-- Priority support available
-- Legal protection and indemnification
-
-### Get a commercial license
-
-Contact us to discuss your needs:
-
-- **Email:** [info@caution.co](mailto:info@caution.co)
-
-Pricing is based on deployment scale, number of users, and support requirements.
+If you want to evaluate Caution internally without AGPL obligations, contact our team at [info@caution.co](mailto:info@caution.co) for commercial licensing.
 
 ## FAQ
 
@@ -93,14 +65,6 @@ Pricing is based on deployment scale, number of users, and support requirements.
     By contributing, you agree to license your contributions under both AGPL-3.0 and the commercial license. This allows us to offer both license options.
 
 ## License text
-
-```
-Copyright (c) 2025 Caution SEZC
-
-SPDX-License-Identifier: AGPL-3.0-only OR LicenseRef-Commercial
-```
-
-Full license texts:
 
 - [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.txt)
 - Commercial license available upon request

@@ -4,52 +4,49 @@ icon: lucide/list-checks
 
 # Requirements
 
+
 What you need to use Caution.
 
 ## System requirements
 
 ### Supported platforms
 
-The Caution CLI runs on:
+Lorem ipsum dolor sit amet:
 
 - **Linux** (x86_64, aarch64)
-- **macOS** (Apple Silicon, Intel)
 - **Windows** (x86_64)
+- **macOS** (COMING SOON)
 
 ### Dependencies
 
-- **Git** - Required for deploying via `git push`
-- **FIDO2 authenticator** - Required for passwordless authentication
+- **Git** - Lorem ipsum dolor sit amet
+- **FIDO2 authenticator** - Lorem ipsum dolor sit amet
 
 ## Authentication
 
-Caution uses passwordless authentication with FIDO2/WebAuthn. You'll need one of:
+Lorem ipsum dolor sit amet:
 
-- **Hardware security key** (YubiKey, SoloKey, etc.)
-- **Platform authenticator** (Touch ID, Face ID, Windows Hello)
+- **Hardware security key** - Lorem ipsum dolor sit amet
+- **Platform authenticator** - Lorem ipsum dolor sit amet
 
 ## Application requirements
 
 ### Supported languages
 
-Caution can deploy any application that:
+Lorem ipsum dolor sit amet:
 
-1. Can be compiled to a Linux binary, or
-2. Runs in a supported runtime environment
+1. Lorem ipsum dolor sit amet
+2. Lorem ipsum dolor sit amet
 
 ### Determinism
 
-For full verifiability, applications should be [deterministic](../guides/deterministic-apps.md). This means:
-
-- No timestamps in build artifacts
-- Reproducible dependency resolution
-- Consistent build environment
+Lorem ipsum dolor sit amet [deterministic](../guides/deterministic-apps.md)
 
 ## Network requirements
 
-Your application must:
+Lorem ipsum dolor sit amet:
 
-- Listen on the port specified by the `$PORT` environment variable
-- Accept incoming TCP connections
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
 
-Outbound connections are supported through Caution's networking layer. See [Networking](../concepts/networking.md) for details.
+Lorem ipsum [Networking](../concepts/networking.md).

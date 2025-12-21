@@ -2,30 +2,31 @@
 icon: lucide/server
 ---
 
-# Managed On-Premises
+# Managed on-premises
+
 
 Deploy Caution in your own infrastructure with managed support.
 
 ## Overview
 
-For organizations with strict data residency or compliance requirements, Caution can be deployed on-premises while still benefiting from managed updates and support.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Requirements
 
-<!-- TODO: Hardware/software requirements -->
+Lorem ipsum dolor sit amet.
 
 ## Installation
 
-<!-- TODO: Installation steps -->
+Lorem ipsum dolor sit amet.
 
 ## Configuration
 
-<!-- TODO: Configuration options -->
+Lorem ipsum dolor sit amet.
 
 ## Maintenance
 
-<!-- TODO: Updates, backups, monitoring -->
+Lorem ipsum dolor sit amet.
 
 ## Support
 
-Contact [support@caution.co](mailto:support@caution.co) for on-premises deployment assistance.
+Lorem ipsum [support@caution.co](mailto:support@caution.co).

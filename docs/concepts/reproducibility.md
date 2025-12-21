@@ -2,29 +2,27 @@
 icon: lucide/refresh-cw
 ---
 
-# Reproducibility & Bootstrapping
+# Reproducibility & bootstrapping
+
 
 Reproducibility is foundational to Caution's trust model.
 
 ## What is reproducibility?
 
-Reproducible builds ensure that given the same source code and build environment, you always get identical output. This allows anyone to verify that deployed binaries match their source.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Why it matters
 
-- **Trust without trust**: Verify deployments without trusting the build server
-- **Auditability**: Anyone can rebuild and compare
-- **Security**: Detect tampering or supply chain attacks
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Bootstrapping
 
-<!-- TODO: Explain the bootstrapping process -->
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## How Caution achieves reproducibility
 
-<!-- TODO: Technical details -->
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Further reading
 
-- [Making your application deterministic](../guides/deterministic-apps.md)
-- [Verifying a deployed app](../get-started/verifying-apps.md)
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

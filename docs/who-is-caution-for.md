@@ -4,6 +4,7 @@ icon: lucide/users
 
 # Who is Caution for?
 
+
 Caution is designed for teams building applications where trust and verification matter:
 
 - **Financial services** - Prove transaction logic runs as audited

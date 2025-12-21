@@ -4,64 +4,57 @@ icon: lucide/hand-platter
 
 # Change requests
 
+
 Have an idea for improving Caution? We'd love to hear it.
 
-## Feature requests
+## Before creating an issue
 
-For new features or significant changes:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-1. **Check existing issues** - Someone may have suggested it already
-2. **Open a discussion** - Describe the problem you're solving
-3. **Gather feedback** - Let the community weigh in
-4. **Create an issue** - Once there's consensus
+### It's not a bug, it's a feature
 
-### What to include
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-- **Problem statement** - What problem does this solve?
-- **Proposed solution** - How would it work?
-- **Alternatives considered** - What other approaches exist?
-- **Impact** - Who benefits and how?
+### Connect with our community
 
-## Enhancement requests
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-For smaller improvements to existing features:
+## Issue template
 
-1. Open an issue with the `enhancement` label
-2. Describe the current behavior
-3. Explain what you'd like to change
-4. Provide use cases
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Breaking changes
+### Title
 
-Changes that break backward compatibility require:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-- Strong justification
-- Migration path for existing users
-- Clear documentation of what changes
-- Version bump following semver
+### Context (optional)
 
-## Request template
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-```markdown
-## Summary
-Brief description of the change.
+### Description
 
-## Problem
-What problem does this solve? Why is it important?
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Proposed solution
-How should this work? Be specific.
+### Related links
 
-## Alternatives
-What other approaches did you consider?
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Additional context
-Screenshots, examples, or related issues.
-```
+### Use cases
 
-## What happens next
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-1. Maintainers review the request
-2. Community discussion
-3. Decision to accept, modify, or decline
-4. If accepted, it goes on the roadmap
+### Visuals (optional)
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+### Checklist
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## How we manage change requests
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+## Rejected requests
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

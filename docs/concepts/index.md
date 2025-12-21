@@ -2,7 +2,8 @@
 icon: lucide/lightbulb
 ---
 
-# Core Concepts
+# Core concepts
+
 
 Understand the foundational ideas behind Caution's verifiable compute platform.
 
@@ -10,26 +11,26 @@ Understand the foundational ideas behind Caution's verifiable compute platform.
 
 - :lucide-refresh-cw: **[Reproducibility](reproducibility.md)**
 
-    How reproducible builds and bootstrapping enable trust.
+    Lorem ipsum dolor sit amet.
 
 - :lucide-shield-check: **[Verifiability](verifiability.md)**
 
-    How Caution's approach differs from traditional secure enclaves.
+    Lorem ipsum dolor sit amet.
 
-- :lucide-lock: **[Nitro Enclaves](nitro-enclaves.md)**
+- :lucide-lock: **[Nitro enclaves](nitro-enclaves.md)**
 
-    The hardware security foundation of Caution.
+    Lorem ipsum dolor sit amet.
 
 - :lucide-network: **[Networking](networking.md)**
 
-    End-to-end encryption and TLS architecture.
+    Lorem ipsum dolor sit amet.
 
 - :lucide-fingerprint: **[Authentication](authentication.md)**
 
-    Passwordless authentication with passkeys.
+    Lorem ipsum dolor sit amet.
 
-- :lucide-cog: **[Deterministic Apps](../guides/deterministic-apps.md)**
+- :lucide-cog: **[Deterministic apps](../guides/deterministic-apps.md)**
 
-    How to make your application fully deterministic for reproducible builds.
+    Lorem ipsum dolor sit amet.
 
 </div>

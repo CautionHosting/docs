@@ -4,6 +4,7 @@ icon: lucide/user-plus
 
 # caution register
 
+
 Create a new Caution account using passkey authentication.
 
 ## Usage
@@ -14,20 +15,20 @@ caution register
 
 ## Description
 
-Registers a new user account with Caution using FIDO2/WebAuthn passkey authentication. This eliminates the need for passwords entirely.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## What happens
 
-1. You'll be prompted for your email address
-2. You'll need to enter a beta code (during early access)
-3. Your security key or platform authenticator will be activated
-4. Touch your security key or use biometrics to complete registration
-5. A session is automatically created upon successful registration
+1. Lorem ipsum dolor sit amet
+2. Lorem ipsum dolor sit amet
+3. Lorem ipsum dolor sit amet
+4. Lorem ipsum dolor sit amet
+5. Lorem ipsum dolor sit amet
 
 ## Requirements
 
-- A FIDO2-compatible security key (YubiKey, etc.) or platform authenticator (Touch ID, Windows Hello)
-- A valid beta code (during early access period)
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
 
 ## Example
 
@@ -41,5 +42,5 @@ Touch your security key...
 
 ## See also
 
-- [caution login](login.md) - Authenticate after registration
-- [Authentication concepts](../concepts/authentication.md) - How passkey auth works
+- [caution login](login.md)
+- [Authentication concepts](../concepts/authentication.md)

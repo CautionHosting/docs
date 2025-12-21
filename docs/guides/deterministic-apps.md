@@ -2,19 +2,20 @@
 icon: lucide/cog
 ---
 
-# Making Your Application Deterministic
+# Making your application deterministic
+
 
 A guide to ensuring your application builds reproducibly.
 
 ## Why determinism matters
 
-For Caution's verification to work, your application must build deterministically. This means the same source code always produces the same binary output.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Common sources of non-determinism
 
 ### Timestamps
 
-Many build tools embed timestamps in output files.
+Lorem ipsum dolor sit amet.
 
 ```bash
 # Bad: includes build timestamp
@@ -28,33 +29,33 @@ gcc -o app main.c -Wno-builtin-macro-redefined \
 
 ### File ordering
 
-File system ordering can vary between builds.
+Lorem ipsum dolor sit amet.
 
 ### Random values
 
-Avoid random values at build time.
+Lorem ipsum dolor sit amet.
 
 ### Absolute paths
 
-Use relative paths in your build configuration.
+Lorem ipsum dolor sit amet.
 
 ## Language-specific guidance
 
 ### Python
 
-<!-- TODO: Python-specific tips -->
+Lorem ipsum dolor sit amet.
 
 ### Node.js
 
-<!-- TODO: Node.js-specific tips -->
+Lorem ipsum dolor sit amet.
 
 ### Go
 
-<!-- TODO: Go-specific tips -->
+Lorem ipsum dolor sit amet.
 
 ### Rust
 
-<!-- TODO: Rust-specific tips -->
+Lorem ipsum dolor sit amet.
 
 ## Testing reproducibility
 

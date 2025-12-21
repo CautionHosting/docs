@@ -4,54 +4,45 @@ icon: lucide/heart-handshake
 
 # Code of conduct
 
+
 We are committed to providing a welcoming and inclusive environment for everyone.
 
 ## Our pledge
 
-We pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, disability, ethnicity, gender identity and expression, level of experience, nationality, personal appearance, race, religion, or sexual identity and orientation.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Our standards
+## Accepted behavior
 
-### Expected behavior
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-- Be respectful and inclusive
-- Use welcoming language
-- Accept constructive criticism gracefully
-- Focus on what's best for the community
-- Show empathy towards others
+## Unaccepted behavior
 
-### Unacceptable behavior
-
-- Harassment, trolling, or personal attacks
-- Discriminatory language or imagery
-- Publishing others' private information
-- Inappropriate sexual attention or advances
-- Other conduct inappropriate in a professional setting
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Scope
 
-This code of conduct applies to:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-- Repository discussions and issues
-- Pull request reviews
-- Community chat channels
-- Events and meetups
-- Any space where you represent the project
+## Rights and responsibilities
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Enforcement
 
-Instances of unacceptable behavior may be reported to the project maintainers at [conduct@caution.co](mailto:conduct@caution.co).
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-All complaints will be reviewed and investigated. The project team is obligated to maintain confidentiality regarding the reporter.
+## Warning policy
 
-### Consequences
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-Project maintainers may take action including:
+### First warning
 
-1. **Warning** - A private written warning
-2. **Temporary ban** - Temporary exclusion from community spaces
-3. **Permanent ban** - Permanent exclusion from community spaces
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Attribution
+### Second warning
 
-This code of conduct is adapted from the [Contributor Covenant](https://www.contributor-covenant.org/), version 2.1.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+### Restriction or blocking
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

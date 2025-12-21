@@ -4,6 +4,7 @@ icon: lucide/download
 
 # Installation
 
+
 Install the Caution CLI to start deploying verifiable applications.
 
 ## Quick install
@@ -16,7 +17,7 @@ curl -fsSL https://caution.co/install.sh | sh
 
 ### From releases
 
-Download the latest release for your platform from the [releases page](https://codeberg.org/caution/platform/releases).
+Lorem ipsum dolor sit amet.
 
 ### From source
 
@@ -26,7 +27,7 @@ cd platform
 cargo build --release -p caution-cli
 ```
 
-The binary will be at `target/release/caution`.
+Lorem ipsum dolor sit amet.
 
 ## Verify installation
 
@@ -36,8 +37,8 @@ caution --version
 
 ## Requirements
 
-- A FIDO2-compatible security key or platform authenticator (Touch ID, Windows Hello)
-- Git (for deployment via `git push`)
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
 
 ## Next steps
 

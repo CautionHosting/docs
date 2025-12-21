@@ -4,13 +4,14 @@ icon: lucide/zap
 
 # Get started
 
-Caution is a verifiable compute platform for deploying applications with cryptographic proof of execution integrity. It's built on AWS Nitro Enclaves and reproducible builds, providing trust without relying on the infrastructure operator.
 
-*You can learn more about how Caution works in the [Concepts](../concepts/index.md) section.*
+Caution is a verifiable compute platform for deploying applications with cryptographic proof of execution integrity. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
+_You can learn more about how Caution works in the [Concepts](../concepts/index.md) section._
 
 ## Installation
 
-Caution is written in Rust and distributed as a single binary. We recommend using the install script for the simplest setup.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 !!! info "Prerequisites"
 
@@ -18,7 +19,7 @@ Caution is written in Rust and distributed as a single binary. We recommend usin
 
 ### Install with script
 
-=== "macOS"
+=== ":fontawesome-brands-linux: Linux"
 
     Open a terminal and run the install script:
 
@@ -26,17 +27,13 @@ Caution is written in Rust and distributed as a single binary. We recommend usin
     curl -fsSL https://caution.co/install.sh | sh
     ```
 
-=== "Linux"
-
-    Open a terminal and run the install script:
-
-    ```bash
-    curl -fsSL https://caution.co/install.sh | sh
-    ```
-
-=== "Windows"
+=== ":fontawesome-brands-windows: Windows"
 
     Download the latest release from the [releases page](https://codeberg.org/caution/platform/releases) and add it to your PATH.
+
+=== ":fontawesome-brands-apple: macOS"
+
+    Coming soon.
 
 ### Install from source
 
@@ -58,91 +55,50 @@ caution --version
 
 ## Setup
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ### Create an account
 
-Register for a Caution account using your security key:
-
-```bash
-caution register
-```
-
-You'll be prompted for:
-
-1. Your email address
-2. A beta code (during early access)
-3. Touch your security key to complete registration
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ### Add your SSH key
 
-Add your SSH key for git-based deployments:
-
-```bash
-caution ssh-keys add ~/.ssh/id_ed25519.pub
-```
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Deploy your first app
 
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+
 ### Initialize a project
 
-Navigate to your project directory and initialize it for Caution:
-
-```bash
-cd my-app
-caution init
-```
-
-This creates:
-
-- A `Procfile` defining how your app runs
-- A `.caution/` directory for deployment metadata
-- A `caution` git remote
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ### Configure the Procfile
 
-Edit your `Procfile` to specify how your application runs:
-
-```procfile
-web: ./my-app --port $PORT
-```
-
-See the [Procfile reference](../reference/procfile.md) for all options.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ### Deploy
 
-Commit your changes and push to deploy:
-
-```bash
-git add .
-git commit -m "Add Caution configuration"
-git push caution main
-```
-
-Your application is now building and deploying to a Nitro Enclave.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ### Verify the deployment
 
-Once deployed, verify that the running code matches your source:
-
-```bash
-caution verify --reproduce <app-id>
-```
-
-This rebuilds the enclave locally and compares the cryptographic measurements (PCRs) with the running instance.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Next steps
 
 <div class="grid cards" markdown>
 
-- :lucide-shield-check: **[Verifying Apps](verifying-apps.md)**
+- :lucide-shield-check: **[Verifying apps](verifying-apps.md)**
 
-    Learn more about the verification process.
+  Learn more about the verification process.
 
 - :lucide-lightbulb: **[Concepts](../concepts/index.md)**
 
-    Understand reproducibility, verifiability, and Nitro Enclaves.
+  Understand reproducibility, verifiability, and secure enclaves.
 
-- :lucide-terminal: **[CLI Reference](../cli/index.md)**
+- :lucide-terminal: **[CLI reference](../cli/overview.md)**
 
-    Explore all available commands.
+  Explore all available commands.
 
 </div>

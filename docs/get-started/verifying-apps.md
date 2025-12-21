@@ -4,24 +4,24 @@ icon: lucide/check-circle
 
 # Verifying a Deployed App
 
+
 Learn how to verify that a deployed application is running the exact code you expect.
 
 ## Overview
 
-Caution enables cryptographic verification of deployed applications. This ensures that the code running in production matches what was built and deployed.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
 
 ## Verification steps
 
 ```bash
-# Verify a deployed application
 caution verify <app-id>
 ```
 
 ## What gets verified
 
-- Source code hash
-- Build artifacts
-- Runtime environment
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
 
 ## Learn more
 

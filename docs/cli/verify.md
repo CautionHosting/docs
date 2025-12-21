@@ -4,6 +4,7 @@ icon: lucide/shield-check
 
 # caution verify
 
+
 Verify a deployed application's integrity.
 
 ## Usage
@@ -14,49 +15,49 @@ caution verify [options] <app-id-or-url>
 
 ## Description
 
-Verifies that a deployed application is running exactly the code you expect by checking its cryptographic attestation.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Verification modes
 
 ### Reproduce mode (recommended)
 
-Rebuilds the application locally and compares PCR values:
+Lorem ipsum dolor sit amet:
 
 ```bash
 caution verify --reproduce <app-id>
 ```
 
-This mode:
+Lorem ipsum dolor sit amet:
 
-1. Clones the source repository
-2. Builds an identical enclave locally
-3. Extracts PCR values from your local build
-4. Fetches the attestation document from the running enclave
-5. Compares PCR values to verify integrity
+1. Lorem ipsum dolor sit amet
+2. Lorem ipsum dolor sit amet
+3. Lorem ipsum dolor sit amet
+4. Lorem ipsum dolor sit amet
+5. Lorem ipsum dolor sit amet
 
 ### PCR file mode
 
-Compares against known PCR values:
+Lorem ipsum dolor sit amet:
 
 ```bash
 caution verify --pcrs <path-to-pcrs.json> <app-id>
 ```
 
-Use this when you have pre-computed PCR values from a trusted build.
+Lorem ipsum dolor sit amet.
 
 ## What gets verified
 
 | PCR | Measures |
 |-----|----------|
-| PCR0 | Enclave image (firmware, bootloader) |
-| PCR1 | Linux kernel and boot ramdisk |
-| PCR2 | Application code and configuration |
+| PCR0 | Lorem ipsum dolor sit amet |
+| PCR1 | Lorem ipsum dolor sit amet |
+| PCR2 | Lorem ipsum dolor sit amet |
 
 ## Output
 
 ```bash
 $ caution verify --reproduce my-api
-Fetching attestation from https://my-api.caution.app:5000/attestation...
+Fetching attestation...
 Building enclave locally...
 Comparing PCR values...
 
@@ -65,27 +66,26 @@ PCR1: ✓ Match
 PCR2: ✓ Match
 
 ✓ Verification successful
-  The running enclave matches the source code.
 ```
 
 ## Troubleshooting
 
 ### PCR mismatch
 
-If verification fails, possible causes:
+Lorem ipsum dolor sit amet:
 
-- Non-deterministic build (timestamps, random UUIDs)
-- Different build environment
-- Code was modified after deployment
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
+- Lorem ipsum dolor sit amet
 
-See [Deterministic Applications](../guides/deterministic-apps.md) for fixing build reproducibility.
+See [Deterministic applications](../guides/deterministic-apps.md).
 
 ### Debug mode detected
 
-If PCR values indicate debug mode, the enclave is running in development mode and should not be trusted for production.
+Lorem ipsum dolor sit amet.
 
 ## See also
 
-- [Verifiability concepts](../concepts/verifiability.md) - How verification works
-- [PCR Values Explained](../reference/pcr-values.md) - Understanding PCRs
-- [Attestation Document Format](../reference/attestation-format.md) - Technical details
+- [Verifiability concepts](../concepts/verifiability.md)
+- [PCR values explained](../reference/pcr-values.md)
+- [Attestation document format](../reference/attestation-format.md)

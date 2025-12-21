@@ -4,6 +4,7 @@ icon: lucide/log-in
 
 # caution login
 
+
 Authenticate with your Caution account.
 
 ## Usage
@@ -14,18 +15,18 @@ caution login
 
 ## Description
 
-Authenticates using your registered passkey. Sessions are stored locally and expire after a configured period.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## What happens
 
-1. You'll be prompted for your email address
-2. Your security key or platform authenticator will be activated
-3. Touch your security key or use biometrics to authenticate
-4. A new session is created and stored locally
+1. Lorem ipsum dolor sit amet
+2. Lorem ipsum dolor sit amet
+3. Lorem ipsum dolor sit amet
+4. Lorem ipsum dolor sit amet
 
 ## Session storage
 
-Sessions are stored in `~/.config/api-cli/config.json`.
+Lorem ipsum dolor sit amet.
 
 ## Example
 
@@ -38,5 +39,5 @@ Touch your security key...
 
 ## See also
 
-- [caution register](register.md) - Create a new account
-- [Authentication concepts](../concepts/authentication.md) - How passkey auth works
+- [caution register](register.md)
+- [Authentication concepts](../concepts/authentication.md)

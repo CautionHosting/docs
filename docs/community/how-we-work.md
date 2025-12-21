@@ -4,44 +4,33 @@ icon: lucide/hammer
 
 # How we work
 
-We build software with and for our users through continuous collaboration. The aim is to keep the project aligned with the needs of our user community.
 
-## Development process
+We build software with and for our users through continuous collaboration. The aim is to keep the platform aligned with the needs of our user community.
 
-Our development follows these principles:
+## Change requests and the backlog
 
-- **Open by default** - All discussions, decisions, and code happen in public
-- **Community-driven** - Features and priorities are shaped by user feedback
-- **Quality first** - We prioritize stability and security over rapid feature development
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Public backlog
+## Process overview
 
-We maintain a public backlog of tasks and features. This helps the community:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-- See what we're working on
-- Understand our priorities
-- Find opportunities to contribute
+## Process steps
 
-## Contributing
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-The key elements of our model are:
+## Benefits
 
-1. **Issues** - All work starts with an issue describing the problem or feature
-2. **Discussion** - We discuss approaches before implementation
-3. **Pull requests** - Changes are submitted as PRs for review
-4. **Review** - All code is reviewed before merging
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Communication
+### Transparency
 
-- Use issues for bug reports and feature requests
-- Keep discussions focused and constructive
-- Be patient - maintainers are often volunteers
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-## Decision making
+### Alignment of interests
 
-Major decisions are made through:
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
-1. Opening an issue or discussion
-2. Gathering community feedback
-3. Reaching consensus among maintainers
-4. Documenting the decision
+### Influence
+
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

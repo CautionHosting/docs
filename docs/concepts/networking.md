@@ -2,28 +2,27 @@
 icon: lucide/network
 ---
 
-# Networking Architecture
+# Networking architecture
+
 
 End-to-end encryption and TLS in Caution deployments.
 
 ## Overview
 
-Caution provides secure networking with end-to-end encryption for all workloads.
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## End-to-end encryption
 
-<!-- TODO: Explain E2E encryption model -->
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## TLS termination
 
-<!-- TODO: Explain TLS architecture -->
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Network topology
 
-<!-- TODO: Diagram and explanation -->
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.
 
 ## Security considerations
 
-- All traffic is encrypted in transit
-- TLS certificates are managed automatically
-- No plaintext data leaves the secure environment
+Lorem ipsum dolor sit amet, consectetur adipiscing elit.

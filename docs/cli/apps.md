@@ -4,6 +4,7 @@ icon: lucide/box
 
 # caution apps
 
+
 Manage your deployed applications.
 
 ## Usage
@@ -16,7 +17,7 @@ caution apps <command>
 
 ### list
 
-List all deployed applications.
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution apps list
@@ -24,7 +25,7 @@ caution apps list
 
 ### get
 
-Get details about a specific application.
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution apps get <app-id>
@@ -32,7 +33,7 @@ caution apps get <app-id>
 
 ### create
 
-Create a new application (typically done automatically via `git push`).
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution apps create --name <name>
@@ -40,14 +41,14 @@ caution apps create --name <name>
 
 ### destroy
 
-Destroy an application and its infrastructure.
+Lorem ipsum dolor sit amet.
 
 ```bash
 caution apps destroy <app-id>
 ```
 
 !!! warning
-    This permanently destroys the application and all associated resources. This action cannot be undone.
+    Lorem ipsum dolor sit amet.
 
 ## Example
 
@@ -55,17 +56,14 @@ caution apps destroy <app-id>
 $ caution apps list
 ID                                    NAME           STATUS
 550e8400-e29b-41d4-a716-446655440000  my-api         running
-6ba7b810-9dad-11d1-80b4-00c04fd430c8  worker-service running
 
 $ caution apps get 550e8400-e29b-41d4-a716-446655440000
 Name:      my-api
 Status:    running
-URL:       https://my-api.caution.app
-Created:   2025-01-15T10:30:00Z
-PCR0:      abc123...
+URL:       https://my-api.example.app
 ```
 
 ## See also
 
-- [caution verify](verify.md) - Verify application integrity
-- [caution describe](describe.md) - Show project info
+- [caution verify](verify.md)
+- [caution describe](describe.md)
