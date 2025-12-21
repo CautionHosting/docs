@@ -1,0 +1,80 @@
+/* Logo styling */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 1rem;
+}
+
+/* Logo color for dark mode - invert black to white */
+[data-md-color-scheme="slate"] .md-logo img {
+  filter: invert(1);
+}
+
+/* FAQ collapsible styling - matches Turnkey style */
+.md-typeset details.question {
+  border: none !important;
+  border-radius: 0 !important;
+  background-color: transparent !important;
+  box-shadow: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.md-typeset details.question > summary {
+  background-color: transparent !important;
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+  font-weight: 700;
+  color: var(--md-default-fg-color);
+  cursor: pointer;
+  border: none !important;
+  min-height: 0 !important;
+}
+
+/* Chevron icon on the left - right arrow */
+.md-typeset details.question > summary::before {
+  content: "▸" !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem) !important;
+  color: var(--md-default-fg-color) !important;
+  background-color: transparent !important;
+  background-image: none !important;
+  mask-image: none !important;
+  -webkit-mask-image: none !important;
+  width: auto !important;
+  height: auto !important;
+}
+
+/* Hide the default after icon */
+.md-typeset details.question > summary::after {
+  display: none !important;
+}
+
+/* Change to down arrow when expanded */
+.md-typeset details.question[open] > summary::before {
+  content: "▾" !important;
+}
+
+/* Answer content styling */
+.md-typeset details.question > p,
+.md-typeset details.question > ul,
+.md-typeset details.question > ol {
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+  font-weight: 400;
+  color: var(--md-default-fg-color);
+  padding: 0 0 1rem 1.5rem !important;
+  margin: 0 !important;
+  line-height: 1.6;
+}
+
+/* Make strong/bold text lighter */
+.md-typeset details.question strong {
+  font-weight: 600;
+}
+
+/* Social icons sizing - make Codeberg and Mastodon slightly larger */
+a.md-social__link[href*="codeberg"] svg,
+a.md-social__link[href*="mstdn"] svg {
+  max-height: 0.95rem;
+}
