@@ -4,29 +4,24 @@ icon: lucide/file-text
 
 # Reference
 
-
 Technical reference documentation.
 
 <div class="grid cards" markdown>
 
 - :lucide-file-code: **[Procfile](procfile.md)**
 
-    Lorem ipsum dolor sit amet.
+    Configure how your application builds and runs.
 
-- :lucide-file-key: **[Attestation format](attestation-format.md)**
+- :lucide-rocket: **[Deployments](deployments.md)**
 
-    Lorem ipsum dolor sit amet.
+    Source verification, networking, and reproducibility options.
 
-- :lucide-hash: **[PCR values](pcr-values.md)**
+- :lucide-globe: **[Custom domains](custom-domains.md)**
 
-    Lorem ipsum dolor sit amet.
+    Use your own domain name for deployments.
 
-- :lucide-variable: **[Environment variables](environment-variables.md)**
+- :lucide-server: **[Managed on-premises](managed-on-premises.md)**
 
-    Lorem ipsum dolor sit amet.
-
-- :lucide-server: **[On-premises](../guides/managed-on-premises.md)**
-
-    Lorem ipsum dolor sit amet.
+    Deploy to your own AWS infrastructure.
 
 </div>

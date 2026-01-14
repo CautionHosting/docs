@@ -27,7 +27,7 @@ Reproducible builds ensure that given the same source code and build environment
 
 ### How do I make my app reproducible?
 
-See our guide on [making your application deterministic](guides/deterministic-apps.md).
+See our guide on [making your application deterministic](reference/deterministic-apps.md).
 
 ## Verification
 
@@ -39,7 +39,7 @@ Use the Caution CLI:
 caution verify <app-id>
 ```
 
-[Full verification guide](get-started/verifying-apps.md)
+See the [Deployments reference](reference/deployments.md) for more on verification.
 
 ### What gets verified?
 
@@ -57,7 +57,7 @@ Traditional TEEs rely on hardware attestation and trust in CPU manufacturers. Ca
 
 ### How does networking work?
 
-All traffic is end-to-end encrypted. See [Networking architecture](concepts/networking.md).
+All traffic is end-to-end encrypted. See [Encryption](concepts/encryption.md) for details.
 
 ## Deployment
 
@@ -67,4 +67,4 @@ A Procfile defines how your application runs. See the [Procfile reference](refer
 
 ### Can I deploy on-premises?
 
-Yes! See [Managed on-premises](guides/managed-on-premises.md).
+Yes! See [Managed on-premises](reference/managed-on-premises.md).

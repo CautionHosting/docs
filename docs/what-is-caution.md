@@ -4,11 +4,15 @@ icon: lucide/info
 
 # What is Caution?
 
+!!! warning "Alpha Software"
+    Caution is currently in alpha and not recommended for production use. APIs and features may change without notice.
 
-Caution is the generalized verifiable compute platform for deploying, proving, and scaling confidential workloads anywhere.
+Caution is the generalized verifiable compute platform for managing the lifecycle of confidential compute workloads that are verifiable.
 
-Unlike traditional cloud platforms where you trust the provider to run your code correctly, Caution provides **cryptographic proof** that your application is running exactly as deployed. This enables:
+Caution improves on the current confidential compute capabilities and provides complete verifiability of software and hardware backed end-to-end encryption.
 
-- **Verifiable deployments** - Anyone can verify the code running in production matches the source
-- **Reproducible builds** - Identical source always produces identical binaries
-- **End-to-end encryption** - Your data stays confidential, even from infrastructure operators
+- [**Verifiable deployments**](./concepts/verifiability.md) - Realtime verification that code running in production matches the intended source, all the way down to the kernel.
+
+- [**End-to-end encryption**](./concepts/encryption.md) - Your data stays confidential, even from infrastructure operators - as it's never exposed to untrusted environments.
+
+While these seem like obvious features for confidential compute, we challenge the reader to find solutions which can do what Caution does. Most confidential solutions are incomplete.

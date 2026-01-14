@@ -14,57 +14,22 @@ Copyright &copy; 2025 Caution SEZC
 # Navigation structure
 
 nav = [
-{ "Get started" = [
-"get-started/quickstart.md",
-{ "Configuration" = "get-started/configuration.md" },
-{ "Verifying apps" = "get-started/verifying-apps.md" },
-{ "Requirements" = "get-started/requirements.md" },
-{ "Roadmap" = "get-started/roadmap.md" },
-{ "License" = "license.md" },
-]},
-{ "CLI" = [
-"cli/overview.md",
-{ "caution register" = "cli/register.md" },
-{ "caution login" = "cli/login.md" },
-{ "caution init" = "cli/init.md" },
-{ "caution apps" = "cli/apps.md" },
-{ "caution verify" = "cli/verify.md" },
-{ "caution ssh-keys" = "cli/ssh-keys.md" },
-{ "caution describe" = "cli/describe.md" },
-{ "git push deploy" = "guides/git-push-deploy.md" },
-]},
+{ "About" = "what-is-caution.md"},
+{ "Quickstart" = "quickstart.md" },
 { "Concepts" = [
-"concepts/verifiability.md",
 { "Reproducibility" = "concepts/reproducibility.md" },
-{ "Secure enclaves" = "concepts/nitro-enclaves.md" },
-{ "Networking" = "concepts/networking.md" },
-{ "Authentication" = "concepts/authentication.md" },
-{ "Deterministic apps" = "guides/deterministic-apps.md" },
+{ "Verifiability" = "concepts/verifiability.md" },
+{ "Attestations" = "concepts/attestation.md" },
+{ "Encryption" = "concepts/encryption.md" },
 ]},
 { "Reference" = [
-"reference/procfile.md",
-{ "Attestation format" = "reference/attestation-format.md" },
-{ "PCR values" = "reference/pcr-values.md" },
-{ "Environment variables" = "reference/environment-variables.md" },
-{ "On-premises" = "guides/managed-on-premises.md" },
-]},
-{ "Community" = [
-"community/get-involved.md",
-{ "How we work" = "community/how-we-work.md" },
-{ "Contribute" = [
-{ "Bug reports" = "community/bug-reports.md" },
-{ "Documentation" = "community/documentation.md" },
-{ "Change requests" = "community/change-requests.md" },
-{ "Pull requests" = "community/pull-requests.md" },
-{ "Code of conduct" = "community/code-of-conduct.md" },
-]},
-{ "Guides" = [
-{ "Reproductions" = "community/reproductions.md" },
-]},
+{ "Procfile" = "reference/procfile.md" },
+{ "Deployments" = "reference/deployments.md" },
+{ "Custom domains" = "reference/custom-domains.md" },
+{ "Managed on-prem" = "reference/managed-on-premises.md" },
 ]},
 ]
 
-# ]
 
 # With the "extra_css" option you can add your own CSS styling to customize
 

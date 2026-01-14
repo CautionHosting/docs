@@ -4,33 +4,24 @@ icon: lucide/lightbulb
 
 # Core concepts
 
-
 Understand the foundational ideas behind Caution's verifiable compute platform.
 
 <div class="grid cards" markdown>
 
 - :lucide-refresh-cw: **[Reproducibility](reproducibility.md)**
 
-    Lorem ipsum dolor sit amet.
+    Build software that produces identical outputs from identical inputs.
 
 - :lucide-shield-check: **[Verifiability](verifiability.md)**
 
-    Lorem ipsum dolor sit amet.
+    Prove exactly what source code is running in production.
 
-- :lucide-lock: **[Nitro enclaves](nitro-enclaves.md)**
+- :lucide-fingerprint: **[Attestations](attestation.md)**
 
-    Lorem ipsum dolor sit amet.
+    Hardware-backed cryptographic proofs of workload integrity.
 
-- :lucide-network: **[Networking](networking.md)**
+- :lucide-lock: **[Encryption](encryption.md)**
 
-    Lorem ipsum dolor sit amet.
-
-- :lucide-fingerprint: **[Authentication](authentication.md)**
-
-    Lorem ipsum dolor sit amet.
-
-- :lucide-cog: **[Deterministic apps](../guides/deterministic-apps.md)**
-
-    Lorem ipsum dolor sit amet.
+    End-to-end encryption that protects data all the way into the enclave.
 
 </div>

@@ -4,7 +4,6 @@ icon: lucide/home
 
 # Documentation
 
-
 Welcome to the Caution documentation.
 
 <div class="grid cards" markdown>
@@ -21,7 +20,7 @@ Welcome to the Caution documentation.
 
     Build, deploy, prove, verify.
 
-- :lucide-rocket: **[Get started](get-started/quickstart.md)**
+- :lucide-rocket: **[Get started](quickstart.md)**
 
     Deploy your first verifiable application.
 
