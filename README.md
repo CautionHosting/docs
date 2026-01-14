@@ -6,8 +6,6 @@ Documentation for [Caution](https://codeberg.org/caution/platform), the generali
 
 ## Development
 
-This documentation site is built with [Zensical](https://zensical.org/).
-
 ### Prerequisites
 
 - Docker
@@ -30,7 +28,3 @@ make down
 # Rebuild the Docker image and remove old artifacts
 make clean
 ```
-
-## License
-
-This documentation is licensed under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
