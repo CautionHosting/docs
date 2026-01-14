@@ -2,31 +2,43 @@
 icon: lucide/zap
 ---
 
-# Quickstart
+# Get started
 
-The quickest way to deploy an application using Caution. It takes 8 minutes.
+!!! warning "Alpha Software"
+    Caution is in alpha. The software is not production ready. APIs, workflows, and features may change without notice.
 
-## Requirements
+Caution is a verifiable compute platform for deploying confidential workloads to secure enclaves. This guide walks you through creating an account, installing the CLI, and deploying your first application. It takes about 10 minutes to complete.
 
-1. An application which is containerized using [Docker](https://www.docker.com/).
+## Prerequisites
 
-2. A Linux system based on x86_64 architecture
+Before you begin, ensure you have the following:
 
-3. Smart card (Yubikey, NitroKey, LibremKey etc.)
+| Requirement | Details |
+|-------------|---------|
+| Alpha access code | Request access at [info@caution.co](mailto:info@caution.co) |
+| Smart card | YubiKey, NitroKey, or LibremKey |
+| Operating system | Linux x86_64 |
+| Git | For cloning and pushing repositories ([install](https://git-scm.com/)) |
+| Docker | Your application must be containerized ([install](https://www.docker.com/)) |
+
 
 ## Create an account
 
-1. Go to [https://alpha.caution.co](https://alpha.caution.co/)
-2. Enter your alpha code (if you do not have one, send an email to `info at caution dot co`)
-3. Plug in your smart card
-4. Click "Continue"
-4. Tap your smart card when it blinks
+Account creation requires a valid alpha access code and a supported smart card.
 
-## CLI Installation
+1. Go to [https://alpha.caution.co](https://alpha.caution.co/)
+2. Enter your alpha access code
+3. Insert your smart card
+4. Click **Continue**
+5. Tap your smart card when prompted
+
+If you do not have an alpha access code, request one at [info@caution.co](mailto:info@caution.co).
+
+## Install the CLI
+
+Open a terminal and run the install script:
 
 === ":fontawesome-brands-linux: Linux"
-
-    Open a terminal and run the install script:
 
     ```bash
     curl -fsSL https://codeberg.org/caution/cli/raw/branch/main/install.sh | sh
@@ -38,47 +50,46 @@ The quickest way to deploy an application using Caution. It takes 8 minutes.
 === ":fontawesome-brands-windows: Windows"
     Coming soon.
 
-### Add an SSH key
+## Add an SSH key
+
+Register your SSH key with Caution to authenticate deployments:
 
 ```bash
 caution ssh-keys add --from-agent
 ```
 
-### Select an application to deploy
+## Select an application
 
-Use `git` to clone a containerized application. You can use the Caution `hello-world-enclave` app:
+You can deploy your own containerized application or use one of the [Caution demo apps](https://codeberg.org/caution). For this guide, we'll use the hello-world-enclave:
 
 ```bash
 git clone https://codeberg.org/caution/demo-hello-world-enclave.git
+cd demo-hello-world-enclave
 ```
 
-### Initialize the application
+## Initialize the application
 
-1. Ensure you are inside of the application repository you are deploying. If you used the `hello-world-enclave` app in the previous step:
-
-```bash
-cd hello-world-enclave
-```
-
-2. Use the initialization command:
+Run `caution init` to capture the build environment and lock it for reproducible enclave builds:
 
 ```bash
 caution init
 ```
 
-This command typically creates the `Procfile` which at a minimum needs to have a `run` field which tells Caution how to run your application, as well as `ports` in order to expose the necessary ports. The `hello-world-enclave` already has the `Procfile` set up with a `run` command, take a look!
+This creates a `Procfile` that defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `Procfile` is already included. If you're deploying your own application, you'll need to create one—see the [Procfile reference](reference/procfile.md).
 
-### Deploy
+## Deploy the application 
 
-You are ready to deploy. Push the code to Caution:
+Push the code to Caution:
 
 ```bash
 git push caution main
 ```
 
-### Verify the deployment
+Caution builds a reproducible enclave image and provisions the TEE.
 
-Once the deployment is complete, you can verify it:
+## Verify the deployment
+
+Run `caution verify` to rebuild the image, compare hashes, and confirm exactly what the enclave is running:
 
 ```bash
 caution verify
@@ -86,18 +97,20 @@ caution verify
 
 ## Next steps
 
+Your application is now running in a verified enclave. Here's what to explore next:
+
 <div class="grid cards" markdown>
 
-- :lucide-shield-check: **[Verifiability](concepts/verifiability.md)**
+- :lucide-shield-check: __Verifiability__
 
-  Learn how Caution proves what code is running.
+    Learn how Caution ensures [code integrity](./concepts/verifiability.md) from source to production.
 
-- :lucide-lock: **[Encryption](concepts/encryption.md)**
+- :lucide-lock: __Encryption__
 
-  Understand end-to-end encryption with STEVE.
+    [End-to-end data protection](./concepts/encryption.md) that keeps your data confidential.
 
-- :lucide-file-code: **[Procfile reference](reference/procfile.md)**
+- :lucide-file-code: __Procfile__
 
-  Configure your application deployment.
+    Learn how to [configure your application](reference/procfile.md) for deployment.
 
 </div>
