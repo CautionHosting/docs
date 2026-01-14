@@ -15,7 +15,8 @@ Copyright &copy; 2025 Caution SEZC
 
 nav = [
 { "About" = "what-is-caution.md"},
-{ "Quickstart" = "quickstart.md" },
+{ "Alpha program" = "alpha.md" },
+{ "Get started" = "quickstart.md" },
 { "Concepts" = [
 { "Reproducibility" = "concepts/reproducibility.md" },
 { "Verifiability" = "concepts/verifiability.md" },
@@ -176,12 +177,12 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
     # When tabs are enabled, top-level sections are rendered in a menu layer
     # below the header for viewports above 1220px, but remain as-is on mobile.
     # https://zensical.org/docs/setup/navigation/#navigation-tabs
-    "navigation.tabs",
+    # "navigation.tabs",
 
     # When sticky tabs are enabled, navigation tabs will lock below the header
     # and always remain visible when scrolling down.
     # https://zensical.org/docs/setup/navigation/#sticky-navigation-tabs
-    "navigation.tabs.sticky",
+    # "navigation.tabs.sticky",
 
     # A back-to-top button can be shown when the user, after scrolling down,
     # starts to scroll up again.
@@ -283,6 +284,6 @@ link = "https://codeberg.org/caution/platform"
 icon = "fontawesome/brands/mastodon"
 link = "https://mstdn.social/@caution"
 
-[[project.extra.social]]
-icon = "fontawesome/brands/bluesky"
-link = "https://bsky.app/profile/cautionco.bsky.social"
+# [[project.extra.social]]
+# icon = "fontawesome/brands/bluesky"
+# link = "https://bsky.app/profile/cautionco.bsky.social"
