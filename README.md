@@ -10,28 +10,26 @@ This documentation site is built with [Zensical](https://zensical.org/).
 
 ### Prerequisites
 
-- Python 3.10+
-- [uv](https://docs.astral.sh/uv/) (recommended) or pip
+- Docker
 
 ### Local development
 
 ```bash
-# Install dependencies
-uv sync
-
 # Start the development server
-uv run zensical serve
+make dev
 ```
 
-The site will be available at `http://localhost:8000`.
+The site will be available at `http://localhost:5000`. Changes to `docs/`, `overrides/`, and `zensical.toml` are mounted as volumes and will be reflected automatically.
 
-### Building
+### Other commands
 
 ```bash
-uv run zensical build
-```
+# Stop the development server
+make down
 
-The built site will be in the `site/` directory.
+# Rebuild the Docker image and remove old artifacts
+make clean
+```
 
 ## License
 
