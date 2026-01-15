@@ -4,6 +4,9 @@ icon: lucide/file-code
 
 # Procfile reference
 
+!!! warning "Alpha Software"
+    Caution is in alpha and not production ready. APIs and features may change without notice.
+
 Configure how your application runs on Caution.
 
 ## Overview

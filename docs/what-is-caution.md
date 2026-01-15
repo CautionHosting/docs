@@ -5,7 +5,7 @@ icon: lucide/info
 # What is Caution?
 
 !!! warning "Alpha Software"
-    Caution is in alpha. The software is not production ready. APIs, workflows, and features may change without notice.
+    Caution is in alpha and not production ready. APIs and features may change without notice.
 
 
 Caution is a generalized verifiable compute platform for managing the lifecycle of confidential workloads that can be independently verified.

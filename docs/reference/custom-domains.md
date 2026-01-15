@@ -4,6 +4,9 @@ icon: lucide/globe
 
 # Custom domains
 
+!!! warning "Alpha Software"
+    Caution is in alpha and not production ready. APIs and features may change without notice.
+
 Use your own domain name for Caution deployments.
 
 ## Overview

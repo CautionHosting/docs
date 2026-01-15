@@ -4,6 +4,9 @@ icon: lucide/flask-conical
 
 # Alpha program
 
+!!! warning "Alpha Software"
+    Caution is in alpha and not production ready. APIs and features may change without notice.
+
 Caution is in closed alpha for teams that want to try out our fully managed platform or managed on-premises offering and explore reproducible enclaves, test workflows, and help shape the future of verifiable compute.
 
 ## What to expect

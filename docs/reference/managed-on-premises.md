@@ -4,6 +4,9 @@ icon: lucide/server
 
 # Managed on-premises
 
+!!! warning "Alpha Software"
+    Caution is in alpha and not production ready. APIs and features may change without notice.
+
 Deploy Caution enclaves in your own AWS infrastructure while Caution handles the build and deployment orchestration.
 
 ## Overview
