@@ -22,33 +22,31 @@ Before you begin, ensure you have the following:
 | Docker | Your application must be containerized ([install](https://www.docker.com/)) |
 
 
-## Create an account
-
-Account creation requires a valid alpha access code and a supported smart card.
-
-1. Go to [https://alpha.caution.co](https://alpha.caution.co/)
-2. Enter your alpha access code
-3. Insert your smart card
-4. Click **Continue**
-5. Tap your smart card when prompted
-
-If you do not have an alpha access code, request one at [info@caution.co](mailto:info@caution.co).
-
 ## Install the CLI
 
-Open a terminal and run the install script:
+Follow the installation instructions in the [CLI README](https://codeberg.org/caution/cli).
 
-=== ":fontawesome-brands-linux: Linux"
+## Create an account
+
+Account creation requires a valid alpha access code and a smart card. You can register via the browser or the CLI.
+
+Your smart card will need to have a FIDO pin set on it.
+
+=== "Browser"
+
+    1. Go to [alpha.caution.co](https://alpha.caution.co/)
+    2. Enter your alpha access code
+    3. Insert your smart card / use another Passkey method
+    4. Click **Continue**
+    5. Approve Passkey interaction when prompted
+
+=== "CLI"
 
     ```bash
-    curl -fsSL https://codeberg.org/caution/cli/raw/branch/main/install.sh | sh
+    caution register --alpha-code <your_code>
     ```
 
-=== ":fontawesome-brands-apple: macOS"
-    Coming soon.
-
-=== ":fontawesome-brands-windows: Windows"
-    Coming soon.
+If you do not have an alpha access code, request one at [info@caution.co](mailto:info@caution.co).
 
 ## Add an SSH key
 
@@ -57,6 +55,8 @@ Register your SSH key with Caution to authenticate deployments:
 ```bash
 caution ssh-keys add --from-agent
 ```
+
+You can also add an SSH key in the browser.
 
 ## Select an application
 
