@@ -70,12 +70,13 @@ Without reproducibility, attestation can only prove that the deployment hasn't c
 
 To build reproducible applications, use [StageX](https://stagex.tools), a Linux distribution designed for full-source bootstrapping and deterministic builds. While other Linux distributions can be used, StageX is recommended as it was designed as a security first distribution.
 
-TODO: Link to StageX documentation on building reproducible applications
+See [Containerizing your application](containerizing.md) for a practical guide to building reproducible containers with StageX.
 
 See [Verifiability](../concepts/verifiability.md) for more on why reproducibility matters for confidential compute.
 
 ## See also
 
+- [Containerizing](containerizing.md) - Build reproducible containers
 - [Managed on-premises](managed-on-premises.md) - Deploy to your own AWS infrastructure
 - [Custom domains](custom-domains.md) - Use your own domain name
 - [Procfile reference](procfile.md) - Complete configuration options

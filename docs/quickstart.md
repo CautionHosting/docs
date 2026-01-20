@@ -19,7 +19,8 @@ Before you begin, ensure you have the following:
 | Smart card | YubiKey, NitroKey, or LibremKey |
 | Operating system | Linux x86_64 |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/)) |
-| Docker | Your application must be containerized ([install](https://www.docker.com/)) |
+| Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/) ([install](https://www.docker.com/)) |
+| Containerized app | Your application must be [containerized](reference/containerizing.md) |
 
 
 ## Install the CLI

@@ -16,6 +16,10 @@ Technical reference documentation.
 
     Deploy to your own AWS infrastructure.
 
+- :lucide-box: **[Containerizing](containerizing.md)**
+
+    Build reproducible containers for full verifiability.
+
 - :lucide-file-code: **[Procfile](procfile.md)**
 
     Configure how your application builds and runs.

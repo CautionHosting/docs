@@ -31,7 +31,8 @@ Fully managed deployments run on Caution's infrastructure. You push code, and Ca
 | Smart card | YubiKey, NitroKey, or LibremKey |
 | Operating system | Linux x86_64 |
 | Git | For cloning and pushing repositories |
-| Docker | Your application must be containerized |
+| Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/) |
+| Containerized app | Your application must be [containerized](containerizing.md) |
 
 ## Setup
 
@@ -123,6 +124,7 @@ Consider [managed on-premises](managed-on-premises.md) if you need:
 ## See also
 
 - [Quickstart](../quickstart.md) - Complete getting started guide
+- [Containerizing](containerizing.md) - Build reproducible containers
 - [Procfile reference](procfile.md) - Configuration options
 - [Custom domains](custom-domains.md) - Use your own domain name
 - [Deployments](deployments.md) - Source verification and networking options

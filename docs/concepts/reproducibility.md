@@ -52,3 +52,7 @@ For EnclaveOS, this means that the images deployed into confidential compute env
 
 !!! quote "Further reading"
     To learn more about reproducible builds and bootstrapping, refer to Ken Thompson's paper [Reflections on Trusting Trust](https://www.cl.cam.ac.uk/teaching/2324/R209/Reflections-Trusting-Trust.pdf){:target="_blank"}, and the StageX paper (TODO add link).
+
+## See also
+
+- [Containerizing your application](../reference/containerizing.md) - Practical guide to building reproducible containers
