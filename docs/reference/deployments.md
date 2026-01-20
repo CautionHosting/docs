@@ -6,6 +6,8 @@ icon: lucide/rocket
 
 Configuration options that affect how your application runs and can be verified.
 
+Caution supports two deployment types: [fully managed](fully-managed.md) and [managed on-premises](managed-on-premises.md).
+
 ## Source verification
 
 To enable third-party verification and reproducibility of your deployment, you must specify the source repositories in your `Procfile`:

@@ -22,12 +22,14 @@ nav = [
 { "Verifiability" = "concepts/verifiability.md" },
 { "Attestations" = "concepts/attestation.md" },
 { "Encryption" = "concepts/encryption.md" },
+{ "Deployment patterns" = "concepts/deployment-patterns.md" },
 ]},
 { "Reference" = [
+{ "Fully managed" = "reference/fully-managed.md" },
+{ "Managed on-prem" = "reference/managed-on-premises.md" },
 { "Procfile" = "reference/procfile.md" },
 { "Deployments" = "reference/deployments.md" },
 { "Custom domains" = "reference/custom-domains.md" },
-{ "Managed on-prem" = "reference/managed-on-premises.md" },
 ]},
 ]
 

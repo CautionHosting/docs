@@ -24,4 +24,8 @@ Understand the foundational ideas behind Caution's verifiable compute platform.
 
     End-to-end encryption that protects data all the way into the enclave.
 
+- :lucide-git-branch: **[Deployment patterns](deployment-patterns.md)**
+
+    Public, private, and fully private verification models.
+
 </div>

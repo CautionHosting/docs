@@ -18,6 +18,11 @@ Caution extends traditional confidential compute by providing complete verifiabi
 
 Together, these guarantees enable verification of software provenance and stronger confidentiality assurances than isolation alone.
 
+Caution currently supports the following deployment types:
+
+* **[Fully managed](./reference/fully-managed.md)** - Deploy to Caution's infrastructure with zero setup. Caution handles builds, hosting, and operations.
+
+* **[Managed on-premises](./reference/managed-on-premises.md)** - Run enclaves in your own AWS account while Caution handles build and deployment orchestration.
 
 [Get started](./quickstart.md) or learn more about Caution:
 

@@ -56,6 +56,9 @@ If all PCR values match, the verification passes. This proves that the remote en
 ✓ Attestation verification PASSED
 ```
 
+!!! tip "Review the source code yourself"
+    During verification, all source code is pulled to `~/.cache/caution/reproductions/local/<your_build_id>`. The verification process output will show you the exact location. You can inspect this directory to review the exact code used to build the enclave image running inside the enclave.
+
 ## What PCR values represent
 
 | PCR | Description |
