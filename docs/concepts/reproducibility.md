@@ -39,7 +39,7 @@ The security engineers behind Caution developed the [StageX](https://stagex.tool
 
 Reproducibility is a foundational requirement for all software built and used by Caution.
 
-The Caution platform and  [EnclaveOS](https://git.distrust.co/enclaveos) are built using [StageX](https://stagex.tools) to ensure the entire software stack is:
+The Caution platform and  [EnclaveOS](https://git.distrust.co/public/enclaveos) are built using [StageX](https://stagex.tools) to ensure the entire software stack is:
 
 - Fully source-bootstrapped
 

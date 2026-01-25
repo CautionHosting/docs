@@ -14,5 +14,5 @@ Most confidential compute solutions today provide what we refer to as "last-mile
 
 ## Caution's approach
 
-Caution leverages full-source bootstrapping and reproducibility all the way down to the kernel, via [StageX](https://stagex.tools) and [EnclaveOS](https://git.distrust.co/enclaveos). In this way Caution's approach provides the ability to verify the entire tech stack, all the way down.
+Caution leverages full-source bootstrapping and reproducibility all the way down to the kernel, via [StageX](https://stagex.tools) and [EnclaveOS](https://git.distrust.co/public/enclaveos). In this way Caution's approach provides the ability to verify the entire tech stack, all the way down.
 
