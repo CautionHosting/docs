@@ -28,20 +28,33 @@ Managed on-premises deployments let you run confidential enclaves in your own AW
 ### Prerequisites
 
 - Docker
-- AWS credentials with admin permissions (used only during setup)
+- AWS credentials — a least-privilege IAM role is recommended (see the [managed-on-prem-scripts repository](https://codeberg.org/caution/managed-on-prem-scripts) for setup instructions). Admin credentials can be used as an alternative.
 
 ### 1. Run the setup script
 
+**Option A: Caution CLI (recommended)**
+
+From your application directory, run:
 ```bash
-git clone https://github.com/aspect/managed-on-prem-scripts.git
+caution init --managed-on-prem
+```
+
+This detects your AWS credentials, provisions all required infrastructure, creates your app on Caution, and registers the credentials automatically.
+
+**Option B: Manual Docker setup**
+
+Use this if you need more control over the provisioning process.
+```bash
+git clone https://codeberg.org/caution/managed-on-prem-scripts.git
 cd managed-on-prem-scripts
+
+cp .env.example .env
+# Edit .env with your AWS credentials
 
 docker build -t caution-provisioner-setup .
 
 docker run --rm \
-  -e AWS_ACCESS_KEY_ID="your-admin-key" \
-  -e AWS_SECRET_ACCESS_KEY="your-admin-secret" \
-  -e AWS_REGION="us-west-2" \
+  --env-file .env \
   -v "$(pwd)/out:/out" \
   caution-provisioner-setup
 ```
@@ -50,25 +63,11 @@ This creates all required AWS infrastructure and outputs `credentials.json.gpg` 
 
 #### Using an existing VPC
 
-To use an existing VPC instead of creating a new one:
+To use an existing VPC instead of creating a new one, set `VPC_ID=vpc-xxxxxxxx` in your `.env` file before running the docker command.
 
+Then initialize the app with the encrypted credentials:
 ```bash
-docker run --rm \
-  -e AWS_ACCESS_KEY_ID="your-admin-key" \
-  -e AWS_SECRET_ACCESS_KEY="your-admin-secret" \
-  -e AWS_REGION="us-west-2" \
-  -e VPC_ID="vpc-xxxxxxxx" \
-  -v "$(pwd)/out:/out" \
-  caution-provisioner-setup
-```
-
-### 2. Initialize a Managed On-Premises application
-
-Inside of the application repository locally, run the following command with the output from the previous step (found in the `out/` directory):
-
-```bash
-caution init --config credentials.json.gpg
-
+caution init --managed-on-prem --config out/credentials.json.gpg
 ```
 
 ## What the setup creates
@@ -136,13 +135,10 @@ The host instance reserves ~2 vCPUs and ~2 GB memory for the parent instance.
 
 To update the IAM policy for an existing deployment (e.g., after script improvements):
 
+Set `DEPLOYMENT_ID` and `VPC_ID` in your `.env` file, then run:
 ```bash
 docker run --rm \
-  -e AWS_ACCESS_KEY_ID="your-admin-key" \
-  -e AWS_SECRET_ACCESS_KEY="your-admin-secret" \
-  -e AWS_REGION="us-west-2" \
-  -e DEPLOYMENT_ID="your-deployment-id" \
-  -e VPC_ID="vpc-xxxxxxxx" \
+  --env-file .env \
   caution-provisioner-setup python setup.py --update-policy
 ```
 
