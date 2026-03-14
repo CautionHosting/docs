@@ -33,7 +33,7 @@ Managed on-premises deployments let you run confidential enclaves in your own AW
 ### 1. Run the setup script
 
 ```bash
-git clone https://github.com/aspect/managed-on-prem-scripts.git
+git clone https://codeberg.org/caution/managed-on-prem-scripts.git
 cd managed-on-prem-scripts
 
 docker build -t caution-provisioner-setup .
