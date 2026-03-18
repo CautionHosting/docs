@@ -25,7 +25,7 @@ Before you begin, ensure you have the following:
 
 ## Install the CLI
 
-Follow the installation instructions in the [CLI README](https://codeberg.org/caution/cli).
+Follow the installation instructions in the [CLI README](https://codeberg.org/caution/platform).
 
 ## Create an account
 

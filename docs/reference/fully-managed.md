@@ -38,7 +38,7 @@ Fully managed deployments run on Caution's infrastructure. You push code, and Ca
 
 ### 1. Install the CLI
 
-Follow the installation instructions in the [CLI README](https://codeberg.org/caution/cli).
+Follow the installation instructions in the [CLI README](https://codeberg.org/caution/platform).
 
 ### 2. Create an account
 
