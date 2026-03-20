@@ -56,6 +56,8 @@ run: /app/server --port 8080
 ports: 8080
 ```
 
+When a single port is specified, it is automatically reverse-proxied through Caddy with TLS termination on port 443. For multiple ports, use `http_port` to specify which one Caddy should proxy — the rest are exposed as raw TCP (useful for P2P or binary protocols).
+
 This establishes a connection from the enclave to the host without STEVE encryption. Traffic is still protected by TLS, but the encryption terminates outside the enclave rather than inside it.
 
 Use this only when e2e encryption is not feasible for your use case.
