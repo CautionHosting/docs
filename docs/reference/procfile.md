@@ -42,6 +42,7 @@ app_sources: https://codeberg.org/myorg/myapp
 |-------|---------|-------------|
 | `memory` | `512` | Memory allocation in MB. |
 | `cpus` | `2` | Number of vCPUs. |
+| `disk_gb` | `30` | Root volume size in GB. |
 
 ### Features
 
