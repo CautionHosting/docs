@@ -20,13 +20,16 @@ app_sources: https://codeberg.org/myorg/myapp
 
 ### Build configuration
 
+!!! warning "`binary` vs `run`"
+    The `binary` field extracts **only** the specified binary from your container — no config files, shared libraries, or other filesystem contents are included in the EIF. This is suitable only for fully self-contained static binaries. For most applications, use `run` instead, which includes the full container filesystem in the EIF.
+
 | Field | Description |
 |-------|-------------|
-| `run` | **Required.** Command to execute your application. |
+| `run` | **Required.** Command to execute your application. The full container filesystem is included in the EIF. |
 | `containerfile` | Path to a Containerfile/Dockerfile for building your app. |
 | `build` | Build command to run before packaging. |
 | `oci_tarball` | Path to a pre-built OCI tarball. |
-| `binary` | Path to the compiled binary in the enclave. |
+| `binary` | Path to a static binary in the container. **Only that binary is extracted** — the rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. |
 
 ### Source verification
 
