@@ -32,4 +32,8 @@ Technical reference documentation.
 
     Use your own domain name for deployments.
 
+- :lucide-bug: **[Debugging](debugging.md)**
+
+    SSH into the host, read enclave console output, and diagnose issues.
+
 </div>

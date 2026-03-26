@@ -53,9 +53,9 @@ app_sources: https://codeberg.org/myorg/myapp
 |-------|---------|-------------|
 | `domain` | — | Domain name for the deployment. |
 | `e2e` | `false` | Enable end-to-end encryption via STEVE proxy. |
-| `debug` | `false` | Enable debug mode. |
+| `debug` | `false` | Enable [debug mode](debugging.md). Allows reading enclave console output but disables attestation verification. |
 | `no_cache` | `false` | Disable Docker build cache. |
-| `ssh_keys` | — | SSH public keys for enclave access. |
+| `ssh_keys` | — | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
 | `ports` | — | Comma-separated list of ports to expose (vsock proxy + security group ingress). |
 | `http_port` | — | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
 
