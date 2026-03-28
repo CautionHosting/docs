@@ -25,7 +25,7 @@ Caution supports multiple ways to deploy your application. Both options provide 
 Choose fully managed to get started quickly, or managed on-premises if you need control over your own infrastructure.
 
 !!! info "Self-host Caution"
-    Caution is fully open source. If you prefer to self-host and try the platform independently, see the [source code on Codeberg](https://codeberg.org/caution){:target="_blank"}.
+    Caution is fully open source. To self-host, see the [source code on Codeberg](https://codeberg.org/caution){:target="_blank"}.
 
 ## Source verification
 

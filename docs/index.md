@@ -2,7 +2,7 @@
 icon: lucide/home
 ---
 
-# Caution Documentation
+# Documentation
 
 Documentation for deploying, verifying, and managing confidential workloads with Caution.
 

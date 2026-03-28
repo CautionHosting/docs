@@ -14,9 +14,11 @@ Copyright &copy; 2025 Caution SEZC
 # Navigation structure
 
 nav = [
+{ "Overview" = [
 { "About" = "what-is-caution.md"},
 { "Alpha program" = "alpha.md" },
 { "Get started" = "quickstart.md" },
+]},
 { "Concepts" = [
 { "Reproducibility" = "concepts/reproducibility.md" },
 { "Verifiability" = "concepts/verifiability.md" },
@@ -219,12 +221,12 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
 
 [[project.theme.palette]]
 scheme = "default"
-toggle.icon = "lucide/sun"
+toggle.icon = "lucide/sun-moon"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
-toggle.icon = "lucide/moon"
+toggle.icon = "lucide/sun"
 toggle.name = "Switch to light mode"
 
 # ----------------------------------------------------------------------------
