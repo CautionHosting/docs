@@ -70,7 +70,7 @@ cd demo-hello-world-enclave
 
 ## Initialize the application
 
-Run `caution init` to capture the build environment and lock it for reproducible enclave builds:
+Run `caution init` to create a Procfile and other data required for the application:
 
 ```bash
 caution init
