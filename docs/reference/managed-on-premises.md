@@ -148,5 +148,35 @@ docker run --rm \
 
 ### Cleanup
 
-To remove all resources created by the setup, see the cleanup instructions in the [managed-on-prem-scripts repository](https://codeberg.org/caution/managed-on-prem-scripts).
+To remove all resources created by the setup, see the cleanup instructions in the [managed-on-prem-scripts repository](https://codeberg.org/caution/managed-on-prem-scripts){:target="_blank"}.
+
+## See also
+
+<div class="grid cards" markdown>
+
+- :lucide-box: **Containerizing your app**
+
+    ---
+
+    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
+
+- :lucide-file-code: **Procfile reference**
+
+    ---
+
+    Configure how your application [builds and runs](procfile.md).
+
+- :lucide-globe: **Custom domains**
+
+    ---
+
+    Use your own [domain name](custom-domains.md) for deployments.
+
+- :lucide-rocket: **Deployments**
+
+    ---
+
+    Configure [source verification and networking](deployments.md) options.
+
+</div>
 

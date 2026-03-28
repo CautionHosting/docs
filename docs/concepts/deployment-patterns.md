@@ -75,3 +75,21 @@ For maximum privacy, deploy to your own infrastructure using [managed on-premise
 | Fully private | Internal only | Your infrastructure | Regulated industries, proprietary systems |
 
 You can also combine patterns. A service might have public-facing components with open source code, while keeping proprietary business logic in private repositories that only internal services verify.
+
+## See also
+
+<div class="grid cards" markdown>
+
+- :lucide-cloud: **Fully managed**
+
+    ---
+
+    Deploy using [Caution's managed infrastructure](../reference/fully-managed.md).
+
+- :lucide-server: **Managed on-premises**
+
+    ---
+
+    Deploy to your own [infrastructure](../reference/managed-on-premises.md), with Caution managing the enclave lifecycle.
+
+</div>

@@ -1,80 +1,77 @@
 /* CSS variables */
-:root {
-  /* Primary accent colors (darker blue replacements) */
+/* :root {
   --md-primary-fg-color: #BD0F80;
   --md-accent-fg-color: #BD0F80;
   --md-typeset-a-color: #BD0F80;
-
-  /* Lighter accent colors (brighter blue replacements) */
   --md-accent-fg-color--transparent: rgba(240, 72, 181, 0.1);
-}
+} */
 
-[data-md-color-scheme="default"] {
+/* [data-md-color-scheme="default"] {
   --md-primary-fg-color: #BD0F80;
   --md-accent-fg-color: #BD0F80;
-}
+} */
 
-[data-md-color-scheme="slate"] {
+/* [data-md-color-scheme="slate"] {
   --md-primary-fg-color: #f048b5;
   --md-accent-fg-color: #f048b5;
-}
+} */
 
 /* Active nav link color - left sidebar only */
-.md-nav--primary .md-nav__item .md-nav__link--active {
+/* .md-nav--primary .md-nav__item .md-nav__link--active {
   color: #BD0F80;
   background: rgba(252, 217, 240, 0.35);
-}
+} */
 
-[data-md-color-scheme="slate"] .md-nav--primary .md-nav__item .md-nav__link--active {
+/* [data-md-color-scheme="slate"] .md-nav--primary .md-nav__item .md-nav__link--active {
   background: rgba(252, 217, 240, 0.075);
-}
+} */
 
 /* Table of contents (right side) - no background */
-.md-nav--secondary .md-nav__link--active {
+/* .md-nav--secondary .md-nav__link--active {
   color: #BD0F80;
   background: none;
-}
+} */
 
-.md-nav__item .md-nav__link--active:hover {
+/* .md-nav__item .md-nav__link--active:hover {
   color: #f048b5;
-}
+} */
 
 /* Search result highlight */
-.md-search-result__item--active {
+/* .md-search-result__item--active {
   background: rgba(252, 217, 240, 0.25);
-}
+} */
 
-.md-search-result mark {
+/* .md-search-result mark {
   background: rgba(252, 217, 240, 0.25);
-}
+} */
 
-.md-typeset .admonition-title::before,
+/* .md-typeset .admonition-title::before,
 .md-typeset summary::before {
   top: .25em;
-}
+} */
 
 /* Header title styling */
-.md-header__topic:first-child {
+/* .md-header__topic:first-child {
   font-weight: 500;
-}
+} */
 
 /* Source repository font sizing */
-.md-source {
+/* .md-source {
   font-size: 0.65rem;
-}
+} */
 
 /* Hyperlink color */
-.md-typeset a {
+/* .md-typeset a {
   color: #f048b5;
-}
+} */
 
-.md-typeset a:hover {
+/* .md-typeset a:hover {
   color: #f048b5;
-}
+} */
 
-.md-typeset .headerlink:hover {
+/* .md-typeset .headerlink:hover {
   color: #f048b5;
-}
+} */
 
 /* Logo styling */
 .md-header__button.md-logo img,
@@ -152,43 +149,43 @@
 }
 
 /* Social icons sizing - make Codeberg and Mastodon slightly larger */
-a.md-social__link[href*="codeberg"] svg,
+/* a.md-social__link[href*="codeberg"] svg,
 a.md-social__link[href*="mstdn"] svg {
   max-height: 0.95rem;
-}
+} */
 
 /* Grid card icons - match link color */
-.md-typeset .grid .card .twemoji,
+/* .md-typeset .grid .card .twemoji,
 .md-typeset .grid .card svg {
   color: #f048b5;
-}
+} */
 
 /* Full width tables */
-.md-typeset table:not([class]) {
+/* .md-typeset table:not([class]) {
   width: 100%;
-}
+} */
 
-.md-typeset table th,
+/* .md-typeset table th,
 .md-typeset table td {
   font-size: clamp(0.7rem, 2.5vw, 0.795rem);
   padding: 0.75rem 1.5rem;
-}
+} */
 
 /* Indented feature block - no border, normal text color */
-.md-typeset .indent-block {
+/* .md-typeset .indent-block {
   margin-left: 1.5rem;
   margin-bottom: 1rem;
-}
+} */
 
-.md-typeset .indent-block p {
+/* .md-typeset .indent-block p {
   margin: 0;
   color: var(--md-default-fg-color);
-}
+} */
 
 /* Task list spacing */
-.md-typeset .task-list-indicator::before {
+/* .md-typeset .task-list-indicator::before {
   margin-right: 0.5em;
-}
+} */
 
 /* Override quote admonition icon with open book */
 :root {

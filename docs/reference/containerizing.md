@@ -56,7 +56,7 @@ Caution's verifiability extends from your application down to the kernel:
 └─────────────────────────────┘
 ```
 
-[StageX](https://stagex.tools) provides reproducible, full-source bootstrapped base images. When you build your application on StageX and make it deterministic, the entire stack becomes verifiable.
+[StageX](https://stagex.tools){:target="_blank"} provides reproducible, full-source bootstrapped base images. When you build your application on StageX and make it deterministic, the entire stack becomes verifiable.
 
 ### Using StageX images
 
@@ -73,7 +73,7 @@ Available images include:
 - `stagex/pallet-python` - Python runtime
 - `stagex/pallet-go` - Go toolchain
 
-See [stagex.tools](https://stagex.tools/packages) for the full list of available packages.
+See [stagex.tools](https://stagex.tools/packages){:target="_blank"} for the full list of available packages.
 
 ### Setting SOURCE_DATE_EPOCH
 
@@ -87,10 +87,26 @@ ENV SOURCE_DATE_EPOCH=1
 
 ### Further Help
 
-If you have issues with making your application deterministic, join the [StageX Matrix Room](https://matrix.to/#/#stagex:matrix.org)
+If you have issues with making your application deterministic, join the [StageX Matrix Room](https://matrix.to/#/#stagex:matrix.org){:target="_blank"}
 
 ## Learn more
 
-- [Reproducibility](../concepts/reproducibility.md) - Why deterministic builds matter
-- [Verifiability](../concepts/verifiability.md) - How Caution ensures code integrity
-- [StageX documentation](https://stagex.tools) - Reproducible base images
+- [StageX documentation](https://stagex.tools){:target="_blank"} - Reproducible base images
+
+## See also
+
+<div class="grid cards" markdown>
+
+- :lucide-refresh-cw: **Reproducibility**
+
+    ---
+
+    Enable independent verification with [deterministic builds](../concepts/reproducibility.md).
+
+- :lucide-shield-check: **Verifiability**
+
+    ---
+
+    Learn how Caution [ensures code integrity](../concepts/verifiability.md) from source to production.
+
+</div>

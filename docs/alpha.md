@@ -31,7 +31,7 @@ If you have an alpha access code, register at [alpha.caution.co](https://alpha.c
 
 ## Self-hosting
 
-Caution is fully open source. If you'd prefer to self-host and try the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
+Caution is fully open source. If you prefer to self-host and try the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
 
 ---
 

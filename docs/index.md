@@ -2,26 +2,34 @@
 icon: lucide/home
 ---
 
-# Documentation
+# Caution Documentation
 
-Welcome to the Caution documentation.
+Documentation for deploying, verifying, and managing confidential workloads with Caution.
 
 <div class="grid cards" markdown>
 
-- :lucide-info: **[What is Caution?](what-is-caution.md)**
+- :lucide-info: **What is Caution?**
 
-    The generalized verifiable compute platform.
+    ---
 
-- :lucide-users: **[Who is Caution for?](who-is-caution-for.md)**
+    Learn about the generalized [verifiable compute platform](what-is-caution.md) for deploying and scaling confidential workloads.
 
-    Teams building applications where trust matters.
+- :lucide-users: **Who is Caution for?**
 
-- :lucide-cog: **[How it works](how-it-works.md)**
+    ---
 
-    Build, deploy, prove, verify.
+    If you are building applications where trust matters, learn about [who Caution is for](who-is-caution-for.md).
 
-- :lucide-rocket: **[Get started](quickstart.md)**
+- :lucide-cog: **How it works**
 
-    Deploy your first verifiable application.
+    ---
+
+    Understand the steps that take your application from source to a [verified enclave](how-it-works.md).
+
+- :lucide-rocket: **Get started**
+
+    ---
+
+    Follow the [quickstart guide](quickstart.md) to deploy your first verifiable application.
 
 </div>

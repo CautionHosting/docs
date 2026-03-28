@@ -12,7 +12,7 @@ For proper end-to-end encryption, data needs to be protected all the way to insi
 
 ## End-to-end encryption
 
-Caution leverages [Secure Transport Encryption via Enclave (STEVE)](https://git.distrust.co/public/steve), a system which is designed as a transparent proxy which is easy to use with existing solutions.
+Caution leverages [Secure Transport Encryption via Enclave (STEVE)](https://distrust.co/blog/steve.html){:target="_blank"}, a system which is designed as a transparent proxy which is easy to use with existing solutions.
 
 The way it works is that there is a proxy service inside of the enclave and a SDK that can be integrated into the user application. STEVE verifies the attested key from a confidential compute workload, and uses it to encrypt the data so that it's only exposed in the client, and inside of the enclave.
 
@@ -22,4 +22,22 @@ The data is additionally wrapped in TLS, which ensures standard security guarant
 
 ## Learn more
 
-TODO link to Steve blog
+- Our sister company [Distrust](https://distrust.co){:target="_blank"} published a [blog](https://distrust.co/blog/steve.html){:target="_blank"} about STEVE
+
+## See also
+
+<div class="grid cards" markdown>
+
+- :lucide-fingerprint: **Attestation**
+
+    ---
+
+    Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
+
+- :lucide-rocket: **Deployments**
+
+    ---
+
+    Configure [source verification and networking](../reference/deployments.md) options.
+
+</div>

@@ -31,14 +31,14 @@ Fully managed deployments run on Caution's infrastructure. You push code, and Ca
 | Smart card | YubiKey, NitroKey, or LibremKey |
 | Operating system | Linux x86_64 |
 | Git | For cloning and pushing repositories |
-| Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/) |
+| Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} |
 | Containerized app | Your application must be [containerized](containerizing.md) |
 
 ## Setup
 
 ### 1. Install the CLI
 
-Follow the installation instructions in the [CLI README](https://codeberg.org/caution/platform).
+Follow the installation instructions in the [CLI README](https://codeberg.org/caution/platform){:target="_blank"}.
 
 ### 2. Create an account
 
@@ -48,7 +48,7 @@ Register with your alpha access code and smart card:
 caution register --alpha-code <your_code>
 ```
 
-Or register via the browser at [alpha.caution.co](https://alpha.caution.co/).
+Or register via the browser at [alpha.caution.co](https://alpha.caution.co/){:target="_blank"}.
 
 ### 3. Add an SSH key
 
@@ -123,8 +123,30 @@ Consider [managed on-premises](managed-on-premises.md) if you need:
 
 ## See also
 
-- [Quickstart](../quickstart.md) - Complete getting started guide
-- [Containerizing](containerizing.md) - Build reproducible containers
-- [Procfile reference](procfile.md) - Configuration options
-- [Custom domains](custom-domains.md) - Use your own domain name
-- [Deployments](deployments.md) - Source verification and networking options
+<div class="grid cards" markdown>
+
+- :lucide-box: **Containerizing your app**
+
+    ---
+
+    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
+
+- :lucide-file-code: **Procfile reference**
+
+    ---
+
+    Configure how your application [builds and runs](procfile.md).
+
+- :lucide-globe: **Custom domains**
+
+    ---
+
+    Use your own [domain name](custom-domains.md) for deployments.
+
+- :lucide-rocket: **Deployments**
+
+    ---
+
+    Configure [source verification and networking](deployments.md) options.
+
+</div>

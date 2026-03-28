@@ -22,7 +22,7 @@ Caution is available under two licenses:
 
 ## AGPL-3.0 (open source)
 
-For open source projects, personal use, and non-commercial use, Caution is licensed under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html).
+For open source projects, personal use, and non-commercial use, Caution is licensed under the [GNU Affero General Public License v3.0](https://www.gnu.org/licenses/agpl-3.0.html){:target="_blank"}.
 
 ### What you can do
 
@@ -66,5 +66,5 @@ If you want to evaluate Caution internally without AGPL obligations, contact our
 
 ## License text
 
-- [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.txt)
+- [AGPL-3.0](https://www.gnu.org/licenses/agpl-3.0.txt){:target="_blank"}
 - Commercial license available upon request
