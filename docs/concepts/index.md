@@ -1,7 +1,3 @@
----
-icon: lucide/lightbulb
----
-
 # Core concepts
 
 Understand the foundational ideas behind Caution's verifiable compute platform.

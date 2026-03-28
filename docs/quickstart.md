@@ -4,10 +4,10 @@ icon: lucide/zap
 
 # Get started
 
-!!! warning "Alpha Software"
-    Caution is in alpha. The software is not production ready. APIs, workflows, and features may change without notice.
-
 Caution is a verifiable compute platform for deploying confidential workloads to secure enclaves. This guide walks you through creating an account, installing the CLI, and deploying your first application. It takes about 10 minutes to complete.
+
+!!! warning "Alpha software"
+    Caution is in alpha and not production ready. APIs, workflows, and features may change without notice.
 
 ## Prerequisites
 

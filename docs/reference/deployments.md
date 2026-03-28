@@ -66,7 +66,7 @@ With e2e enabled, data is encrypted on the client and only decrypted inside the 
 
 See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
 
-### Direct port exposure (not recommended)
+### Direct port exposure
 
 If you cannot use end-to-end encryption, you can expose ports directly:
 
