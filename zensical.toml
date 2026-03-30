@@ -1,12 +1,12 @@
 [project]
 
 site_name = "Caution Documentation"
-site_description = "Documentation for Caution, the generalized verifiable compute platform for deploying, proving, and scaling confidential workloads anywhere."
+site_description = "Documentation for deploying, verifying, and managing confidential workloads with Caution."
 site_author = "Ksenia Lesko"
 site_url = "https://docs.caution.co/"
-repo_url = "https://codeberg.org/caution/platform"
-repo_name = "caution/platform"
-edit_uri = "src/branch/main/docs/docs/"
+repo_url = "https://codeberg.org/caution/docs"
+repo_name = "caution"
+edit_uri = "src/branch/main/docs/"
 copyright = """
 Copyright &copy; 2025 Caution SEZC
 """
@@ -14,10 +14,13 @@ Copyright &copy; 2025 Caution SEZC
 # Navigation structure
 
 nav = [
+{ "Overview" = [
 { "About" = "what-is-caution.md"},
 { "Alpha program" = "alpha.md" },
 { "Get started" = "quickstart.md" },
+]},
 { "Concepts" = [
+{ "Concepts" = "concepts/index.md" },
 { "Reproducibility" = "concepts/reproducibility.md" },
 { "Verifiability" = "concepts/verifiability.md" },
 { "Attestations" = "concepts/attestation.md" },
@@ -25,12 +28,14 @@ nav = [
 { "Deployment patterns" = "concepts/deployment-patterns.md" },
 ]},
 { "Reference" = [
+{ "Reference" = "reference/index.md" },
+{ "Deployments" = "reference/deployments.md" },
+{ "Containerizing" = "reference/containerizing.md" },
 { "Fully managed" = "reference/fully-managed.md" },
 { "Managed on-prem" = "reference/managed-on-premises.md" },
-{ "Containerizing" = "reference/containerizing.md" },
 { "Procfile" = "reference/procfile.md" },
-{ "Deployments" = "reference/deployments.md" },
 { "Custom domains" = "reference/custom-domains.md" },
+{ "Debugging" = "reference/debugging.md" },
 ]},
 ]
 
@@ -219,12 +224,12 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
 
 [[project.theme.palette]]
 scheme = "default"
-toggle.icon = "lucide/sun"
+toggle.icon = "lucide/sun-moon"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 scheme = "slate"
-toggle.icon = "lucide/moon"
+toggle.icon = "lucide/sun"
 toggle.name = "Switch to light mode"
 
 # ----------------------------------------------------------------------------
@@ -281,7 +286,7 @@ toggle.name = "Switch to light mode"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/git-alt"
-link = "https://codeberg.org/caution/platform"
+link = "https://codeberg.org/caution"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/mastodon"

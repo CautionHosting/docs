@@ -1,39 +1,49 @@
----
-icon: lucide/file-text
----
-
 # Reference
 
 Technical reference documentation.
 
 <div class="grid cards" markdown>
 
-- :lucide-cloud: **[Fully managed](fully-managed.md)**
+- :lucide-rocket: **Deployments**
 
-    Deploy to Caution's infrastructure with zero setup.
+    ---
 
-- :lucide-server: **[Managed on-premises](managed-on-premises.md)**
+    Configure [source verification and networking](deployments.md) options.
 
-    Deploy to your own AWS infrastructure.
+- :lucide-box: **Containerizing your app**
 
-- :lucide-box: **[Containerizing](containerizing.md)**
+    ---
 
-    Build reproducible containers for full verifiability.
+    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
 
-- :lucide-file-code: **[Procfile](procfile.md)**
+- :lucide-cloud: **Fully managed**
 
-    Configure how your application builds and runs.
+    ---
 
-- :lucide-rocket: **[Deployments](deployments.md)**
+    Deploy using [Caution's managed infrastructure](fully-managed.md).
 
-    Source verification, networking, and reproducibility options.
+- :lucide-server: **Managed on-premises**
 
-- :lucide-globe: **[Custom domains](custom-domains.md)**
+    ---
 
-    Use your own domain name for deployments.
+    Deploy to your own [infrastructure](managed-on-premises.md), with Caution managing the enclave lifecycle.
 
-- :lucide-bug: **[Debugging](debugging.md)**
+- :lucide-file-code: **Procfile**
 
-    SSH into the host, read enclave console output, and diagnose issues.
+    ---
+
+    Configure how your application [builds and runs](procfile.md).
+
+- :lucide-globe: **Custom domains**
+
+    ---
+
+    Use your own [domain name](custom-domains.md) for deployments.
+
+- :lucide-bug: **Debugging**
+
+    ---
+
+    [SSH into the host](debugging.md), read enclave console output, and diagnose issues.
 
 </div>

@@ -2,7 +2,7 @@
 
 > **Note:** This documentation site is under active development and is not yet production-ready. Content may be incomplete or contain placeholder text.
 
-Documentation for [Caution](https://codeberg.org/caution/platform), the generalized verifiable compute platform.
+Documentation for [Caution](https://codeberg.org/caution), the generalized verifiable compute platform.
 
 ## Development
 

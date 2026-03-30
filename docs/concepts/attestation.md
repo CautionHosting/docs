@@ -8,7 +8,7 @@ The backbone of confidential compute are hardware trust anchors which offer both
 
 Different hardware, such as Intel TDX, AMD SEV-SNP, TPM 2.0, Nitro, all provide attestation capabilities, where they can measure the state of a server and provide *cryptographic signatures* of hashes of said data - this is what "attestations" are. They are also referred to as *cryptographic remote attestations*.
 
-Alpha version of Caution only supports [AWS Nitro](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html).
+Alpha version of Caution only supports [AWS Nitro](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html){:target="_blank"}.
 
 ## How verification of attestations works
 
@@ -23,7 +23,7 @@ The CLI generates a random 32-byte nonce (number used once). This nonce prevents
 The CLI sends the nonce to the enclave's attestation endpoint. The enclave's Nitro Security Module (NSM) generates an attestation document that includes:
 
 - The nonce (echoed back)
-- [PCR values (Platform Configuration Registers)](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html) - cryptographic measurements of the enclave image
+- [PCR values (Platform Configuration Registers)](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html){:target="_blank"} - cryptographic measurements of the enclave image
 - A certificate chain signed by the AWS Nitro root CA
 - A manifest containing source URLs and commit hashes
 
@@ -79,12 +79,28 @@ Most solutions today are based on a single confidential compute technology. Usin
 
 ### The solution - multi-hardware
 
-To address this failure of rooting all trust in a single hardware, along with its inherited risks that span the software, firmware and hardware supply chains, operational practices and all other risks stemming from the organization which creates a confidential compute, the team behind Caution designed [EnclaveOS](https://git.distrust.co/public/enclaveos). Caution alpha only supports AWS Nitro, but the new version with of EnclaveOS with multi-hardware support is in active development, and you can learn more about it [here](https://distrust.co/blog/enclaveos.html).
+To address this failure of rooting all trust in a single hardware, along with its inherited risks that span the software, firmware and hardware supply chains, operational practices and all other risks stemming from the organization which creates a confidential compute, the team behind Caution designed [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"}. Caution alpha only supports AWS Nitro, but the new version with of EnclaveOS with multi-hardware support is in active development, and you can learn more about it [here](https://distrust.co/blog/enclaveos.html){:target="_blank"}.
 
 This OS is designed to leverage multiple different attestation technologies for a single workload, requiring them all to agree on the current state of the confidential compute workload in order to consider its integrity to be intact. This distribution of trust on the hardware level is unique to Caution and EnclaveOS as of writing of this document.
 
 ## Learn more
 
-- [Verifiability](verifiability.md) - How reproducibility enables verification
-- [Reproducibility](reproducibility.md) - Why deterministic builds matter
-- Our sister company [Distrust](https://distrust.co) published a [blog](https://distrust.co/blog/enclaveos.html) about the details of EnclaveOS
+- Our sister company [Distrust](https://distrust.co){:target="_blank"} published a [blog](https://distrust.co/blog/enclaveos.html){:target="_blank"} about EnclaveOS
+
+## See also
+
+<div class="grid cards" markdown>
+
+- :lucide-shield-check: **Verifiability**
+
+    ---
+
+    Learn how Caution [ensures code integrity](verifiability.md) from source to production.
+
+- :lucide-refresh-cw: **Reproducibility**
+
+    ---
+
+    Enable independent verification with [deterministic builds](reproducibility.md).
+
+</div>

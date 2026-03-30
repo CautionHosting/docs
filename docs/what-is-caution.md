@@ -4,11 +4,10 @@ icon: lucide/info
 
 # What is Caution?
 
-!!! warning "Alpha Software"
-    Caution is in alpha. The software is not production ready. APIs, workflows, and features may change without notice.
-
-
 Caution is a generalized verifiable compute platform for managing the lifecycle of confidential workloads that can be independently verified.
+
+!!! warning "Alpha software"
+    Caution is in alpha and not production ready. APIs, workflows, and features may change without notice.
 
 Caution extends traditional confidential compute by providing complete verifiability of the software running in production and hardware-backed, end-to-end encryption of application data:
 
@@ -18,30 +17,34 @@ Caution extends traditional confidential compute by providing complete verifiabi
 
 Together, these guarantees enable verification of software provenance and stronger confidentiality assurances than isolation alone.
 
-Caution currently supports the following deployment types:
-
-* **[Fully managed](./reference/fully-managed.md)** - Deploy to Caution's infrastructure with zero setup. Caution handles builds, hosting, and operations.
-
-* **[Managed on-premises](./reference/managed-on-premises.md)** - Run enclaves in your own AWS account while Caution handles build and deployment orchestration.
+Caution is free and open source software. It supports [multiple deployment options](./reference/deployments.md#deployment-options) including fully managed, managed on-premises, and self-hosted.
 
 [Get started](./quickstart.md) or learn more about Caution:
 
 <div class="grid cards" markdown>
 
--   :lucide-shield-check: __Verifiability__
+- :lucide-shield-check: **Verifiability**
 
-    Learn how Caution ensures [code integrity](./concepts/verifiability.md) from source to production.
+    ---
 
--   :lucide-refresh-cw: __Reproducibility__
+    Learn how Caution [ensures code integrity](./concepts/verifiability.md) from source to production.
 
-    Understand how [deterministic builds](./concepts/reproducibility.md) enable independent verification.
+- :lucide-rocket: **Deployment options**
 
--   :lucide-fingerprint: __Attestations__
+    ---
 
-    Hardware-backed [proof of execution](./concepts/attestation.md) you can cryptographically verify.
+    Choose from [fully managed, on-premises, or self-hosted](./reference/deployments.md#deployment-options) deployments.
 
--   :lucide-lock: __Encryption__
+- :lucide-fingerprint: **Attestations**
 
-    [End-to-end data protection](./concepts/encryption.md) that keeps your data confidential.
+    ---
+
+    Prove workload integrity with [hardware-backed cryptographic proofs](./concepts/attestation.md).
+
+- :lucide-lock: **Encryption**
+
+    ---
+
+    Protect data all the way into the enclave with [end-to-end encryption](./concepts/encryption.md).
 
 </div>

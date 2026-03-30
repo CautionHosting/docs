@@ -14,5 +14,23 @@ Most confidential compute solutions today provide what we refer to as "last-mile
 
 ## Caution's approach
 
-Caution leverages full-source bootstrapping and reproducibility all the way down to the kernel, via [StageX](https://stagex.tools) and [EnclaveOS](https://git.distrust.co/public/enclaveos). In this way Caution's approach provides the ability to verify the entire tech stack, all the way down.
+Caution leverages full-source bootstrapping and reproducibility all the way down to the kernel, via [StageX](https://stagex.tools){:target="_blank"} and [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"}. In this way Caution's approach provides the ability to verify the entire tech stack, all the way down.
+
+## See also
+
+<div class="grid cards" markdown>
+
+- :lucide-refresh-cw: **Reproducibility**
+
+    ---
+
+    Enable independent verification with [deterministic builds](reproducibility.md).
+
+- :lucide-fingerprint: **Attestation**
+
+    ---
+
+    Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
+
+</div>
 

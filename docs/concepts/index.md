@@ -1,31 +1,37 @@
----
-icon: lucide/lightbulb
----
-
 # Core concepts
 
 Understand the foundational ideas behind Caution's verifiable compute platform.
 
 <div class="grid cards" markdown>
 
-- :lucide-refresh-cw: **[Reproducibility](reproducibility.md)**
+- :lucide-refresh-cw: **Reproducibility**
 
-    Build software that produces identical outputs from identical inputs.
+    ---
 
-- :lucide-shield-check: **[Verifiability](verifiability.md)**
+    Enable independent verification with [deterministic builds](reproducibility.md).
 
-    Prove exactly what source code is running in production.
+- :lucide-shield-check: **Verifiability**
 
-- :lucide-fingerprint: **[Attestations](attestation.md)**
+    ---
 
-    Hardware-backed cryptographic proofs of workload integrity.
+    Learn how Caution [ensures code integrity](verifiability.md) from source to production.
 
-- :lucide-lock: **[Encryption](encryption.md)**
+- :lucide-fingerprint: **Attestations**
 
-    End-to-end encryption that protects data all the way into the enclave.
+    ---
 
-- :lucide-git-branch: **[Deployment patterns](deployment-patterns.md)**
+    Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
 
-    Public, private, and fully private verification models.
+- :lucide-lock: **Encryption**
+
+    ---
+
+    Protect data all the way into the enclave with [end-to-end encryption](encryption.md).
+
+- :lucide-git-branch: **Deployment patterns**
+
+    ---
+
+    Choose from [public, private, and fully private](deployment-patterns.md) verification models.
 
 </div>
