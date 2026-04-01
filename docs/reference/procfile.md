@@ -53,6 +53,7 @@ app_sources: https://codeberg.org/myorg/myapp
 |-------|---------|-------------|
 | `domain` | — | Domain name for the deployment. |
 | `e2e` | `false` | Enable end-to-end encryption via STEVE proxy. |
+| `locksmith` | `false` | Enable [Locksmith](../concepts/key-services.md) secret management. Runs locksmithd inside the enclave to receive sharded secrets via quorum. |
 | `debug` | `false` | Enable [debug mode](debugging.md). Allows reading enclave console output but disables attestation verification. |
 | `no_cache` | `false` | Disable Docker build cache. |
 | `ssh_keys` | — | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
@@ -68,6 +69,7 @@ The following ports are reserved for internal enclave services:
 | `8080` | STEVE encryption proxy (when `e2e: true`) |
 | `8081` | Internal enclave services |
 | `8082` | Attestation service |
+| `8084` | Locksmith shard receiver (when `locksmith: true`) |
 
 Your application should listen on port `8083` or another unreserved port.
 
@@ -103,6 +105,18 @@ app_sources: https://codeberg.org/example/secure-app
 ```
 
 Since only one port is specified, it is automatically used as the `http_port`.
+
+### With Locksmith secret management
+
+```
+run: /app/server --port 8083
+locksmith: true
+ports: 8083
+domain: secrets.example.com
+app_sources: https://codeberg.org/example/secret-app
+```
+
+After deploying, send shards with `caution secret send-shard`.
 
 ### Custom resources with multiple ports
 

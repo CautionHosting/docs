@@ -25,6 +25,7 @@ nav = [
 { "Verifiability" = "concepts/verifiability.md" },
 { "Attestations" = "concepts/attestation.md" },
 { "Encryption" = "concepts/encryption.md" },
+{ "Key Services" = "concepts/key-services.md" },
 { "Deployment patterns" = "concepts/deployment-patterns.md" },
 ]},
 { "Reference" = [
