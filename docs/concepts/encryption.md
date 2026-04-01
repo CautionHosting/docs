@@ -28,6 +28,12 @@ The data is additionally wrapped in TLS, which ensures standard security guarant
 
 <div class="grid cards" markdown>
 
+- :lucide-key-round: **Key Services**
+
+    ---
+
+    Manage [secrets inside enclaves](key-services.md) using shamir secret sharing and quorum-based key recovery.
+
 - :lucide-fingerprint: **Attestation**
 
     ---
