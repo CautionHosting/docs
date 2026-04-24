@@ -21,7 +21,7 @@ Before you begin, ensure you have the following:
 | Requirement | Details |
 |-------------|---------|
 | Access code | Request access at [info@caution.co](mailto:info@caution.co) |
-| Smart card | YubiKey, NitroKey, or LibremKey |
+| Passkey | Browser or platform passkey, password manager passkey, or security key or smart card (YubiKey, NitroKey, or LibremKey) |
 | Operating system | Linux x86_64 |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/){:target="_blank"}) |
 | Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} ([install](https://www.docker.com/){:target="_blank"}) |
@@ -33,7 +33,7 @@ Follow the installation instructions in the [CLI README](https://codeberg.org/ca
 
 ## Create an account
 
-To create an account, you'll need a valid access code and a smart card with a FIDO PIN configured. You can register in the browser or with the CLI.
+To create an account, you'll need a valid access code and a passkey. You can register in the browser or with the CLI.
 
 If you do not have an access code, request one at [info@caution.co](mailto:info@caution.co).
 
@@ -47,7 +47,7 @@ If you do not have an access code, request one at [info@caution.co](mailto:info@
 
     1. Go to [dashboard.caution.co](https://dashboard.caution.co/){:target="_blank"}
     2. Enter your access code
-    3. Insert your smart card / use another Passkey method
+    3. Use your passkey method
     4. Click **Continue**
     5. Approve Passkey interaction when prompted
 
