@@ -142,6 +142,19 @@
   width: 24%;
 }
 
+.md-typeset .procfile-build-config-table table th:first-child,
+.md-typeset .procfile-build-config-table table td:first-child,
+.md-typeset .procfile-source-verification-table table th:first-child,
+.md-typeset .procfile-source-verification-table table td:first-child {
+  min-width: 7rem;
+  width: 7rem;
+}
+
+.md-typeset .procfile-build-config-table table td:first-child code,
+.md-typeset .procfile-source-verification-table table td:first-child code {
+  white-space: nowrap;
+}
+
 @media screen and (max-width: 44.9375em) {
   .md-typeset .two-column-list {
     grid-template-columns: 1fr;

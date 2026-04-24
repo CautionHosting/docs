@@ -4,16 +4,13 @@ icon: lucide/layers-3
 
 # Deployment models
 
-Caution supports multiple deployment models depending on how much infrastructure ownership and operational control you want.
-
-Use [fully managed](../fully-managed.md) for the fastest path to production, [bring your own cloud](../bring-your-own-cloud.md) to run in your own AWS account, or self-host if you want to operate the platform yourself.
-
-!!! info "Current platform support"
-    Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
+<p class="docs-home-intro">Compare Caution’s deployment options to choose the setup that fits your infrastructure ownership and operational control needs.</p>
 
 ## At a glance
 
-Teams choose fully managed for the fastest setup and simplest operational path. They choose bring your own cloud (BYOC) when workloads and data must stay in their own AWS account.
+Caution runs on AWS Nitro Enclaves and supports multiple deployment options depending on how much infrastructure ownership and operational control you want.
+
+Use [fully managed](../fully-managed.md) for the fastest path to production on Caution-managed infrastructure, or [bring your own cloud](../bring-your-own-cloud.md) when workloads and data must stay in your AWS account. If you want to operate the platform yourself, self-host using the [Caution source code on Codeberg](https://codeberg.org/caution){:target="_blank"}.
 
 | Model | Hosted in | Caution manages | You manage |
 |-------|-----------|-----------------|------------|

@@ -4,13 +4,13 @@ icon: lucide/bug
 
 # Debugging enclaves
 
-How to diagnose and fix issues with your enclave deployment.
+<p class="docs-home-intro">How to diagnose and fix issues with your enclave deployment.</p>
 
 ## Enable debug mode
 
 Add `debug: true` to your Procfile:
 
-```
+```yaml
 run: /app/server
 debug: true
 ports: 8083
@@ -22,7 +22,7 @@ Debug mode passes `--debug-mode` to `nitro-cli run-enclave`, which allows you to
 
 To SSH into the EC2 instance running the enclave, add your public key to the Procfile:
 
-```
+```yaml
 run: /app/server
 debug: true
 ssh_keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample... user@host
@@ -30,7 +30,7 @@ ssh_keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample... user@host
 
 The key must be a full OpenSSH public key string starting with `ssh-ed25519`, `ssh-rsa`, `ecdsa-sha2-nistp256`, or similar. Multiple keys can be specified:
 
-```
+```yaml
 ssh_keys: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFirst... user1@host", "ssh-ed25519..."
 ```
 

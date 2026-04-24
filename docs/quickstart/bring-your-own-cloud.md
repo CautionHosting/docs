@@ -11,6 +11,9 @@ Deploy Caution enclaves in your own AWS infrastructure while Caution handles the
 
 Bring your own cloud (BYOC) lets you run confidential enclaves in your own AWS account. A one-time setup script creates isolated AWS infrastructure and a role that can only interact with resources tagged for Caution, then Caution manages deployments within that environment. For full details, see the [bring your own cloud reference](../reference/bring-your-own-cloud.md).
 
+!!! info "Current platform support"
+    Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
+
 ## What you need
 
 Before you begin, ensure you have the following:

@@ -11,6 +11,9 @@ Deploy your first application on Caution's fully managed platform using AWS Nitr
 
 Fully managed is a deployment model where Caution hosts and operates the deployment environment end to end on Caution-managed infrastructure. For full details, see the [fully managed reference](../reference/fully-managed.md).
 
+!!! info "Current platform support"
+    Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
+
 ## What you need
 
 Before you begin, ensure you have the following:

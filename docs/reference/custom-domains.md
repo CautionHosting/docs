@@ -4,7 +4,7 @@ icon: lucide/globe
 
 # Custom domains
 
-Use your own domain name for Caution deployments.
+<p class="docs-home-intro">Use your own domain name for Caution deployments.</p>
 
 ## Overview
 
@@ -17,7 +17,7 @@ Caution allows you to point your own domain to your deployment. This involves tw
 
 Add the `domain` field to your `Procfile`:
 
-```
+```yaml
 domain: api.yourdomain.com
 ```
 

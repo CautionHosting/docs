@@ -51,7 +51,7 @@ Finally, the CLI compares:
 
 If all PCR values match, the verification passes. This proves that the remote enclave is running exactly the code specified in the manifest, built in exactly the same way.
 
-```
+```text
 ✓ Certificate chain verified against AWS Nitro root CA
 ✓ COSE signature verification passed
 ✓ Nonce verified (prevents replay attacks)

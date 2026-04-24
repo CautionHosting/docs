@@ -62,7 +62,7 @@ Once you have everything in place, the setup flow looks like this:
 
 All resources are tagged with:
 
-```
+```text
 caution:deployment-id = <deployment-id>
 ```
 

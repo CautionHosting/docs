@@ -4,7 +4,7 @@ icon: lucide/box
 
 # Containerizing your application
 
-Caution deploys containerized applications. This guide covers how to containerize your app and make it reproducible for full verifiability.
+<p class="docs-home-intro">Caution deploys containerized applications. This guide covers how to containerize your app and make it reproducible for full verifiability.</p>
 
 ## Requirements
 
@@ -44,7 +44,7 @@ For full verifiability, your application must be [reproducible](../concepts/repr
 
 Caution's verifiability extends from your application down to the kernel:
 
-```
+```text
 ┌─────────────────────────────┐
 │     Your Application        │  ← You make this reproducible
 ├─────────────────────────────┤

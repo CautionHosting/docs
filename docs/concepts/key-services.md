@@ -76,7 +76,7 @@ This creates a 2-of-4 quorum: any 2 of the 4 shard-holders can unlock the enclav
 
 Encrypt your secret values to the quorum's public key and place them in your repository:
 
-```
+```text
 .caution/
   secrets/
     bundle.json          # quorum bundle (created by caution secret new)
@@ -88,7 +88,7 @@ Each `.asc` file should contain a single value, encrypted with the quorum's publ
 
 ### 3. Enable Locksmith in your Procfile
 
-```
+```yaml
 run: /app/server
 locksmith: true
 ports: 8083

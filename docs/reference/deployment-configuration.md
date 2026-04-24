@@ -4,13 +4,13 @@ icon: lucide/settings-2
 
 # Deployment configuration
 
-Shared configuration options that affect how your application runs and can be verified across deployment models.
+<p class="docs-home-intro">Shared configuration options that affect how your application runs and can be verified across deployment models.</p>
 
 ## Source verification
 
 To enable third-party verification and reproducibility of your deployment, you must specify the source repositories in your `Procfile`:
 
-```
+```yaml
 app_sources: https://codeberg.org/myorg/myapp
 ```
 
@@ -30,7 +30,7 @@ Caution supports two modes for exposing your application to the network.
 
 For full security, enable end-to-end encryption using [STEVE (Secure Transport Encryption via Enclave)](https://git.distrust.co/public/steve){:target="_blank"}:
 
-```
+```yaml
 e2e: true
 ```
 
@@ -49,7 +49,7 @@ See the [Encryption](../concepts/encryption.md) concepts page for details on how
 
 If you cannot use end-to-end encryption, you can expose ports directly:
 
-```
+```yaml
 run: /app/server --port 8080
 ports: 8080
 ```
