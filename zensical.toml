@@ -21,7 +21,6 @@ nav = [
 ]},
 { "Concepts" = [
 "concepts/index.md",
-{ "How Caution works" = "concepts/how-caution-works.md" },
 { "Reproducibility" = "concepts/reproducibility.md" },
 { "Verifiability" = "concepts/verifiability.md" },
 { "Attestations" = "concepts/attestation.md" },
