@@ -157,6 +157,6 @@ RUN echo "LOG_LEVEL=info" >> /etc/environment
 
     ---
 
-    See all [configuration options](../reference/procfile.md) including `locksmith: true`.
+    Configure how your application [builds, runs, and verifies](../reference/procfile.md), including `locksmith: true`.
 
 </div>

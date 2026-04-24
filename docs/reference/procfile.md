@@ -21,7 +21,7 @@ app_sources: https://codeberg.org/myorg/myapp
 ### Build configuration
 
 !!! warning "`binary` vs `run`"
-    The `binary` field extracts **only** the specified binary from your container — no config files, shared libraries, or other filesystem contents are included in the EIF. This is suitable only for fully self-contained static binaries. For most applications, use `run` instead, which includes the full container filesystem in the EIF.
+    The `binary` field extracts **only** the specified binary from your container. No config files, shared libraries, or other filesystem contents are included in the EIF. This is suitable only for fully self-contained static binaries. For most applications, use `run` instead, which includes the full container filesystem in the EIF.
 
 | Field | Description |
 |-------|-------------|
@@ -29,7 +29,7 @@ app_sources: https://codeberg.org/myorg/myapp
 | `containerfile` | Path to a Containerfile/Dockerfile for building your app. |
 | `build` | Build command to run before packaging. |
 | `oci_tarball` | Path to a pre-built OCI tarball. |
-| `binary` | Path to a static binary in the container. **Only that binary is extracted** — the rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. |
+| `binary` | Path to a static binary in the container. **Only that binary is extracted.** The rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. |
 
 ### Source verification
 
@@ -51,14 +51,14 @@ app_sources: https://codeberg.org/myorg/myapp
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `domain` | — | Domain name for the deployment. |
+| `domain` | - | Domain name for the deployment. |
 | `e2e` | `false` | Enable end-to-end encryption via STEVE proxy. |
 | `locksmith` | `false` | Enable [Locksmith](../concepts/key-services.md) secret management. Runs locksmithd inside the enclave to receive sharded secrets via quorum. |
 | `debug` | `false` | Enable [debug mode](debugging.md). Allows reading enclave console output but disables attestation verification. |
 | `no_cache` | `false` | Disable Docker build cache. |
-| `ssh_keys` | — | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
-| `ports` | — | Comma-separated list of ports to expose (vsock proxy + security group ingress). |
-| `http_port` | — | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
+| `ssh_keys` | - | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
+| `ports` | - | Comma-separated list of ports to expose (vsock proxy + security group ingress). |
+| `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
 
 ## Reserved ports
 
@@ -130,7 +130,7 @@ http_port: 8083
 
 With multiple ports, `http_port` is required to specify which port Caddy should reverse proxy. Port 9000 is exposed as raw TCP.
 
-### Managed on-prem (AWS)
+### Bring your own cloud (AWS)
 
 ```
 run: /app/server

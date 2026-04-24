@@ -4,32 +4,46 @@ icon: lucide/home
 
 # Documentation
 
-Documentation for deploying, verifying, and managing confidential workloads with Caution.
+<p class="docs-home-intro">Welcome to the documentation for Caution. Deploy sensitive workloads faster, with cryptographic proof that each enclave runs the intended source code.</p>
+
+## What is Caution?
+
+Caution is a verifiable confidential compute platform for deploying and managing sensitive workloads. It extends traditional confidential compute with independently verifiable deployments and hardware-backed, end-to-end encryption of application data.
+
+Caution provides stronger software integrity and confidentiality assurances than isolation alone through two core security properties:
+
+- [x] **Verifiable deployments**: Independently verify that the code running in production matches the source code, all the way down to the kernel.
+
+- [x] **End-to-end encryption**: Application data remains encrypted and is never exposed to untrusted environments, including infrastructure operators.
+
+Caution is fully open source, so teams can inspect, verify, and self-host the platform themselves. If you prefer to run the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
+
+[Get started](./quickstart/), or learn more about Caution:
 
 <div class="grid cards" markdown>
 
-- :lucide-info: **What is Caution?**
+- :lucide-zap: **Get started**
 
     ---
 
-    Learn about the generalized [verifiable compute platform](what-is-caution.md) for deploying and scaling confidential workloads.
+    Deploy your first application in a verifiable enclave. [Get started :lucide-arrow-right:](./quickstart/)
 
-- :lucide-users: **Who is Caution for?**
-
-    ---
-
-    If you are building applications where trust matters, learn about [who Caution is for](who-is-caution-for.md).
-
-- :lucide-cog: **How it works**
+- :lucide-layers-3: **Deployment models**
 
     ---
 
-    Understand the steps that take your application from source to a [verified enclave](how-it-works.md).
+    Learn about [fully managed, BYOC, and self-host](./reference/deployment-models/).
 
-- :lucide-rocket: **Get started**
+- :lucide-shield-check: **Verifiability**
 
     ---
 
-    Follow the [quickstart guide](quickstart.md) to deploy your first verifiable application.
+    Learn how Caution [ensures code integrity](./concepts/verifiability.md) from source to production.
+
+- :lucide-lock: **Encryption**
+
+    ---
+
+    Protect data all the way into the enclave with [end-to-end encryption](./concepts/encryption.md).
 
 </div>

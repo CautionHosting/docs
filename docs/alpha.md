@@ -1,38 +1,13 @@
 ---
-icon: lucide/flask-conical
+icon: lucide/home
 ---
 
-# Alpha program
+<meta http-equiv="refresh" content="0; url=/" />
+<link rel="canonical" href="/" />
+<script>
+  window.location.replace("/");
+</script>
 
-Caution is in closed alpha for teams that want to try out our fully managed platform or managed on-premises offering and explore reproducible enclaves, test workflows, and help shape the future of verifiable compute.
+# Redirecting
 
-## What to expect
-
-The software is in active development and not production-ready. During alpha:
-
-- Features may change without notice
-- You may encounter bugs or incomplete functionality
-- We value your feedback to help shape the platform
-
-## What's available now
-
-- [x] Verified enclave deployments
-- [x] Self-guided onboarding
-- [x] AWS Nitro Enclaves
-- [x] CLI for Linux x86_64
-
-!!! info "Coming soon"
-    We're working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations, as well as CLI support for macOS and Windows.
-
-
-## Get access
-
-If you have an alpha access code, register at [alpha.caution.co](https://alpha.caution.co){:target="_blank"}. To request an access code, contact our team at [info@caution.co](mailto:info@caution.co).
-
-## Self-hosting
-
-Caution is fully open source. If you prefer to self-host and try the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
-
----
-
-Ready to get started? [Follow this guide](./quickstart.md).
+This page has moved. If you are not redirected automatically, go to [Caution docs home](/).

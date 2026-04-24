@@ -1,6 +1,7 @@
-/* Hide "Overview" section label in the sidebar */
-.md-nav--primary > .md-nav__list > .md-nav__item--section:first-child > .md-nav__link {
-  display: none;
+.md-typeset .docs-home-intro {
+  color: #56636f;
+  font-size: 0.925rem;
+  line-height: 1.45;
 }
 
 /* Dark mode hyperlink color */
@@ -22,6 +23,14 @@
 
 /* Reduce top margin of main content (desktop only) */
 @media screen and (min-width: 76.25em) {
+  .md-sidebar--primary {
+    width: 12.75rem;
+  }
+
+  .md-sidebar--secondary {
+    width: 12.75rem;
+  }
+
   .md-main__inner {
     margin-top: 0.5rem;
   }
@@ -105,4 +114,37 @@
 /* Override quote admonition icon with open book */
 :root {
   --md-admonition-icon--quote: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>');
+  --md-admonition-icon--example: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 14a1 1 0 0 1-.78-1.63l7-9A1 1 0 0 1 12 4v6h7a1 1 0 0 1 .78 1.63l-7 9A1 1 0 0 1 11 20v-6z"/></svg>');
+}
+
+.md-typeset .task-list-indicator {
+  transform: scale(0.9);
+  transform-origin: center;
+}
+
+/* Two-column list layout for ownership/scope sections */
+.md-typeset .two-column-list {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.md-typeset .two-column-list > div > *:first-child {
+  margin-top: 0;
+}
+
+.md-typeset .two-column-list--byoc-responsibility {
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+}
+
+.md-typeset .byoc-setup-creates-table table th:first-child,
+.md-typeset .byoc-setup-creates-table table td:first-child {
+  width: 24%;
+}
+
+@media screen and (max-width: 44.9375em) {
+  .md-typeset .two-column-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 }

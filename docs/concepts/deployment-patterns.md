@@ -47,14 +47,14 @@ For internal systems where verification happens within your organization, source
 
 - **Internal APIs** - Microservices verify each other before exchanging sensitive data.
 
-## Fully private (managed on-premises)
+## Fully private (bring your own cloud)
 
-For maximum privacy, deploy to your own infrastructure using [managed on-premises](../reference/managed-on-premises.md). Source repositories never leave your network, and verification happens entirely within your VPC.
+For maximum privacy, deploy to your own infrastructure using [bring your own cloud](../reference/bring-your-own-cloud.md). Source repositories never leave your network, and verification happens entirely within your VPC.
 
 **How it works:**
 
 1. Source code lives in internal repositories
-2. Caution builds and deploys within your AWS account
+2. Caution manages the enclave lifecycle within your AWS account
 3. Verification happens inside your network
 4. No repository URLs or code are exposed externally
 
@@ -86,10 +86,10 @@ You can also combine patterns. A service might have public-facing components wit
 
     Deploy using [Caution's managed infrastructure](../reference/fully-managed.md).
 
-- :lucide-server: **Managed on-premises**
+- :lucide-server: **Bring your own cloud**
 
     ---
 
-    Deploy to your own [infrastructure](../reference/managed-on-premises.md), with Caution managing the enclave lifecycle.
+    [Run Caution enclaves in your own cloud.](../reference/bring-your-own-cloud.md)
 
 </div>

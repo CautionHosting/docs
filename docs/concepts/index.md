@@ -1,6 +1,7 @@
 # Core concepts
 
-Understand the foundational ideas behind Caution's verifiable compute platform.
+Learn the key ideas behind how Caution deploys and verifies confidential workloads.
+{: .docs-home-intro }
 
 <div class="grid cards" markdown>
 
