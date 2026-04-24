@@ -40,10 +40,10 @@ The data is additionally wrapped in TLS, which ensures standard security guarant
 
     Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
 
-- :lucide-rocket: **Deployments**
+- :lucide-rocket: **Deployment configuration**
 
     ---
 
-    Configure [source verification and networking](../reference/deployments.md) options.
+    Configure [source verification and networking](../reference/deployment-configuration.md) options.
 
 </div>

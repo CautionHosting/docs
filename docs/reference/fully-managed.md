@@ -1,21 +1,37 @@
 ---
-icon: lucide/cloud
+icon: lucide/book-marked
 ---
 
 # Fully managed
 
-Deploy to Caution's infrastructure with zero setup. Caution handles everything from builds to hosting.
+<p class="docs-home-intro">Learn what fully managed includes, what Caution manages, and what you still control.</p>
 
 ## Overview
 
-Fully managed deployments run on Caution's infrastructure. You push code, and Caution builds, deploys, and hosts your application in a secure enclave.
+Fully managed deployments run on Caution's infrastructure. You push code, and Caution builds, deploys, and hosts your application in a secure enclave. It is best for teams that want:
+
+- [x] Fastest path to production
+- [x] Caution-hosted infrastructure
+- [x] Minimal infrastructure setup before your first deployment
+
+For a side-by-side comparison with other deployment options, see [deployment models](deployment-models/).
+
+## Responsibility split
+
+Fully managed means Caution manages the enclave lifecycle and underlying infrastructure, while you retain control over your application and its configuration.
+
+<div class="two-column-list" markdown>
+<div markdown>
 
 **Caution handles:**
 
 - Infrastructure and billing
-- Building your application
-- Deploying and hosting enclaves
-- Network configuration and routing
+- Application builds
+- Enclave lifecycle management
+- Network routing and public ingress
+
+</div>
+<div markdown>
 
 **You control:**
 
@@ -23,119 +39,50 @@ Fully managed deployments run on Caution's infrastructure. You push code, and Ca
 - Procfile configuration
 - Custom domain (optional)
 
-## Prerequisites
+</div>
+</div>
 
-| Requirement | Details |
-|-------------|---------|
-| Alpha access code | Request access at [info@caution.co](mailto:info@caution.co) |
-| Smart card | YubiKey, NitroKey, or LibremKey |
-| Operating system | Linux x86_64 |
-| Git | For cloning and pushing repositories |
-| Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} |
-| Containerized app | Your application must be [containerized](containerizing.md) |
+In this model, you keep control of your application code and configuration while Caution operates the deployment environment on your behalf.
 
-## Setup
+## How it works
 
-### 1. Install the CLI
+To deploy with fully managed, you'll need a [containerized application](containerizing.md), Docker with the [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"}, and a Caution account.
 
-Follow the installation instructions in the [CLI README](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}.
+You will also need a `Procfile` that tells Caution how to run your application. The examples below show a minimal configuration, plus an optional `app_sources` entry for source verification.
 
-### 2. Create an account
-
-Register with your alpha access code and smart card:
-
-```bash
-caution register --alpha-code <your_code>
-```
-
-Or register via the browser at [alpha.caution.co](https://alpha.caution.co/){:target="_blank"}.
-
-### 3. Add an SSH key
-
-Register your SSH key to authenticate deployments:
-
-```bash
-caution ssh-keys add --from-agent
-```
-
-You can also add an SSH key in the browser.
-
-## Deploying an application
-
-### 1. Initialize your application
-
-From your application directory:
-
-```bash
-caution init
-```
-
-This creates a `Procfile` that defines how to build and run your application. See the [Procfile reference](procfile.md) for configuration options.
-
-### 2. Configure your Procfile
-
-At minimum, specify how to run your application:
-
-```
+```yaml
+# Minimal `Procfile`
 run: /app/server
-```
 
-For source verification, add your repository URL:
-
-```
+# Example with source verification enabled
 run: /app/server
 app_sources: https://codeberg.org/myorg/myapp
 ```
 
-### 3. Deploy
+Once you have everything in place, the setup flow looks like this:
 
-Push your code to Caution:
+1. Create an account, install the CLI, and register an SSH key.
+2. Initialize your application with a `Procfile`, then push your code to Caution.
+3. Caution builds the enclave image, provisions the deployment, and runs your application in a managed enclave environment.
 
-```bash
-git push caution main
-```
-
-Caution builds a reproducible enclave image and deploys it.
-
-### 4. Verify the deployment
-
-Confirm the running code matches your source:
-
-```bash
-caution verify
-```
-
-## When to use fully managed
-
-Fully managed works well when:
-
-- You want to get started quickly without infrastructure setup
-- You don't have specific data residency requirements
-- You prefer Caution to handle operational concerns
-
-## When to consider managed on-premises
-
-Consider [managed on-premises](managed-on-premises.md) if you need:
-
-- Data to reside in your own AWS account
-- Control over your AWS billing
-- Specific network or compliance requirements
+!!! example "Setup guide"
+    For the full step-by-step setup and deployment flow, see the [fully managed guide](../quickstart/fully-managed.md).
 
 ## See also
 
 <div class="grid cards" markdown>
 
-- :lucide-box: **Containerizing your app**
+- :lucide-server: **Bring your own cloud**
 
     ---
 
-    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
+    Run Caution enclaves in [your own AWS account](bring-your-own-cloud.md).
 
 - :lucide-file-code: **Procfile reference**
 
     ---
 
-    Configure how your application [builds and runs](procfile.md).
+    Configure how your application [builds, runs, and verifies](procfile.md).
 
 - :lucide-globe: **Custom domains**
 
@@ -143,10 +90,10 @@ Consider [managed on-premises](managed-on-premises.md) if you need:
 
     Use your own [domain name](custom-domains.md) for deployments.
 
-- :lucide-rocket: **Deployments**
+- :lucide-rocket: **Deployment configuration**
 
     ---
 
-    Configure [source verification and networking](deployments.md) options.
+    Configure [source verification and networking](deployment-configuration.md) options.
 
 </div>

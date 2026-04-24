@@ -8,19 +8,20 @@ repo_url = "https://codeberg.org/caution/docs"
 repo_name = "caution"
 edit_uri = "src/branch/main/docs/"
 copyright = """
-Copyright &copy; 2025 Caution SEZC
+Copyright &copy; 2026 Caution SEZC
 """
 
 # Navigation structure
 
 nav = [
-{ "Overview" = [
-{ "About" = "what-is-caution.md"},
-{ "Alpha program" = "alpha.md" },
-{ "Get started" = "quickstart.md" },
+{ "Get started" = [
+{ "Quickstart" = "quickstart/index.md" },
+{ "Fully managed" = "quickstart/fully-managed.md" },
+{ "Bring your own cloud" = "quickstart/bring-your-own-cloud.md" },
 ]},
 { "Concepts" = [
-{ "Concepts" = "concepts/index.md" },
+"concepts/index.md",
+{ "How Caution works" = "concepts/how-caution-works.md" },
 { "Reproducibility" = "concepts/reproducibility.md" },
 { "Verifiability" = "concepts/verifiability.md" },
 { "Attestations" = "concepts/attestation.md" },
@@ -29,14 +30,17 @@ nav = [
 { "Deployment patterns" = "concepts/deployment-patterns.md" },
 ]},
 { "Reference" = [
-{ "Reference" = "reference/index.md" },
-{ "Deployments" = "reference/deployments.md" },
+"reference/index.md",
+{ "Configuration" = "reference/deployment-configuration.md" },
 { "Containerizing" = "reference/containerizing.md" },
-{ "Fully managed" = "reference/fully-managed.md" },
-{ "Managed on-prem" = "reference/managed-on-premises.md" },
 { "Procfile" = "reference/procfile.md" },
 { "Custom domains" = "reference/custom-domains.md" },
 { "Debugging" = "reference/debugging.md" },
+{ "Deployment models" = [
+"reference/deployment-models/index.md",
+{ "Fully managed" = "reference/fully-managed.md" },
+{ "Bring your own cloud" = "reference/bring-your-own-cloud.md" },
+]},
 ]},
 ]
 
@@ -71,7 +75,10 @@ extra_css = ["stylesheets/extra.css"]
 
 # Read more: https://zensical.org/docs/customization/#additional-javascript
 
-#extra_javascript = ["javascripts/extra.js"]
+extra_javascript = [
+"https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js",
+"javascripts/mermaid-init.js",
+]
 
 # ----------------------------------------------------------------------------
 
@@ -186,7 +193,6 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
     # When tabs are enabled, top-level sections are rendered in a menu layer
     # below the header for viewports above 1220px, but remain as-is on mobile.
     # https://zensical.org/docs/setup/navigation/#navigation-tabs
-    # "navigation.tabs",
 
     # When sticky tabs are enabled, navigation tabs will lock below the header
     # and always remain visible when scrolling down.

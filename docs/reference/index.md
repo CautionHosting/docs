@@ -1,14 +1,15 @@
 # Reference
 
 Technical reference documentation.
+{: .docs-home-intro }
 
 <div class="grid cards" markdown>
 
-- :lucide-rocket: **Deployments**
+- :lucide-settings-2: **Deployment configuration**
 
     ---
 
-    Configure [source verification and networking](deployments.md) options.
+    Configure [source verification and networking](deployment-configuration.md) options.
 
 - :lucide-box: **Containerizing your app**
 
@@ -16,23 +17,11 @@ Technical reference documentation.
 
     Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
 
-- :lucide-cloud: **Fully managed**
-
-    ---
-
-    Deploy using [Caution's managed infrastructure](fully-managed.md).
-
-- :lucide-server: **Managed on-premises**
-
-    ---
-
-    Deploy to your own [infrastructure](managed-on-premises.md), with Caution managing the enclave lifecycle.
-
 - :lucide-file-code: **Procfile**
 
     ---
 
-    Configure how your application [builds and runs](procfile.md).
+    Configure how your application [builds, runs, and verifies](procfile.md).
 
 - :lucide-globe: **Custom domains**
 
@@ -45,5 +34,11 @@ Technical reference documentation.
     ---
 
     [SSH into the host](debugging.md), read enclave console output, and diagnose issues.
+
+- :lucide-layers-3: **Deployment models**
+
+    ---
+
+    Learn about [fully managed, BYOC, and self-host](deployment-models/).
 
 </div>
