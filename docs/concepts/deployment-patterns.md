@@ -4,7 +4,7 @@ icon: lucide/git-branch
 
 # Deployment patterns
 
-Caution supports different verification models depending on who needs to verify your workload and how much you want to expose.
+<p class="docs-home-intro">Learn how to choose between public, private, and fully private verification patterns based on who needs to verify your workload and how much source visibility you can allow.</p>
 
 ## Public verification
 
@@ -47,7 +47,7 @@ For internal systems where verification happens within your organization, source
 
 - **Internal APIs** - Microservices verify each other before exchanging sensitive data.
 
-## Fully private (bring your own cloud)
+## Fully private (BYOC)
 
 For maximum privacy, deploy to your own infrastructure using [bring your own cloud](../reference/bring-your-own-cloud.md). Source repositories never leave your network, and verification happens entirely within your VPC.
 
@@ -90,6 +90,6 @@ You can also combine patterns. A service might have public-facing components wit
 
     ---
 
-    [Run Caution enclaves in your own cloud.](../reference/bring-your-own-cloud.md)
+    Run Caution enclaves in [your own AWS account](../reference/bring-your-own-cloud.md).
 
 </div>

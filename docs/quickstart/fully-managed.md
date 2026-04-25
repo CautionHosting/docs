@@ -2,30 +2,34 @@
 icon: lucide/cloud
 ---
 
-# Get started with fully managed
+# Deploy on Caution-managed infrastructure
 
 Deploy your first application on Caution's fully managed platform using AWS Nitro Enclaves. Your first deployment should take about 10 minutes.
 {: .docs-home-intro }
 
 ## What is fully managed?
 
-Fully managed is a deployment model where Caution hosts and operates the deployment environment end to end on Caution-managed infrastructure. For full details, see the [fully managed reference](../reference/fully-managed.md).
+Fully managed is a deployment model where Caution hosts and operates the deployment environment end-to-end on Caution-managed infrastructure. For full details, see the [fully managed reference](../reference/fully-managed.md).
 
-!!! info "Current platform support"
+!!! info "AWS Nitro support today"
     Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
 
 ## What you need
 
 Before you begin, ensure you have the following:
 
-| Requirement | Details |
-|-------------|---------|
+<div class="quickstart-needs-table" markdown>
+
+| What you'll need | Details |
+|------------------|---------|
 | Access code | Request access at [info@caution.co](mailto:info@caution.co) |
 | Passkey | Browser or platform passkey, password manager passkey, or security key or smart card (YubiKey, NitroKey, or LibremKey) |
-| Operating system | Linux x86_64 |
+| CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/){:target="_blank"}) |
 | Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} ([install](https://www.docker.com/){:target="_blank"}) |
 | Containerized app | Your application must be [containerized](../reference/containerizing.md) |
+
+</div>
 
 ## Install the CLI
 

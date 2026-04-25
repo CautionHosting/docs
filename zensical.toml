@@ -4,9 +4,9 @@ site_name = "Caution Documentation"
 site_description = "Documentation for deploying, verifying, and managing confidential workloads with Caution."
 site_author = "Ksenia Lesko"
 site_url = "https://docs.caution.co/"
-repo_url = "https://codeberg.org/caution/docs"
+repo_url = "https://codeberg.org/caution"
 repo_name = "caution"
-edit_uri = "src/branch/main/docs/"
+edit_uri = "https://codeberg.org/caution/docs/src/branch/main/docs/"
 copyright = """
 Copyright &copy; 2026 Caution SEZC
 """
@@ -100,12 +100,6 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
     # repository hosting services.
     # https://zensical.org/docs/setup/repository/#code-actions
     "content.action.edit",
-
-    # If you have a repository configured and turn feature this on, Zensical
-    # will generate a button that allows the user to view the Markdown
-    # code for the current page.
-    # https://zensical.org/docs/setup/repository/#code-actions
-    "content.action.view",
 
     # Code annotations allow you to add an icon with a tooltip to your
     # code blocks to provide explanations at crucial points.

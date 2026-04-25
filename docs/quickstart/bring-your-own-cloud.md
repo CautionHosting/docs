@@ -2,7 +2,7 @@
 icon: lucide/server
 ---
 
-# Get started with bring your own cloud
+# Deploy in your own AWS account
 
 Deploy Caution enclaves in your own AWS infrastructure while Caution handles the build and deployment orchestration.
 {: .docs-home-intro }
@@ -11,24 +11,28 @@ Deploy Caution enclaves in your own AWS infrastructure while Caution handles the
 
 Bring your own cloud (BYOC) lets you run confidential enclaves in your own AWS account. A one-time setup script creates isolated AWS infrastructure and a role that can only interact with resources tagged for Caution, then Caution manages deployments within that environment. For full details, see the [bring your own cloud reference](../reference/bring-your-own-cloud.md).
 
-!!! info "Current platform support"
+!!! info "AWS Nitro support today"
     Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
 
 ## What you need
 
 Before you begin, ensure you have the following:
 
-| Requirement | Details |
-|-------------|---------|
+<div class="quickstart-needs-table" markdown>
+
+| What you'll need | Details |
+|------------------|---------|
 | Access code | Request access at [info@caution.co](mailto:info@caution.co) |
 | Passkey | Browser or platform passkey, password manager passkey, or security key or smart card (YubiKey, NitroKey, or LibremKey) |
-| Operating system | Linux x86_64 |
+| CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/){:target="_blank"}) |
 | Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} ([install](https://www.docker.com/){:target="_blank"}) |
 | Containerized app | Your application must be [containerized](../reference/containerizing.md) |
 | AWS credentials | For the AWS account where Caution will provision tagged resources |
 
-AWS credentials should use a least-privilege IAM role when possible. See [bring-your-own-cloud-setup](https://codeberg.org/caution/bring-your-own-cloud-setup) for guidance. Admin credentials can be used as an alternative.
+</div>
+
+AWS credentials should use a least-privilege IAM role when possible. Admin credentials can be used as an alternative. See [bring-your-own-cloud-setup](https://codeberg.org/caution/bring-your-own-cloud-setup) for guidance.
 
 ## Install the CLI
 
@@ -88,7 +92,7 @@ Use this path if you want Caution to provision AWS infrastructure and register d
 From your application directory, run:
 
 ```bash
-caution init --managed-on-prem
+caution init --byoc
 ```
 
 This command detects your AWS credentials, provisions the required AWS infrastructure, creates your app on Caution, and registers the deployment credentials automatically.
@@ -122,7 +126,7 @@ This provisions the required AWS infrastructure and writes `credentials.json.gpg
 To use the generated encrypted credentials, return to your application directory and run:
 
 ```bash
-caution init --managed-on-prem --config /path/to/credentials.json.gpg
+caution init --byoc --config /path/to/credentials.json.gpg
 ```
 
 ## What the setup creates
@@ -162,7 +166,15 @@ caution verify
 
 ## Cleanup
 
-To remove the AWS resources created by setup, see the cleanup instructions in the [BYOC repository](https://codeberg.org/caution/bring-your-own-cloud-setup){:target="_blank"}.
+To tear down a BYOC deployment from the CLI, run:
+
+```bash
+caution teardown --byoc
+```
+
+Run this from your application directory (or ensure local BYOC state exists in `~/.caution/<app>/bring-your-own-cloud.json`) and make sure your AWS credentials are available.
+
+If you need manual cleanup details, see the cleanup instructions in the [BYOC repo](https://codeberg.org/caution/bring-your-own-cloud-setup){:target="_blank"}.
 
 ## Next steps
 
@@ -170,17 +182,17 @@ Your application is now running in a verified enclave in your own AWS account. H
 
 <div class="grid cards" markdown>
 
-- :lucide-server: **BYOC overview**
+- :lucide-server: **Bring your own cloud**
 
     ---
 
-    See what stays in your AWS account and what Caution manages in [BYOC](../reference/bring-your-own-cloud.md).
+    Run Caution enclaves in [your own AWS account](../reference/bring-your-own-cloud.md).
 
 - :lucide-rocket: **Deployment configuration**
 
     ---
 
-    Review [source verification and networking](../reference/deployment-configuration.md) options.
+    Configure [source verification and networking](../reference/deployment-configuration.md) options.
 
 - :lucide-file-code: **Procfile**
 

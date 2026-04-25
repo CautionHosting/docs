@@ -20,7 +20,7 @@ Use [fully managed](../fully-managed.md) for the fastest path to production on C
 
 ## Fully managed
 
-Fully managed is for teams that want Caution to host and operate deployments end to end. Your application runs on Caution-managed infrastructure, while you keep control of your code and deployment configuration.
+Fully managed is for teams that want Caution to host and operate deployments end-to-end. Your application runs on Caution-managed infrastructure, while you keep control of your code and deployment configuration.
 
 - Start here if you want the fastest path to production.
 - Use the [fully managed quickstart](../../quickstart/fully-managed.md) to deploy your first app.

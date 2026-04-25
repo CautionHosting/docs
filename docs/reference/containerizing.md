@@ -4,7 +4,7 @@ icon: lucide/box
 
 # Containerizing your application
 
-<p class="docs-home-intro">Caution deploys containerized applications. This guide covers how to containerize your app and make it reproducible for full verifiability.</p>
+<p class="docs-home-intro">Learn how to containerize your application for Caution and make builds reproducible for verifiable deployments.</p>
 
 ## Requirements
 
@@ -85,28 +85,23 @@ To eliminate timestamp variations, set `SOURCE_DATE_EPOCH` in your build:
 ENV SOURCE_DATE_EPOCH=1
 ```
 
-### Further Help
-
-If you have issues with making your application deterministic, join the [StageX Matrix Room](https://matrix.to/#/#stagex:matrix.org){:target="_blank"}
-
-## Learn more
-
-- [StageX documentation](https://stagex.tools){:target="_blank"} - Reproducible base images
+!!! tip "Need help with deterministic builds?"
+    If you're having trouble making your application deterministic, ask in the [StageX Matrix Room](https://matrix.to/#/#stagex:matrix.org){:target="_blank"}.
 
 ## See also
 
 <div class="grid cards" markdown>
+
+- :lucide-file-text: **StageX**
+
+    ---
+
+    Learn about full-source bootstrapping and reproducibility in the [StageX paper](https://codeberg.org/stagex/whitepapers/src/branch/main/out/stagex.pdf){:target="_blank"}.
 
 - :lucide-refresh-cw: **Reproducibility**
 
     ---
 
     Enable independent verification with [deterministic builds](../concepts/reproducibility.md).
-
-- :lucide-shield-check: **Verifiability**
-
-    ---
-
-    Learn how Caution [ensures code integrity](../concepts/verifiability.md) from source to production.
 
 </div>

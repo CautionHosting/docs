@@ -129,7 +129,7 @@ To remove all resources created by the setup, see the cleanup instructions in th
 
     Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
 
-- :lucide-file-code: **Procfile reference**
+- :lucide-file-code: **Procfile**
 
     ---
 

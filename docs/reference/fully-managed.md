@@ -61,7 +61,7 @@ app_sources: https://codeberg.org/myorg/myapp
 
 Once you have everything in place, the setup flow looks like this:
 
-1. Create an account, install the CLI, and register an SSH key.
+1. Create an account, install the CLI (Linux (x86_64) or macOS (arm64)), and register an SSH key.
 2. Initialize your application with a `Procfile`, then push your code to Caution.
 3. Caution builds the enclave image, provisions the deployment, and runs your application in a managed enclave environment.
 
@@ -78,7 +78,7 @@ Once you have everything in place, the setup flow looks like this:
 
     Run Caution enclaves in [your own AWS account](bring-your-own-cloud.md).
 
-- :lucide-file-code: **Procfile reference**
+- :lucide-file-code: **Procfile**
 
     ---
 
