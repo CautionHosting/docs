@@ -26,7 +26,7 @@ Caution is fully open source, so teams can inspect, verify, and self-host the pl
 
     ---
 
-    Deploy your first application in a verifiable enclave. [Get started :lucide-arrow-right:](./quickstart/)
+    Deploy your first application in a verifiable enclave. [Get started](./quickstart/)
 
 - :lucide-layers-3: **Deployment models**
 

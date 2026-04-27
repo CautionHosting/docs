@@ -1,4 +1,4 @@
-# Core concepts
+# Concepts
 
 Learn the key ideas behind how Caution deploys and verifies confidential workloads.
 {: .docs-home-intro }

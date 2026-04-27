@@ -2,34 +2,39 @@
 icon: lucide/fingerprint
 ---
 
-# Attestation
+# Attestations
 
-The backbone of confidential compute are hardware trust anchors which offer both mechanisms to isolate workloads and encrypt memory as well as protected private keys which can be used to attest to (vouch for) what's running inside of a confidential compute workload.
+<p class="docs-home-intro">Learn what attestations are, how hardware-rooted proofs work in confidential compute, and how Caution verifies enclave integrity.</p>
 
-Different hardware, such as Intel TDX, AMD SEV-SNP, TPM 2.0, Nitro, all provide attestation capabilities, where they can measure the state of a server and provide *cryptographic signatures* of hashes of said data - this is what "attestations" are. They are also referred to as *cryptographic remote attestations*.
+## What attestations are
 
-The current version of Caution only supports [AWS Nitro](https://docs.aws.amazon.com/enclaves/latest/user/nitro-enclave.html){:target="_blank"}.
+The backbone of confidential compute consists of hardware trust anchors that provide mechanisms to isolate workloads and encrypt memory, along with protected private keys that can be used to attest to (vouch for) what is running inside a confidential compute workload.
 
-## How verification of attestations works
+Different hardware platforms such as Intel TDX, AMD SEV-SNP, TPM 2.0, and Nitro provide attestation capabilities: they can measure the state of a server and provide *cryptographic signatures* of hashes of that data. This is what "attestations" are. They are also referred to as *cryptographic remote attestations*.
+
+!!! info "AWS Nitro support today"
+    Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
+
+## How attestation verification works
 
 When you run `caution verify`, the CLI performs a multi-step verification process to prove that the code running in a remote enclave matches exactly what you expect.
 
-### Step 1: Generate a challenge nonce
+### 1. Generate a challenge nonce
 
-The CLI generates a random 32-byte nonce (number used once). This nonce prevents replay attacks - an attacker cannot reuse an old attestation document because each verification requires a fresh nonce.
+The CLI generates a random 32-byte nonce (number used once). This nonce prevents replay attacks. An attacker cannot reuse an old attestation document because each verification requires a fresh nonce.
 
-### Step 2: Request attestation from the enclave
+### 2. Request attestation from the enclave
 
 The CLI sends the nonce to the enclave's attestation endpoint. The enclave's Nitro Security Module (NSM) generates an attestation document that includes:
 
 - The nonce (echoed back)
-- [PCR values (Platform Configuration Registers)](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html){:target="_blank"} - cryptographic measurements of the enclave image
+- [PCR values](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html){:target="_blank"} (Platform Configuration Registers), cryptographic measurements of the enclave image
 - A certificate chain signed by the AWS Nitro root CA
 - A manifest containing source URLs and commit hashes
 
 The attestation document is signed using COSE (CBOR Object Signing and Encryption) with the NSM's private key.
 
-### Step 3: Verify the attestation document
+### 3. Verify the attestation document
 
 The CLI verifies the attestation document:
 
@@ -37,11 +42,11 @@ The CLI verifies the attestation document:
 2. **Signature verification** - Verifies the COSE signature using the certificate's public key
 3. **Nonce verification** - Confirms the returned nonce matches the one sent, preventing replay attacks
 
-### Step 4: Reproduce the build
+### 4. Reproduce the build
 
 Using the manifest from the attestation (which contains source URLs and commit hashes), the CLI reproduces the enclave build locally. This generates the expected PCR values - the same cryptographic measurements that would result from building the exact same code.
 
-### Step 5: Compare PCR values
+### 5. Compare PCR values
 
 Finally, the CLI compares:
 
@@ -63,6 +68,8 @@ If all PCR values match, the verification passes. This proves that the remote en
 
 ## What PCR values represent
 
+Attestation verification compares these PCR measurements to confirm the enclave is running the expected image, kernel, and application code.
+
 | PCR | Description |
 |-----|-------------|
 | PCR0 | Enclave image file - a hash of the entire enclave image |
@@ -73,23 +80,25 @@ Because these are cryptographic hashes, even a single byte change in the source 
 
 ## Multi-hardware attestation
 
-### The problem
+### Single-hardware trust problem
 
-Most solutions today are based on a single confidential compute technology. Using confidential compute is a good upgrade over standard ways to run software, but it roots trust in a single manufacturer which provides the confidential compute technology. As all companies, large manufacturers are susceptible to bugs and compromise. By rooting the trust in only one piece of hardware, users of this technology expose themselves to single points of failure (SPOFs).
+Most solutions today are based on a single confidential compute technology. Using confidential compute is a good upgrade over standard ways to run software, but it roots trust in a single manufacturer that provides the confidential compute technology. Like all companies, large manufacturers are susceptible to bugs and compromise. By rooting trust in only one piece of hardware, users of this technology expose themselves to single points of failure (SPOFs).
 
-### The solution - multi-hardware
+### Multi-hardware trust solution
 
-To address this failure of rooting all trust in a single hardware, along with its inherited risks that span the software, firmware and hardware supply chains, operational practices and all other risks stemming from the organization which creates a confidential compute, the team behind Caution designed [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"}. Caution currently supports AWS Nitro, but the new version of EnclaveOS with multi-hardware support is in active development, and you can learn more about it [here](https://distrust.co/blog/enclaveos.html){:target="_blank"}.
+To address the risk of rooting trust in a single hardware vendor, along with inherited risks across software, firmware, hardware supply chains, and operational practices, the team behind Caution designed [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"}. Caution currently supports AWS Nitro Enclaves, and a new version of EnclaveOS with multi-hardware support is in active development. You can learn more in [this blog post](https://distrust.co/blog/enclaveos.html){:target="_blank"}.
 
-This OS is designed to leverage multiple different attestation technologies for a single workload, requiring them all to agree on the current state of the confidential compute workload in order to consider its integrity to be intact. This distribution of trust on the hardware level is unique to Caution and EnclaveOS as of writing of this document.
-
-## Learn more
-
-- Our sister company [Distrust](https://distrust.co){:target="_blank"} published a [blog](https://distrust.co/blog/enclaveos.html){:target="_blank"} about EnclaveOS
+This OS is designed to leverage multiple attestation technologies for a single workload, requiring all of them to agree on the workload state before its integrity is considered intact. This hardware-level distribution of trust is unique to Caution and EnclaveOS at the time of writing.
 
 ## See also
 
 <div class="grid cards" markdown>
+
+- :lucide-file-text: **EnclaveOS**
+
+    ---
+
+    Learn about EnclaveOS in [this blog post](https://distrust.co/blog/enclaveos.html){:target="_blank"} by our sister company, Distrust.
 
 - :lucide-shield-check: **Verifiability**
 

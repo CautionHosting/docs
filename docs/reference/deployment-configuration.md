@@ -4,7 +4,7 @@ icon: lucide/settings-2
 
 # Deployment configuration
 
-<p class="docs-home-intro">Shared configuration options that affect how your application runs and can be verified across deployment models.</p>
+<p class="docs-home-intro">Configure shared deployment settings that control how your application runs, is verified, and is exposed across deployment models.</p>
 
 ## Source verification
 
@@ -18,9 +18,9 @@ app_sources: https://codeberg.org/myorg/myapp
 |-------|-------------|
 | `app_sources` | Comma-separated git URLs for your application source code |
 
-These URLs are embedded in the manifest field which is part of attestations, and is used to pull in all required source code to reproduce software.
+These URLs are embedded in the attestation manifest and used to pull all required source code for reproducibility.
 
-Without source fields, third parties cannot independently reproduce and verify your deployment.
+Without `app_sources`, third parties cannot independently reproduce and verify your deployment.
 
 ## Network connectivity
 
@@ -34,7 +34,7 @@ For full security, enable end-to-end encryption using [STEVE (Secure Transport E
 e2e: true
 ```
 
-Run the app on port 8083, that's the port STEVE uses to establish a proxy connection.
+Run the app on port 8083; that is the port STEVE uses to establish a proxy connection.
 
 This requires:
 
@@ -68,7 +68,7 @@ Without reproducibility, attestation can only prove that the deployment hasn't c
 
 ### Making your application reproducible
 
-To build reproducible applications, use [StageX](https://stagex.tools){:target="_blank"}, a Linux distribution designed for full-source bootstrapping and deterministic builds. While other Linux distributions can be used, StageX is recommended as it was designed as a security first distribution.
+To build reproducible applications, use [StageX](https://stagex.tools){:target="_blank"}, a Linux distribution designed for full-source bootstrapping and deterministic builds. While other Linux distributions can be used, StageX is recommended because it was designed as a security-first distribution.
 
 See [Verifiability](../concepts/verifiability.md) for more on why reproducibility matters for confidential compute.
 
@@ -88,7 +88,7 @@ See [Verifiability](../concepts/verifiability.md) for more on why reproducibilit
 
     Use your own [domain name](custom-domains.md) for deployments.
 
-- :lucide-file-code: **Procfile reference**
+- :lucide-file-code: **Procfile**
 
     ---
 
@@ -98,6 +98,6 @@ See [Verifiability](../concepts/verifiability.md) for more on why reproducibilit
 
     ---
 
-    Learn why [reproducibility matters](../concepts/verifiability.md) for code integrity in confidential compute.
+    Learn how Caution [ensures code integrity](../concepts/verifiability.md) from source to production.
 
 </div>

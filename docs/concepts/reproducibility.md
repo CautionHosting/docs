@@ -4,11 +4,11 @@ icon: lucide/refresh-cw
 
 # Reproducibility
 
-Reproducibility is a relatively recent concept that provides stronger security guarantees for software supply chains.
+<p class="docs-home-intro">Learn what reproducibility is, why deterministic builds matter for software integrity, and how Caution uses source-bootstrapped tooling to make enclave deployments independently verifiable.</p>
 
-## What is reproducibility? 
+## What is reproducibility?
 
-Reproducibility means that for a fixed set of inputs, software always produces the same bit-for-bit identical outputs. 
+Reproducibility means that for a fixed set of inputs, software always produces the same bit-for-bit identical outputs. It is a relatively recent concept that provides stronger security guarantees for software supply chains.
 
 While this may sound like the default behavior, most software today is not reproducible. Build outputs often vary due to factors such as timestamps, environment differences, non-deterministic tooling, or external dependencies.
 
@@ -22,7 +22,7 @@ In practice, this enables multiple independent parties to build the same softwar
 
 Without reproducibility, major supply-chain compromises like [SolarWinds](https://en.wikipedia.org/wiki/2020_United_States_federal_government_data_breach){:target="_blank"} can go undetected.
 
-## Bootstrapping
+## Full-source bootstrapping
 
 Bootstrapping is a related concept that strengthens the security of the foundational software a system depends on.
 
@@ -34,23 +34,19 @@ To address this, compilers can be bootstrapped starting from a small, human-read
 
 The security engineers behind Caution developed the [StageX](https://stagex.tools){:target="_blank"} Linux distribution to support this approach.
 
-
 ## How Caution leverages reproducibility
 
 Reproducibility is a foundational requirement for all software built and used by Caution.
 
-The Caution platform and  [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"} are built using [StageX](https://stagex.tools){:target="_blank"} to ensure the entire software stack is:
+The Caution platform and [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"} are built using [StageX](https://stagex.tools){:target="_blank"} to ensure the entire software stack is:
 
 - Fully source-bootstrapped
-
 - Deterministic
-
 - Auditable
-
 
 For EnclaveOS, this means that the images deployed into confidential compute environments can be verified down to the kernel.
 
-!!! quote "Further reading"
+!!! quote "Learn more"
     To learn more about reproducible builds and bootstrapping, refer to Ken Thompson's paper [Reflections on Trusting Trust](https://www.cl.cam.ac.uk/teaching/2324/R209/Reflections-Trusting-Trust.pdf){:target="_blank"}, and the [StageX paper](https://codeberg.org/stagex/whitepapers/src/branch/main/out/stagex.pdf){:target="_blank"}.
 
 ## See also

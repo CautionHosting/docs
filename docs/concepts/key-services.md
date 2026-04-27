@@ -4,13 +4,13 @@ icon: lucide/key-round
 
 # Key Services
 
-Manage secrets inside enclaves using shamir secret sharing and quorum-based key recovery.
+<p class="docs-home-intro">Learn how Caution manages secrets inside enclaves using Shamir secret sharing, quorum-based recovery, and attested key delivery.</p>
 
 ## Overview
 
 Caution's secret management system for enclaves offers services for managing keys that are never exposed outside of enclave memory and are portable. It solves a fundamental problem in confidential computing: how do you get secrets into an enclave without exposing them to the host or any single party?
 
-The system uses [shamir secret sharing](https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing) to split a master secret into multiple shards encrypted to PGP keys. A configurable quorum threshold of shard-holders must independently send their shards to the enclave before it can reconstruct the secret and derive cryptographic keys.
+The system uses [Shamir secret sharing](https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing) to split a master secret into multiple shards encrypted to PGP keys. A configurable quorum threshold of shard-holders must independently send their shards to the enclave before it can reconstruct the secret and derive cryptographic keys.
 
 ## Components
 
@@ -26,7 +26,7 @@ caution secret new keyring.asc --threshold 2 --max 4
 
 This produces a **quorum bundle** containing:
 
-- **Shardfile** --- the shamir-split secret, each share encrypted to a shard-holder's OpenPGP key
+- **Shardfile** --- the Shamir-split secret, each share encrypted to a shard-holder's OpenPGP key
 - **Keyring** --- the public OpenPGP keyring of all shard-holders (used to verify shard submissions)
 - **Public key** --- the derived public key for encrypting secrets to the enclave
 
@@ -147,16 +147,16 @@ RUN echo "LOG_LEVEL=info" >> /etc/environment
 
     Learn about [end-to-end encryption](encryption.md) with STEVE.
 
-- :lucide-fingerprint: **Attestation**
+- :lucide-fingerprint: **Attestations**
 
     ---
 
-    Understand [hardware-backed cryptographic proofs](attestation.md) that locksmith relies on.
+    Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
 
-- :lucide-file-code: **Procfile reference**
+- :lucide-file-code: **Procfile**
 
     ---
 
-    Configure how your application [builds, runs, and verifies](../reference/procfile.md), including `locksmith: true`.
+    Configure how your application [builds, runs, and verifies](../reference/procfile.md).
 
 </div>

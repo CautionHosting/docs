@@ -2,39 +2,43 @@
 icon: lucide/lock
 ---
 
-# Encryption
+# End-to-end encryption
 
-The Caution platform is designed to deploy workloads that are end-to-end encrypted. Alternative solutions often fail to provide proper end-to-end encryption, and expose data to untrusted environments. At Caution we never compromise on security.
+<p class="docs-home-intro">Learn how Caution protects data all the way into the enclave, why TLS alone is not enough, and how STEVE enables end-to-end encryption.</p>
 
-## Overview
+## Why end-to-end encryption matters
 
-For proper end-to-end encryption, data needs to be protected all the way to inside of the enclave, and encrypted to a key which can only be accessed by the enclave. This means that terminating TLS outside of the enclave, which is what many alternative solutions do, exposes data to untrusted environments, defeating the point of using confidential compute in the first place.
+The Caution platform is designed to deploy workloads that are end-to-end encrypted. Alternative solutions often fail to provide proper end-to-end encryption and expose data to untrusted environments. At Caution, we never compromise on security.
 
-## End-to-end encryption
+For proper end-to-end encryption, data must remain protected all the way into the enclave and be encrypted to a key that can only be accessed by the enclave. This means that terminating TLS outside the enclave, which many alternative solutions do, exposes data to untrusted environments and defeats the point of using confidential compute in the first place.
+
+## How Caution implements it (STEVE)
 
 Caution leverages [Secure Transport Encryption via Enclave (STEVE)](https://distrust.co/blog/steve.html){:target="_blank"}, a system which is designed as a transparent proxy which is easy to use with existing solutions.
 
-The way it works is that there is a proxy service inside of the enclave and a SDK that can be integrated into the user application. STEVE verifies the attested key from a confidential compute workload, and uses it to encrypt the data so that it's only exposed in the client, and inside of the enclave.
+STEVE works through a proxy service inside the enclave and an SDK integrated into the application. It verifies the attested key from a confidential compute workload and uses that key to encrypt data so it is exposed only in the client and inside the enclave.
 
-## TLS termination
+## TLS and end-to-end encryption
 
-The data is additionally wrapped in TLS, which ensures standard security guarantees for that technology such as domain trust.
-
-## Learn more
-
-- Our sister company [Distrust](https://distrust.co){:target="_blank"} published a [blog](https://distrust.co/blog/steve.html){:target="_blank"} about STEVE
+The data is additionally wrapped in TLS, which provides standard transport-layer guarantees such as domain trust. TLS is complementary to end-to-end encryption, not a replacement for it.
 
 ## See also
 
 <div class="grid cards" markdown>
 
+- :lucide-file-text: **STEVE**
+
+    ---
+
+    Learn more about STEVE in [this blog post](https://distrust.co/blog/steve.html){:target="_blank"} by our sister company, Distrust.
+
 - :lucide-key-round: **Key Services**
 
     ---
 
-    Manage [secrets inside enclaves](key-services.md) using shamir secret sharing and quorum-based key recovery.
+    Manage [secrets inside enclaves](key-services.md) using Shamir secret sharing and quorum-based key recovery.
 
-- :lucide-fingerprint: **Attestation**
+- :lucide-fingerprint: **Attestations**
 
     ---
 

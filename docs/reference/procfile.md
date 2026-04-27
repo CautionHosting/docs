@@ -18,10 +18,12 @@ app_sources: https://codeberg.org/myorg/myapp
 
 ## Fields
 
+Use these fields to control how Caution builds, deploys, and verifies your application. Unless marked required, fields are optional.
+
 ### Build configuration
 
-!!! warning "`binary` vs `run`"
-    The `binary` field extracts **only** the specified binary from your container. No config files, shared libraries, or other filesystem contents are included in the EIF. This is suitable only for fully self-contained static binaries. For most applications, use `run` instead, which includes the full container filesystem in the EIF.
+!!! warning "Use `run` by default"
+    The `binary` field extracts only the specified binary from your container. It does not include config files, shared libraries, or other filesystem contents in the EIF. Use `binary` only for fully self-contained static binaries. For most applications, use `run`, which includes the full container filesystem in the EIF.
 
 <div class="procfile-build-config-table" markdown>
 
@@ -49,6 +51,8 @@ app_sources: https://codeberg.org/myorg/myapp
 
 ### Resource allocation
 
+Resource values are defaults if not specified.
+
 | Field | Default | Description |
 |-------|---------|-------------|
 | `memory` | `512` | Memory allocation in MB. |
@@ -66,6 +70,13 @@ app_sources: https://codeberg.org/myorg/myapp
 | `ssh_keys` | - | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
 | `ports` | - | Comma-separated list of ports to expose (vsock proxy + security group ingress). |
 | `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
+| `managed_on_prem` | `false` | Enable bring-your-own-cloud (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
+| `platform` | - | Cloud platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
+| `aws_region` | - | AWS region for BYOC (for example `us-east-1`). Required when `managed_on_prem: true` and `platform: aws`. |
+| `aws_instance_type` | - | Optional BYOC override for the AWS instance type. |
+| `aws_vpc_id` | - | Optional existing VPC ID for BYOC deployments. |
+| `aws_subnet_id` | - | Optional existing subnet ID for BYOC deployments. |
+| `aws_security_group_id` | - | Optional existing security group ID for BYOC deployments. |
 
 ## Reserved ports
 
@@ -81,6 +92,8 @@ The following ports are reserved for internal enclave services:
 Your application should listen on port `8083` or another unreserved port.
 
 ## Examples
+
+Use these examples as starting points. Adjust commands, ports, and domains to match your application.
 
 ### Basic application
 
@@ -141,5 +154,7 @@ With multiple ports, `http_port` is required to specify which port Caddy should 
 
 ```yaml
 run: /app/server
+managed_on_prem: true
+platform: aws
 aws_region: us-east-1
 ```

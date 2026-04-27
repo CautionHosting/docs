@@ -4,7 +4,7 @@ icon: lucide/globe
 
 # Custom domains
 
-<p class="docs-home-intro">Use your own domain name for Caution deployments.</p>
+<p class="docs-home-intro">Set up a custom domain for your Caution deployment.</p>
 
 ## Overview
 
@@ -28,7 +28,11 @@ After deploying your application, retrieve the IP address using either method:
 ### Using the CLI
 
 ```bash
-caution apps get <app-name>
+# From your app directory (uses .caution/deployment)
+caution apps get
+
+# Or specify an app ID directly
+caution apps get <app-id>
 ```
 
 The output includes your deployment's IP address.

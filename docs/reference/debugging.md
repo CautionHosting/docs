@@ -4,7 +4,7 @@ icon: lucide/bug
 
 # Debugging enclaves
 
-<p class="docs-home-intro">How to diagnose and fix issues with your enclave deployment.</p>
+<p class="docs-home-intro">Diagnose and fix issues with your enclave deployments.</p>
 
 ## Enable debug mode
 
@@ -43,7 +43,7 @@ ssh ec2-user@<instance-ip>
 !!! danger "Do not leave SSH enabled in production"
     SSH access and debug mode should only be used during development and testing. Before deploying to production, remove both `ssh_keys` and `debug: true` from your Procfile. Leaving SSH open exposes port 22 to the internet, and debug mode disables attestation verification. Both reduce the overall security of the system.
 
-!!! note
+!!! note "Host access only"
     SSH access is to the **host** EC2 instance, not the enclave itself. The enclave runs in an isolated VM. From the host you can inspect the enclave's state using `nitro-cli` commands.
 
 ## Read enclave console output
