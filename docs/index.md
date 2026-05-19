@@ -18,9 +18,15 @@ Caution provides stronger software integrity and confidentiality assurances than
 
 Caution is fully open source, so teams can inspect, verify, and self-host the platform themselves. If you prefer to run the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
 
-[Get started](./quickstart/), or learn more about Caution:
+[Learn what Caution is](./what-is-caution.md), [get started](./quickstart/), or explore the topics below:
 
 <div class="grid cards" markdown>
+
+- :lucide-circle-help: **What is Caution?**
+
+    ---
+
+    Understand the product, mental model, and core guarantees. [Learn more](./what-is-caution.md)
 
 - :lucide-zap: **Get started**
 
