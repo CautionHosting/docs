@@ -45,7 +45,7 @@ In bring your own cloud, Caution manages builds and the enclave lifecycle in you
 
 ## How it works
 
-To deploy with bring your own cloud, you'll need a [containerized application](containerizing.md), Docker, and AWS credentials for the target account.
+To deploy with bring your own cloud, you'll need a [containerized application](../guides/containerize-an-application.md), Docker, and AWS credentials for the target account.
 
 Once you have everything in place, the setup flow looks like this:
 
@@ -123,11 +123,11 @@ To remove all resources created by the setup, see the cleanup instructions in th
 
 <div class="grid cards" markdown>
 
-- :lucide-box: **Containerizing your app**
+- :lucide-box: **Containerize an application**
 
     ---
 
-    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
+    Follow a [practical guide](../guides/containerize-an-application.md) to building reproducible containers with StageX.
 
 - :lucide-file-code: **Procfile**
 

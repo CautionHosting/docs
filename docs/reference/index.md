@@ -11,12 +11,6 @@ Technical reference documentation.
 
     Configure [source verification and networking](deployment-configuration.md) options.
 
-- :lucide-box: **Containerizing your app**
-
-    ---
-
-    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
-
 - :lucide-file-code: **Procfile**
 
     ---

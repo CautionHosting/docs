@@ -76,11 +76,11 @@ See [Verifiability](../concepts/verifiability.md) for more on why reproducibilit
 
 <div class="grid cards" markdown>
 
-- :lucide-box: **Containerizing your app**
+- :lucide-box: **Containerize an application**
 
     ---
 
-    Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
+    Follow a [practical guide](../guides/containerize-an-application.md) to building reproducible containers with StageX.
 
 - :lucide-globe: **Set up a custom domain**
 

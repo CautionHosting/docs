@@ -46,7 +46,7 @@ In this model, you keep control of your application code and configuration while
 
 ## How it works
 
-To deploy with fully managed, you'll need a [containerized application](containerizing.md), Docker with the [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"}, and a Caution account.
+To deploy with fully managed, you'll need a [containerized application](../guides/containerize-an-application.md), Docker with the [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"}, and a Caution account.
 
 You will also need a `Procfile` that tells Caution how to run your application. The examples below show a minimal configuration, plus an optional `app_sources` entry for source verification.
 

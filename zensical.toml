@@ -21,6 +21,7 @@ nav = [
 ]},
 { "How-to guides" = [
 { "Verify an app" = "guides/verify-an-app.md" },
+{ "Containerize an app" = "guides/containerize-an-application.md" },
 { "Set up a custom domain" = "guides/set-up-a-custom-domain.md" },
 ]},
 { "Concepts" = [
@@ -35,7 +36,6 @@ nav = [
 { "Reference" = [
 "reference/index.md",
 { "Configuration" = "reference/deployment-configuration.md" },
-{ "Containerizing" = "reference/containerizing.md" },
 { "Procfile" = "reference/procfile.md" },
 { "Debugging" = "reference/debugging.md" },
 { "Deployment models" = [

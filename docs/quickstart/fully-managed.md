@@ -27,7 +27,7 @@ Before you begin, ensure you have the following:
 | CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/){:target="_blank"}) |
 | Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} ([install](https://www.docker.com/){:target="_blank"}) |
-| Containerized app | Your application must be [containerized](../reference/containerizing.md) |
+| Containerized app | Your application must be [containerized](../guides/containerize-an-application.md) |
 
 </div>
 
@@ -71,7 +71,7 @@ Add an SSH key so you can authenticate your Caution deployments:
 
 ## Select an application
 
-Deploy your own [containerized application](../reference/containerizing.md), or start with one of the [Caution demo apps](https://codeberg.org/caution){:target="_blank"}. For this guide, use hello-world-enclave:
+Deploy your own [containerized application](../guides/containerize-an-application.md), or start with one of the [Caution demo apps](https://codeberg.org/caution){:target="_blank"}. For this guide, use hello-world-enclave:
 
 ```bash
 git clone https://codeberg.org/caution/demo-hello-world-enclave.git

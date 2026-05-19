@@ -53,11 +53,11 @@ For EnclaveOS, this means that the images deployed into confidential compute env
 
 <div class="grid cards" markdown>
 
-- :lucide-box: **Containerizing your app**
+- :lucide-box: **Containerize an application**
 
     ---
 
-    Follow a [practical guide](../reference/containerizing.md) to building reproducible containers with StageX.
+    Follow a [practical guide](../guides/containerize-an-application.md) to building reproducible containers with StageX.
 
 - :lucide-shield-check: **Verifiability**
 
