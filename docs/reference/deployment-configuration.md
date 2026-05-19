@@ -82,11 +82,11 @@ See [Verifiability](../concepts/verifiability.md) for more on why reproducibilit
 
     Follow a [practical guide](containerizing.md) to building reproducible containers with StageX.
 
-- :lucide-globe: **Custom domains**
+- :lucide-globe: **Set up a custom domain**
 
     ---
 
-    Use your own [domain name](custom-domains.md) for deployments.
+    Use your own [domain name](../guides/set-up-a-custom-domain.md) for deployments.
 
 - :lucide-file-code: **Procfile**
 

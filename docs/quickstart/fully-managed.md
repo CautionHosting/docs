@@ -131,11 +131,11 @@ Your application is now running in a verified enclave. Here's what to explore ne
 
     Configure [source verification and networking](../reference/deployment-configuration.md) options.
 
-- :lucide-globe: **Custom domains**
+- :lucide-globe: **Set up a custom domain**
 
     ---
 
-    Use your own [domain name](../reference/custom-domains.md) for deployments.
+    Use your own [domain name](../guides/set-up-a-custom-domain.md) for deployments.
 
 - :lucide-shield-check: **Verifiability**
 

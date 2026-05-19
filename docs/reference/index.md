@@ -23,12 +23,6 @@ Technical reference documentation.
 
     Configure how your application [builds, runs, and verifies](procfile.md).
 
-- :lucide-globe: **Custom domains**
-
-    ---
-
-    Use your own [domain name](custom-domains.md) for deployments.
-
 - :lucide-bug: **Debugging**
 
     ---

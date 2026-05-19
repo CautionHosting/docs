@@ -135,11 +135,11 @@ To remove all resources created by the setup, see the cleanup instructions in th
 
     Configure how your application [builds, runs, and verifies](procfile.md).
 
-- :lucide-globe: **Custom domains**
+- :lucide-globe: **Set up a custom domain**
 
     ---
 
-    Use your own [domain name](custom-domains.md) for deployments.
+    Use your own [domain name](../guides/set-up-a-custom-domain.md) for deployments.
 
 - :lucide-rocket: **Deployment configuration**
 
