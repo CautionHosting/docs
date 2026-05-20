@@ -23,6 +23,12 @@ Learn the key ideas behind how Caution deploys and verifies confidential workloa
 
     Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
 
+- :lucide-shield-alert: **Security assumptions**
+
+    ---
+
+    Understand Caution's [trust boundaries and threat model](security-assumptions.md).
+
 - :lucide-lock: **Encryption**
 
     ---

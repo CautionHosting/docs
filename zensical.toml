@@ -29,6 +29,7 @@ nav = [
 { "Reproducibility" = "concepts/reproducibility.md" },
 { "Verifiability" = "concepts/verifiability.md" },
 { "Attestations" = "concepts/attestation.md" },
+{ "Security assumptions" = "concepts/security-assumptions.md" },
 { "Encryption" = "concepts/encryption.md" },
 { "Key Services" = "concepts/key-services.md" },
 { "Deployment patterns" = "concepts/deployment-patterns.md" },
