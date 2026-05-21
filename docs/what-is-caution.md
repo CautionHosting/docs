@@ -8,25 +8,27 @@ icon: lucide/compass
 
 ## What Caution is
 
-Caution is a general-purpose, [verifiable](concepts/verifiability.md) confidential compute platform for deploying sensitive applications in secure enclaves. It currently supports deployments on AWS Nitro Enclaves, with additional attestation backends in active development.
+Caution is a general-purpose, [verifiable](concepts/verifiability.md) confidential compute platform for deploying sensitive applications in secure enclaves. It connects running enclave measurements back to the intended source code and build inputs that produced the enclave image. It currently supports deployments on AWS Nitro Enclaves, with additional attestation backends in active development.
 
-It combines enclave isolation, [hardware attestation](concepts/attestation.md), [reproducible builds](concepts/reproducibility.md), and support for [end-to-end encryption](concepts/encryption.md). Together, these let users connect reviewed source code and build inputs to the running enclave and, when end-to-end encryption is enabled, keep application data encrypted all the way into it.
+It combines enclave isolation, [hardware attestation](concepts/attestation.md), [reproducible builds](concepts/reproducibility.md), and support for [end-to-end encryption](concepts/encryption.md). Together, these let users verify code integrity and, when end-to-end encryption is enabled, keep application data encrypted all the way into the enclave.
 
 ## Why it exists
 
-Caution exists to move sensitive cloud services from "trust us" to "verify it yourself." Instead of relying only on operator promises or opaque build systems, verifiers can inspect source code and build inputs, reproduce the enclave image, and compare the expected measurements with the running enclave.
+Caution exists to move sensitive cloud services from "trust us" to "verify it yourself." It helps operators reduce blind trust by giving customers, auditors, and downstream services independent evidence of what is running. That matters when sensitive data, secrets, or automated decisions depend on software running outside the verifier's control.
 
 ## The problem it solves
 
 Cloud applications often require users to trust infrastructure operators, deployment pipelines, cloud providers, and private build systems. Confidential compute improves this by isolating workloads from the host and using hardware attestation to report enclave measurements.
 
-That is an important baseline, but it does not fully answer what code is running inside the enclave. Without a source-to-enclave link, an enclave can prove it is isolated without proving that it is running the code the verifier reviewed or expected.
+That is an important baseline, but it does not answer what code is running inside the enclave. An operator or compromised deployment pipeline could run code that differs from the intended source code inside a genuine enclave, and isolation alone would provide no way to detect it.
 
-Caution is designed to close that gap. It gives organizations, their customers, auditors, and downstream services integrity guarantees that connect the intended source code, build inputs, and configuration to what is actually running inside an enclave. It also makes enclave deployments simpler by wrapping deployment and verification in familiar Git-based and CLI workflows.
+Caution makes confidential compute verifiable by connecting enclave measurements back to the intended source code and build inputs that produced the enclave image.
+
+It gives organizations, customers, auditors, and downstream services integrity guarantees that connect the intended source code, build inputs, and configuration to what is actually running inside an enclave. It also simplifies enclave deployments by integrating deployment and verification into familiar Git-based and CLI workflows.
 
 | Problem | How Caution solves it |
 |---------|------------------------|
-| You can attest an enclave, but still not know what source code produced it. | Caution connects enclave measurements back to [reviewed source code, build inputs, and configuration](concepts/verifiability.md). |
+| Attestation alone does not prove that a running enclave matches the intended source and build process. | Caution connects enclave measurements back to [intended source code, build inputs, and configuration](concepts/verifiability.md). |
 | Verifiers need a practical way to check a running enclave themselves. | Verification with [`caution verify`](guides/verify-an-app.md) validates the attestation, reproduces expected measurements from source, and compares them with the running enclave. |
 | Enclave deployments often require custom infrastructure and specialized security expertise. | Caution's [Git-based and CLI workflows](quickstart/) handle deployment, attestation, and verification, making confidential compute easier to adopt. |
 | Teams need different levels of infrastructure control. | Caution supports [fully managed](reference/fully-managed.md), [bring your own cloud](reference/bring-your-own-cloud.md), and self-hosted deployment models. |
@@ -41,7 +43,8 @@ Example workloads that benefit from source-to-enclave verification include AI in
 Caution is a fit when:
 
 - Your customers or downstream services need to verify the software they interact with
-- You want to reduce how much trust customers place in infrastructure administrators
+- You want customers to depend less on infrastructure administrators
+- You need to reduce insider risk from operators or compromised deployment pipelines
 - You need stronger guarantees for code integrity, data confidentiality, or secret delivery
 - You need deployment options that match your infrastructure, data residency, or control requirements
 
@@ -49,18 +52,26 @@ Caution is a fit when:
 
 Most confidential compute systems can prove that a workload is running in a protected environment and that the deployed image has not changed since launch.
 
-Caution is designed to prove the full chain of evidence:
+Caution is designed to turn confidential compute into verifiable compute by adding a source-to-enclave chain of evidence:
 
-- What source code and build inputs were used
-- What enclave image was produced from those inputs
-- What measurements the running enclave reports
-- Whether those measurements match the reproduced build
+<div class="caution-comparison-table" markdown>
 
-This gives verifiers a source-to-enclave chain of evidence instead of only a binary-level attestation.
+| Capability | Confidential compute | Verifiable compute |
+|------------|----------------------|---------------------------------|
+| Workload isolation from the host | :lucide-circle-check:{ .caution-icon-yes } | :lucide-circle-check:{ .caution-icon-yes } |
+| Hardware attestation | :lucide-circle-check:{ .caution-icon-yes } | :lucide-circle-check:{ .caution-icon-yes } |
+| Enclave measurements | :lucide-circle-check:{ .caution-icon-yes } | :lucide-circle-check:{ .caution-icon-yes } |
+| Source-to-enclave evidence | :lucide-circle-x:{ .caution-icon-no } | :lucide-circle-check:{ .caution-icon-yes } |
+| Reproducible verification from source and build inputs | :lucide-circle-x:{ .caution-icon-no } | :lucide-circle-check:{ .caution-icon-yes } |
+| Independent source-linked verification | Binary-level attestation&nbsp;only | :lucide-circle-check:{ .caution-icon-yes } |
+
+</div>
+
+This lets verifiers evaluate the source and build process behind a running enclave, not only the binary measurements reported by hardware attestation.
 
 Caution is [fully open source](https://codeberg.org/caution){:target="_blank"}, so teams can inspect the platform, understand the verification path, and self-host it if they want to operate deployments independently.
 
-Caution turns verification into a developer workflow: teams deploy with familiar Git-based workflows, expose an attestation endpoint, and let verifiers reproduce the enclave image locally.
+Caution turns verification into a developer workflow. Teams deploy with familiar Git-based workflows, expose attestation endpoints, and let verifiers reproduce enclave images locally.
 
 ## Security model
 
@@ -77,7 +88,7 @@ This security model is grounded in the [Distrust Threat Model](https://distrust.
 
 ## What Caution does not prove
 
-Caution does not determine whether source code is safe, bug-free, or appropriate for a given use case. Verification proves that the reviewed code and the running enclave match. Users and auditors still need to inspect the code and decide whether they trust what it does.
+Caution does not determine whether source code is safe, bug-free, or appropriate for a given use case. Verification proves that the running enclave matches the intended source code and build inputs. Users and auditors still need to inspect the code and decide whether they trust what it does.
 
 ## Next steps
 
@@ -87,12 +98,12 @@ Caution does not determine whether source code is safe, bug-free, or appropriate
 
     ---
 
-    Deploy your first application with the [quickstart](quickstart/).
+    Deploy your first verifiable enclave with the [quickstart](quickstart/).
 
 - :lucide-layers-3: **Deployment models**
 
     ---
 
-    Understand where Caution can run and how much [infrastructure you manage](reference/deployment-models/).
+    Compare [fully managed, bring your own cloud, and self-hosted](reference/deployment-models/) options.
 
 </div>

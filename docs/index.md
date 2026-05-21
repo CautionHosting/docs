@@ -6,8 +6,6 @@ icon: lucide/home
 
 <p class="docs-home-intro">Welcome to the documentation for Caution. Deploy sensitive workloads faster, with cryptographic proof that each enclave runs the intended source code.</p>
 
-## What is Caution?
-
 Caution is a verifiable confidential compute platform for deploying and managing sensitive workloads. It extends traditional confidential compute with independently verifiable deployments and support for hardware-backed, end-to-end encryption of application data.
 
 Caution provides stronger software integrity and confidentiality assurances than isolation alone through two core security properties:
@@ -28,7 +26,7 @@ Caution is fully open source, so teams can inspect, verify, and self-host the pl
 
     Deploy your first application in a verifiable enclave. [Get started](./quickstart/)
 
-- :lucide-circle-help: **What is Caution?**
+- :lucide-compass: **What is Caution?**
 
     ---
 
@@ -38,7 +36,7 @@ Caution is fully open source, so teams can inspect, verify, and self-host the pl
 
     ---
 
-    Learn about [fully managed, BYOC, and self-host](./reference/deployment-models/).
+    Compare [fully managed, bring your own cloud, and self-hosted](./reference/deployment-models/) options.
 
 - :lucide-shield-check: **Verifiability**
 
