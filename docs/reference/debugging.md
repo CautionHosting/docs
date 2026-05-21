@@ -109,7 +109,7 @@ Check the host-side services that connect traffic to the enclave:
 
 ```bash
 # Vsock proxy status (bridges host ports to enclave)
-sudo systemctl status vsock-proxy-<port>.service
+sudo systemctl status vsock-proxy-8083.service
 
 # Network proxy (provides enclave internet access)
 sudo systemctl status vsock-network.service
@@ -119,7 +119,7 @@ sudo systemctl status caddy.service
 sudo journalctl -u caddy.service --no-pager -n 50
 ```
 
-Replace `<port>` with the application port from your `Procfile`.
+These examples use port `8083`. If your `Procfile` uses a different value in `ports`, replace `8083` with that port.
 
 ## Clean up debug access
 
@@ -157,10 +157,10 @@ Common causes include insufficient memory or CPU allocation, or the EIF failing 
 
 Symptoms include connection timeouts, failed health checks, or Caddy returning an upstream or proxy error.
 
-Inspect network and proxy services, and verify the vsock proxy is running for your application port:
+Inspect network and proxy services, and verify the vsock proxy is running for your application port. These examples use port `8083`; if your `Procfile` uses a different value in `ports`, replace `8083` with that port:
 
 ```bash
-sudo systemctl status vsock-proxy-<port>.service
+sudo systemctl status vsock-proxy-8083.service
 ```
 
 If the proxy is running but the app isn't responding, use `sudo nitro-cli console` with debug mode to check whether your application started correctly inside the enclave.
