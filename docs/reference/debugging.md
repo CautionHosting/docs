@@ -150,6 +150,57 @@ caution verify
 
 Verification should only be run against a production-mode enclave. Debug mode zeros out PCR values, so `caution verify` will fail while debug mode is enabled.
 
+## Test locally with QEMU
+
+For a faster debugging loop, you can boot the same kernel and initramfs inputs locally with QEMU instead of deploying to AWS each time. First, build the enclave image:
+
+```bash
+caution apps build
+```
+
+This outputs the EIF path and a build directory you can inspect. The build directory contains an `eif-stage/output/` directory with:
+
+```text
+enclave.eif
+enclave.pcrs
+rootfs.cpio.gz
+```
+
+Use `rootfs.cpio.gz` as the QEMU initrd. Do not pass the EIF itself to `-initrd`; the EIF is the Nitro package produced by `eif_build`, while QEMU expects a raw initramfs.
+
+The Nitro kernel is not built by `caution apps build`. It comes from the pinned StageX `linux-nitro` image used by the generated `Containerfile.eif`:
+
+```dockerfile
+FROM stagex/user-linux-nitro@sha256:aa1006d91a7265b33b86160031daad2fdf54ec2663ed5ccbd312567cc9beff2c AS linux-nitro
+COPY --from=linux-nitro /bzImage /build/kernel/bzImage
+COPY --from=linux-nitro /linux.config /build/kernel/linux.config
+```
+
+Extract the matching kernel from that image:
+
+```bash
+mkdir -p /tmp/caution-linux-nitro
+docker create --name caution-linux-nitro \
+  stagex/user-linux-nitro@sha256:aa1006d91a7265b33b86160031daad2fdf54ec2663ed5ccbd312567cc9beff2c
+
+docker cp caution-linux-nitro:/bzImage /tmp/caution-linux-nitro/bzImage
+docker cp caution-linux-nitro:/linux.config /tmp/caution-linux-nitro/linux.config
+docker rm caution-linux-nitro
+```
+
+Then boot the exported initramfs with QEMU:
+
+```bash
+qemu-system-x86_64 \
+  -m 512M \
+  -nographic \
+  -kernel /tmp/caution-linux-nitro/bzImage \
+  -initrd /path/to/eif-stage/output/rootfs.cpio.gz \
+  -append "console=ttyS0 reboot=k panic=1 pci=off nomodules nit.target=/run.sh"
+```
+
+This lets you see boot output and application logs directly in your terminal without needing SSH, debug mode, or a full AWS deployment. Nitro-specific features such as NSM attestation and real enclave vsock behavior are not fully available under plain QEMU, so use this for debugging the initramfs and application boot path rather than validating production attestation.
+
 ## Common issues
 
 ### Enclave won't start
