@@ -15,6 +15,7 @@ Copyright &copy; 2026 Caution SEZC
 
 nav = [
 { "Get started" = [
+{ "What is Caution?" = "what-is-caution.md" },
 { "Quickstart" = "quickstart/index.md" },
 { "Fully managed" = "quickstart/fully-managed.md" },
 { "Bring your own cloud" = "quickstart/bring-your-own-cloud.md" },

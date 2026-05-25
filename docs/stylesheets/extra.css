@@ -58,6 +58,45 @@
   transform-origin: center;
 }
 
+.md-typeset .caution-icon-yes {
+  color: #15803d;
+  height: 1.05rem;
+  width: 1.05rem;
+}
+
+.md-typeset .caution-icon-no {
+  color: #dc2626;
+  height: 1.05rem;
+  width: 1.05rem;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .caution-icon-yes {
+  color: #4ade80;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .caution-icon-no {
+  color: #f87171;
+}
+
+.md-typeset .caution-comparison-table table th:first-child,
+.md-typeset .caution-comparison-table table td:first-child {
+  width: 43%;
+}
+
+.md-typeset .caution-comparison-table table th {
+  vertical-align: middle;
+}
+
+.md-typeset .caution-comparison-table table th:nth-child(2),
+.md-typeset .caution-comparison-table table td:nth-child(2) {
+  width: 28%;
+}
+
+.md-typeset .caution-comparison-table table th:nth-child(3),
+.md-typeset .caution-comparison-table table td:nth-child(3) {
+  width: 28%;
+}
+
 /* Two-column list layout for ownership/scope sections */
 .md-typeset .two-column-list {
   display: grid;
