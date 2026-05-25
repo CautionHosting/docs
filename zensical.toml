@@ -38,7 +38,7 @@ nav = [
 "reference/index.md",
 { "Configuration" = "reference/deployment-configuration.md" },
 { "Procfile" = "reference/procfile.md" },
-{ "Debugging" = "reference/debugging.md" },
+{ "Debug an enclave" = "reference/debugging.md" },
 { "Deployment models" = [
 "reference/deployment-models/index.md",
 { "Fully managed" = "reference/fully-managed.md" },
