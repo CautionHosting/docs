@@ -28,11 +28,11 @@ You need:
 
 ## Publish source information
 
-If you operate the app and want third parties to verify it from the remote manifest, include source locations in the `Procfile` before deploying:
+If you operate the app and want third parties to verify it from the remote manifest, include source locations in the `Procfile` before deploying. This example uses port `3000` only as a placeholder:
 
 ```yaml
-run: /app/server --port 8083
-ports: 8083
+run: /app/server --port 3000
+ports: 3000
 app_sources: https://codeberg.org/example/myapp
 ```
 
@@ -62,7 +62,7 @@ If you are verifying an app from outside its deployment directory, pass the atte
 caution verify --attestation-url http://<host>/attestation
 ```
 
-Use the exact attestation URL shown by the deployment output or provided by the app operator, including any port number.
+Caution serves `/attestation` through the deployment's public HTTP/HTTPS endpoint and proxies it internally to bootproofd on reserved port `49502`. Use the exact attestation URL shown by the deployment output or provided by the app operator.
 
 ## Verification modes
 

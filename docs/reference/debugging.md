@@ -29,10 +29,12 @@ Add `debug: true` to your `Procfile` to make the enclave console readable:
 ```yaml
 run: /app/server
 debug: true
-ports: 8083
+ports: 3000
 ```
 
-Debug mode passes `--debug-mode` to `nitro-cli run-enclave`, which allows you to read the enclave's console output. The tradeoff is that AWS zeros out all PCR values in debug mode, so `caution verify` will refuse to attest the enclave.
+Use the port your application listens on; `3000` is only a placeholder.
+
+Debug mode passes `--debug-mode` to `nitro-cli run-enclave`, which allows you to read the enclave's console output. The tradeoff is that AWS zeros out all PCR values in debug mode, so `caution verify` will refuse to attest the enclave. **Do not use debug mode in production.**
 
 Redeploy after changing `debug` or `ssh_keys` settings.
 
@@ -83,6 +85,16 @@ sudo nitro-cli describe-enclaves
 # Enclave service logs
 sudo journalctl -u nitro-enclave.service --no-pager -n 100
 
+# Vsock proxy status (bridges host ports to enclave; replace 3000 with your app port)
+sudo systemctl status vsock-proxy-3000.service
+
+# Network proxy (provides enclave internet access)
+sudo systemctl status vsock-network.service
+
+# TLS termination
+sudo systemctl status caddy.service
+sudo journalctl -u caddy.service --no-pager -n 50
+
 # Nitro CLI logs (enclave startup errors, resource allocation failures)
 sudo cat /var/log/nitro_enclaves/nitro_enclaves.log
 
@@ -109,7 +121,7 @@ Check the host-side services that connect traffic to the enclave:
 
 ```bash
 # Vsock proxy status (bridges host ports to enclave)
-sudo systemctl status vsock-proxy-8083.service
+sudo systemctl status vsock-proxy-3000.service
 
 # Network proxy (provides enclave internet access)
 sudo systemctl status vsock-network.service
@@ -119,7 +131,7 @@ sudo systemctl status caddy.service
 sudo journalctl -u caddy.service --no-pager -n 50
 ```
 
-These examples use port `8083`. If your `Procfile` uses a different value in `ports`, replace `8083` with that port.
+These examples use port `3000`. If your `Procfile` uses a different value in `ports`, replace `3000` with that port.
 
 ## Clean up debug access
 
@@ -157,10 +169,10 @@ Common causes include insufficient memory or CPU allocation, or the EIF failing 
 
 Symptoms include connection timeouts, failed health checks, or Caddy returning an upstream or proxy error.
 
-Inspect network and proxy services, and verify the vsock proxy is running for your application port. These examples use port `8083`; if your `Procfile` uses a different value in `ports`, replace `8083` with that port:
+Inspect network and proxy services, and verify the vsock proxy is running for your application port. These examples use port `3000`; if your `Procfile` uses a different value in `ports`, replace `3000` with that port:
 
 ```bash
-sudo systemctl status vsock-proxy-8083.service
+sudo systemctl status vsock-proxy-3000.service
 ```
 
 If the proxy is running but the app isn't responding, use `sudo nitro-cli console` with debug mode to check whether your application started correctly inside the enclave.

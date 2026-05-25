@@ -34,25 +34,27 @@ For full security, enable end-to-end encryption using [STEVE (Secure Transport E
 e2e: true
 ```
 
-Run the app on port 8083; that is the port STEVE uses to establish a proxy connection.
+Run the app on any unreserved port. The reserved app-facing range is `49500`-`49600`; STEVE uses port `49500` for the `/e2p/*` proxy path.
 
 This requires:
 
 1. **Procfile configuration**: Set `e2e: true` and specify your application port
 2. **SDK integration**: Integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client application
 
-With e2e enabled, data is encrypted on the client and only decrypted inside the enclave. The STEVE proxy runs on port 8080 inside the enclave and forwards decrypted traffic to your application.
+With e2e enabled, data is encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
 
 See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
 
 ### Direct port exposure
 
-If you cannot use end-to-end encryption, you can expose ports directly:
+If you cannot use end-to-end encryption, you can expose ports directly. This example uses port `3000` only as a placeholder:
 
 ```yaml
-run: /app/server --port 8080
-ports: 8080
+run: /app/server --port 3000
+ports: 3000
 ```
+
+Use the port your application listens on. Do not declare ports in Caution's reserved `49500`-`49600` range.
 
 When a single port is specified, it is automatically reverse-proxied through Caddy with TLS termination on port 443. For multiple ports, use `http_port` to specify which one Caddy should proxy. The rest are exposed as raw TCP (useful for P2P or binary protocols).
 

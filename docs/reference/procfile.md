@@ -68,7 +68,7 @@ Resource values are defaults if not specified.
 | `debug` | `false` | Enable [debug mode](debugging.md). Allows reading enclave console output but disables attestation verification. |
 | `no_cache` | `false` | Disable Docker build cache. |
 | `ssh_keys` | - | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
-| `ports` | - | Comma-separated list of ports to expose (vsock proxy + security group ingress). |
+| `ports` | - | Comma-separated list of ports to expose (vsock proxy + security group ingress). Do not include ports in the reserved `49500`-`49600` range. |
 | `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
 | `managed_on_prem` | `false` | Enable bring-your-own-cloud (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
 | `platform` | - | Cloud platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
@@ -80,20 +80,22 @@ Resource values are defaults if not specified.
 
 ## Reserved ports
 
-The following ports are reserved for internal enclave services:
+The reserved app-facing range is `49500`-`49600`. User apps should not declare ports in that range in `ports`, `http_port`, or application startup commands. Choose the port your app already uses, as long as it is outside the reserved range.
+
+Current reserved/internal service ports:
 
 | Port | Service |
 |------|---------|
-| `8080` | STEVE encryption proxy (when `e2e: true`) |
-| `8081` | Internal enclave services |
-| `8082` | Attestation service |
-| `8084` | Locksmith shard receiver (when `locksmith: true`) |
+| `49500` | STEVE proxy for `/e2p/*` traffic (when `e2e: true`) |
+| `49501` | Auxiliary internal proxy slot |
+| `49502` | bootproofd internal attestation service, proxied to the public `/attestation` path |
+| `49504` | Locksmith shard receiver (when `locksmith: true`) |
 
-Your application should listen on port `8083` or another unreserved port.
+The public attestation endpoint is the deployment's app URL plus `/attestation`; do not add `:49502` unless your operator explicitly exposes that internal port.
 
 ## Examples
 
-Use these examples as starting points. Adjust commands, ports, and domains to match your application.
+Use these examples as starting points. Port `3000` is only a placeholder; adjust commands, ports, and domains to match your application.
 
 ### Basic application
 
@@ -117,10 +119,10 @@ In this example, port 8232 (RPC) is reverse-proxied through Caddy with TLS on po
 ### With end-to-end encryption
 
 ```yaml
-run: /app/server --port 8083
+run: /app/server --port 3000
 domain: secure.example.com
 e2e: true
-ports: 8083
+ports: 3000
 app_sources: https://codeberg.org/example/secure-app
 ```
 
@@ -129,9 +131,9 @@ Since only one port is specified, it is automatically used as the `http_port`.
 ### With Locksmith secret management
 
 ```yaml
-run: /app/server --port 8083
+run: /app/server --port 3000
 locksmith: true
-ports: 8083
+ports: 3000
 domain: secrets.example.com
 app_sources: https://codeberg.org/example/secret-app
 ```
@@ -144,8 +146,8 @@ After deploying, send shards with `caution secret send-shard`.
 run: /app/ml-inference
 memory: 4096
 cpus: 4
-ports: 8083, 9000
-http_port: 8083
+ports: 3000, 9000
+http_port: 3000
 ```
 
 With multiple ports, `http_port` is required to specify which port Caddy should reverse proxy. Port 9000 is exposed as raw TCP.

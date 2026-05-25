@@ -44,7 +44,7 @@ This data should be checked in as part of the repository.
 Locksmithd runs inside the enclave at startup. It:
 
 1. Reads the quorum bundle from `/etc/caution/bundle.json`
-2. Listens on port **8084** for incoming shard submissions
+2. Listens on port **49504** for incoming shard submissions
 3. Verifies each shard is signed by a key in the bundle's keyring
 4. Uses Nitro attestation to prove to shard-holders that they're sending to a genuine enclave
 5. Once the quorum threshold is met, reconstructs the master secret
@@ -134,9 +134,15 @@ Each `.asc` file should contain a single value, encrypted with the quorum's publ
 
 ### 3. Enable Locksmith in your Procfile
 
+This example uses port `3000` only as a placeholder:
+
 ```yaml
+run: /app/server --port 3000
 locksmith: true
+ports: 3000
 ```
+
+List your application port in `ports`. Do not list port `49504` or any port in the reserved `49500`-`49600` range; Caution opens the Locksmith shard receiver automatically when `locksmith: true`.
 
 ### 4. Deploy
 
@@ -144,7 +150,7 @@ locksmith: true
 git push caution main
 ```
 
-The enclave will start with locksmithd listening on port 8084, waiting for shards.
+The enclave will start with locksmithd listening on reserved port 49504, waiting for shards.
 
 ### 5. Send shards
 
@@ -158,7 +164,7 @@ This command:
 
 1. Looks up the enclave's public IP
 2. Reads the bundle from `.caution/quorum-bundle.json` (or pulls it from your Caution account)
-3. Connects to the enclave on port 8084
+3. Connects to the enclave on port 49504
 4. Verifies the enclave's Nitro attestation
 5. Encrypts and sends the shard using ECDH key exchange
 6. Reports whether the quorum threshold has been met
@@ -170,7 +176,7 @@ Once enough shards are received, locksmithd reconstructs the secret, starts keyf
 For configuration values that don't need encryption (ports, feature flags, public URLs), place them in `/etc/environment` in your container image. These are loaded into the enclave environment automatically, without requiring locksmith.
 
 ```dockerfile
-RUN echo "APP_PORT=8083" >> /etc/environment
+RUN echo "APP_PORT=3000" >> /etc/environment
 RUN echo "LOG_LEVEL=info" >> /etc/environment
 ```
 

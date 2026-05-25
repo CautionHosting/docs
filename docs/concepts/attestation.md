@@ -25,7 +25,7 @@ The CLI generates a random 32-byte nonce (number used once). This nonce prevents
 
 ### 2. Request attestation from the enclave
 
-The CLI sends the nonce to the enclave's attestation endpoint. The enclave's Nitro Security Module (NSM) generates an attestation document that includes:
+The CLI sends the nonce to the enclave's public `/attestation` endpoint. Caution proxies that path internally to bootproofd on reserved port `49502`. The enclave's Nitro Security Module (NSM) generates an attestation document that includes:
 
 - The nonce (echoed back)
 - [PCR values](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html){:target="_blank"} (Platform Configuration Registers), cryptographic measurements of the enclave image
