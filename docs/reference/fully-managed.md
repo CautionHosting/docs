@@ -8,7 +8,7 @@ icon: lucide/book-marked
 
 ## Overview
 
-Fully managed deployments run on Caution's infrastructure. You push code, and Caution builds, deploys, and hosts your application in a secure enclave. It is best for teams that want:
+Fully managed deployments run on Caution's infrastructure. You push code, and Caution builds the container image with standard Docker, deploys it, and hosts your application in a secure enclave. It is best for teams that want:
 
 - [x] Fastest path to production
 - [x] Caution-hosted infrastructure
@@ -26,7 +26,7 @@ Fully managed means Caution manages the enclave lifecycle and underlying infrast
 **Caution handles:**
 
 - Infrastructure and billing
-- Application builds
+- Standard Docker application builds
 - Enclave lifecycle management
 - Network routing and public ingress
 
@@ -48,7 +48,7 @@ In this model, you keep control of your application code and configuration while
 
 To deploy with fully managed, you'll need a [containerized application](../guides/containerize-an-application.md), Docker with the [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"}, and a Caution account.
 
-You will also need a `Procfile` that tells Caution how to run your application. The examples below show a minimal configuration, plus an optional `app_sources` entry for source verification.
+You will also need a `Procfile` that tells Caution how to run your application and, if needed, which Containerfile to build. The examples below show a minimal configuration, plus an optional `app_sources` entry for source verification.
 
 ```yaml
 # Minimal `Procfile`
@@ -59,11 +59,13 @@ run: /app/server
 app_sources: https://codeberg.org/myorg/myapp
 ```
 
+Caution builds from the repository root with `docker build -f <containerfile> .`. It does not run a custom `build` command or pass extra Docker build arguments, so public build-time values must be part of the Containerfile or files copied into the image. Use [Locksmith](../concepts/key-services.md) for secrets.
+
 Once you have everything in place, the setup flow looks like this:
 
 1. Create an account, install the CLI (Linux (x86_64) or macOS (arm64)), and register an SSH key.
 2. Initialize your application with a `Procfile`, then push your code to Caution.
-3. Caution builds the enclave image, provisions the deployment, and runs your application in a managed enclave environment.
+3. Caution runs the standard Docker build, provisions the deployment, and runs your application in a managed enclave environment.
 
 !!! example "Setup guide"
     For the full step-by-step setup and deployment flow, see the [fully managed guide](../quickstart/fully-managed.md).
@@ -82,7 +84,7 @@ Once you have everything in place, the setup flow looks like this:
 
     ---
 
-    Configure how your application [builds, runs, and verifies](procfile.md).
+    Configure how your application [runs and verifies](procfile.md).
 
 - :lucide-globe: **Set up a custom domain**
 

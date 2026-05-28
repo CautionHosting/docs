@@ -68,6 +68,16 @@ For full verifiability benefits, your application must be reproducible. A reprod
 
 Without reproducibility, attestation can only prove that the deployment hasn't changed. It cannot prove that it matches specific source code.
 
+### Container build inputs
+
+Caution uses the same Docker build shape for deployment and verification:
+
+```bash
+docker build -f <containerfile> .
+```
+
+The build context is the repository root, and extra Docker build arguments are not part of the Caution workflow. Values that affect the build output must be visible in the Containerfile, default `ARG` values, `ENV` instructions, or files copied into the image. This keeps the build inputs reviewable and reproducible. Use [Locksmith](../concepts/key-services.md) instead of image-baked values for secrets.
+
 ### Making your application reproducible
 
 To build reproducible applications, use [StageX](https://stagex.tools){:target="_blank"}, a Linux distribution designed for full-source bootstrapping and deterministic builds. While other Linux distributions can be used, StageX is recommended because it was designed as a security-first distribution.
@@ -94,7 +104,7 @@ See [Verifiability](../concepts/verifiability.md) for more on why reproducibilit
 
     ---
 
-    Configure how your application [builds, runs, and verifies](procfile.md).
+    Configure how your application [runs and verifies](procfile.md).
 
 - :lucide-shield-check: **Verifiability**
 

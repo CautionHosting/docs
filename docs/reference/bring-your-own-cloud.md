@@ -20,7 +20,7 @@ For a side-by-side comparison with other deployment options, see [deployment mod
 
 ## Responsibility split
 
-In bring your own cloud, Caution manages builds and the enclave lifecycle in your AWS account, while you retain control over the account, network boundaries, and where data resides.
+In bring your own cloud, Caution runs the standard Docker application build and manages the enclave lifecycle in your AWS account, while you retain control over the account, network boundaries, and where data resides.
 
 <div class="two-column-list two-column-list--byoc-responsibility" markdown>
 <div markdown>
@@ -36,7 +36,7 @@ In bring your own cloud, Caution manages builds and the enclave lifecycle in you
 
 **Caution handles:**
 
-- Application builds
+- Standard Docker application builds
 - Enclave lifecycle management
 - Deployment orchestration in your AWS account, including uploading EIFs to your S3 bucket, launch templates, and Elastic IP assignment
 
@@ -45,7 +45,7 @@ In bring your own cloud, Caution manages builds and the enclave lifecycle in you
 
 ## How it works
 
-To deploy with bring your own cloud, you'll need a [containerized application](../guides/containerize-an-application.md), Docker, and AWS credentials for the target account.
+To deploy with bring your own cloud, you'll need a [containerized application](../guides/containerize-an-application.md), Docker, and AWS credentials for the target account. Caution builds from the repository root with `docker build -f <containerfile> .`; it does not run a custom `build` command or pass extra Docker build arguments. Public build-time values must be part of the image inputs, and secrets should use [Locksmith](../concepts/key-services.md).
 
 Once you have everything in place, the setup flow looks like this:
 
@@ -133,7 +133,7 @@ To remove all resources created by the setup, see the cleanup instructions in th
 
     ---
 
-    Configure how your application [builds, runs, and verifies](procfile.md).
+    Configure how your application [runs and verifies](procfile.md).
 
 - :lucide-globe: **Set up a custom domain**
 

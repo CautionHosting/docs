@@ -8,7 +8,7 @@ icon: lucide/file-code
 
 ## Overview
 
-The `Procfile` is a simple key-value configuration file that tells Caution how to build and run your application inside a confidential enclave. Place it in the root of your repository.
+The `Procfile` is a simple key-value configuration file that tells Caution how to run your application, which container build recipe to use, and what metadata to publish for verification. Place it in the root of your repository.
 
 ```yaml
 run: /app/server
@@ -18,20 +18,22 @@ app_sources: https://codeberg.org/myorg/myapp
 
 ## Fields
 
-Use these fields to control how Caution builds, deploys, and verifies your application. Unless marked required, fields are optional.
+Use these fields to control how Caution locates container inputs, deploys, runs, and verifies your application. Unless marked required, fields are optional.
 
-### Build configuration
+### Container input configuration
 
 !!! warning "Use `run` by default"
     The `binary` field extracts only the specified binary from your container. It does not include config files, shared libraries, or other filesystem contents in the EIF. Use `binary` only for fully self-contained static binaries. For most applications, use `run`, which includes the full container filesystem in the EIF.
+
+!!! warning "No `build` field or custom build command"
+    The legacy `build` Procfile field is no longer available. Caution builds the application container with `docker build -f <containerfile> .` from the repository root. It does not run a custom pre-build command or pass extra `--build-arg` values. Put required public build-time configuration in the Containerfile or in committed files copied into the image. Do not bake secrets into the image; use [Locksmith](../concepts/key-services.md) for secret values.
 
 <div class="procfile-build-config-table" markdown>
 
 | Field | Description |
 |-------|-------------|
 | `run` | **Required.** Command to execute your application. The full container filesystem is included in the EIF. |
-| `containerfile` | Path to a Containerfile/Dockerfile for building your app. |
-| `build` | Build command to run before packaging. |
+| `containerfile` | Path to a Containerfile/Dockerfile for building your app. Caution builds it with `docker build -f <containerfile> .` using the repository root as the build context. |
 | `oci_tarball` | Path to a pre-built OCI tarball. |
 | `binary` | Path to a static binary in the container. **Only that binary is extracted.** The rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. |
 
@@ -104,6 +106,15 @@ run: /app/server
 domain: api.example.com
 app_sources: https://codeberg.org/example/api
 ```
+
+### With a custom Containerfile
+
+```yaml
+run: /app/server
+containerfile: deploy/Containerfile
+```
+
+Caution builds this with `docker build -f deploy/Containerfile .` from the repository root.
 
 ### With HTTP and TCP ports
 

@@ -15,7 +15,7 @@ Technical reference documentation.
 
     ---
 
-    Configure how your application [builds, runs, and verifies](procfile.md).
+    Configure how your application [runs and verifies](procfile.md).
 
 - :lucide-bug: **Debug an enclave**
 

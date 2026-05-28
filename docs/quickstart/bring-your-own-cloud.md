@@ -4,7 +4,7 @@ icon: lucide/server
 
 # Deploy in your own AWS account
 
-Deploy Caution enclaves in your own AWS infrastructure while Caution handles the build and deployment orchestration.
+Deploy Caution enclaves in your own AWS infrastructure while Caution handles the standard Docker build and deployment orchestration.
 {: .docs-home-intro }
 
 ## What is bring your own cloud?
@@ -81,6 +81,14 @@ git clone https://codeberg.org/caution/demo-hello-world-enclave.git
 cd demo-hello-world-enclave
 ```
 
+For your own app, make sure the container builds from the repository root with the standard Docker form:
+
+```bash
+docker build -f Containerfile .
+```
+
+If you use another file, set `containerfile` in the `Procfile` and replace `Containerfile` with that path. Caution uses this build shape and does not pass extra build arguments, so public build-time values need to be part of the image inputs. Use [Locksmith](../concepts/key-services.md) for secrets.
+
 ## Set up your AWS environment
 
 Choose how you want to provision the AWS environment for bring your own cloud deployments. Both paths continue through the Caution CLI for app registration, Git-based deployment, and verification.
@@ -154,7 +162,7 @@ From your application directory, push the code to Caution:
 git push caution main
 ```
 
-Caution builds a reproducible enclave image and deploys it into the AWS environment you provisioned.
+Caution builds a reproducible enclave image with the standard Docker build and deploys it into the AWS environment you provisioned.
 
 ## Verify the deployment
 
@@ -198,7 +206,7 @@ Your application is now running in a verified enclave in your own AWS account. H
 
     ---
 
-    Configure how your application [builds, runs, and verifies](../reference/procfile.md).
+    Configure how your application [runs and verifies](../reference/procfile.md).
 
 - :lucide-shield-check: **Verifiability**
 

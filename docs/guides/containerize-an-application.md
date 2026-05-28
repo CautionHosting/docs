@@ -10,7 +10,7 @@ icon: lucide/box
 
 Your application needs:
 
-1. A `Containerfile` (or `Dockerfile`) that builds your application
+1. A `Containerfile` (or `Dockerfile`) that builds your application with `docker build -f <file> .` from the repository root
 2. A `Procfile` that tells Caution how to run it
 
 ## Basic Containerfile
@@ -35,6 +35,30 @@ FROM stagex/core-filesystem@sha256:58a29a7a3a60559b999b6009a47ebaaf80fb669f29547
 COPY --from=build /myapp /app/myapp
 ENTRYPOINT ["/app/myapp"]
 ```
+
+## Build behavior in Caution
+
+Caution builds application containers with the standard Docker form:
+
+```bash
+docker build -f <containerfile> .
+```
+
+The build context is the repository root. Replace `<containerfile>` with the file your project uses, such as `Containerfile` or `Dockerfile`. If your `Procfile` sets `containerfile`, test the same path locally:
+
+```bash
+docker build -f deploy/Containerfile .
+```
+
+Caution no longer supports a separate `build` command in the `Procfile`, and it does not pass extra Docker build arguments. If your build needs public configuration, make it part of the image inputs instead:
+
+```dockerfile
+ENV APP_PORT=3000
+ENV LOG_LEVEL=info
+COPY config/production.toml /etc/myapp/config.toml
+```
+
+Do not bake secrets into the image. Use [Locksmith](../concepts/key-services.md) for secret values that must only be decrypted inside the enclave.
 
 ## Making your application reproducible
 

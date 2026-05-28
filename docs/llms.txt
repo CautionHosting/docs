@@ -4,6 +4,8 @@
 
 Caution helps teams deploy workloads to AWS Nitro Enclaves, verify source-to-enclave integrity with reproducible builds and hardware attestation, and optionally protect application data all the way into the enclave with end-to-end encryption.
 
+Application containers are built with standard Docker, `docker build -f <containerfile> .`, from the repository root. The legacy Procfile `build` field is not available, and Caution does not pass extra Docker build arguments; public build-time values must be part of the image inputs.
+
 ## Start here
 
 - What is Caution?: https://docs.caution.co/what-is-caution/
@@ -14,6 +16,7 @@ Caution helps teams deploy workloads to AWS Nitro Enclaves, verify source-to-enc
 ## How-to guides
 
 - Verify an app: https://docs.caution.co/guides/verify-an-app/
+- Containerize an app: https://docs.caution.co/guides/containerize-an-application/
 - Set up a custom domain: https://docs.caution.co/guides/set-up-a-custom-domain/
 
 ## Concepts

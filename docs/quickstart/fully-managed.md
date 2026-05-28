@@ -88,6 +88,14 @@ caution init
 
 A `Procfile` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `Procfile` is already included. If you're deploying your own application, you'll need to create one. See the [Procfile reference](../reference/procfile.md).
 
+For your own app, make sure the container builds from the repository root with the standard Docker form:
+
+```bash
+docker build -f Containerfile .
+```
+
+If you use another file, set `containerfile` in the `Procfile` and replace `Containerfile` with that path. Caution uses this build shape and does not pass extra build arguments, so public build-time values need to be part of the image inputs. Use [Locksmith](../concepts/key-services.md) for secrets.
+
 At minimum, your `Procfile` should specify how to run your application:
 
 ```yaml
@@ -109,7 +117,7 @@ From your application directory, push the code to Caution:
 git push caution main
 ```
 
-Caution builds a reproducible enclave image and deploys it into the enclave.
+Caution builds a reproducible enclave image with the standard Docker build and deploys it into the enclave.
 
 ## Verify the deployment
 
@@ -147,6 +155,6 @@ Your application is now running in a verified enclave. Here's what to explore ne
 
     ---
 
-    Configure how your application [builds, runs, and verifies](../reference/procfile.md).
+    Configure how your application [runs and verifies](../reference/procfile.md).
 
 </div>

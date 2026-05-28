@@ -16,7 +16,7 @@ The system uses [Shamir secret sharing](https://en.wikipedia.org/wiki/Shamir%27s
 
 Use Locksmith for values that must remain secret, such as database URLs, API keys, and signing keys. These values are encrypted into `.asc` files, committed with the app, and decrypted inside the enclave after the quorum is met. See [Add encrypted secrets](#2-add-encrypted-secrets) for the setup flow.
 
-For public or non-sensitive configuration, such as ports, feature flags, or public URLs, use `/etc/environment` in your container image instead. Public environment variables do not require Keymaker, a quorum bundle, Locksmith, or shard submission. See [Non-encrypted environment variables](#non-encrypted-environment-variables) for the Dockerfile example.
+For public or non-sensitive configuration, such as ports, feature flags, or public URLs, use `/etc/environment` in your container image instead. Public environment variables do not require Keymaker, a quorum bundle, Locksmith, or shard submission. Because Caution does not pass Docker build arguments, public build-time values must also be expressed in the Containerfile or files copied into the image. See [Non-encrypted environment variables](#non-encrypted-environment-variables) for the Dockerfile example.
 
 ## Components
 
@@ -173,7 +173,7 @@ Once enough shards are received, locksmithd reconstructs the secret, starts keyf
 
 ## Non-encrypted environment variables
 
-For configuration values that don't need encryption (ports, feature flags, public URLs), place them in `/etc/environment` in your container image. These are loaded into the enclave environment automatically, without requiring locksmith.
+For configuration values that don't need encryption (ports, feature flags, public URLs), place them in `/etc/environment` in your container image. These are loaded into the enclave environment automatically, without requiring locksmith. This is also where values that older workflows might have supplied with Docker build arguments should be baked into the image.
 
 ```dockerfile
 RUN echo "APP_PORT=3000" >> /etc/environment
@@ -207,6 +207,6 @@ RUN echo "LOG_LEVEL=info" >> /etc/environment
 
     ---
 
-    Configure how your application [builds, runs, and verifies](../reference/procfile.md).
+    Configure how your application [runs and verifies](../reference/procfile.md).
 
 </div>
