@@ -168,7 +168,11 @@ rootfs.cpio.gz
 
 Use `rootfs.cpio.gz` as the QEMU initrd. Do not pass the EIF itself to `-initrd`; the EIF is the Nitro package produced by `eif_build`, while QEMU expects a raw initramfs.
 
-The Nitro kernel is not built by `caution apps build`. It comes from the pinned StageX `linux-nitro` image used by the generated `Containerfile.eif`:
+Two kernel options are available depending on what you need to test.
+
+### Logs only (Nitro kernel)
+
+The Nitro kernel comes from the pinned StageX `linux-nitro` image used by the generated `Containerfile.eif`:
 
 ```dockerfile
 FROM stagex/user-linux-nitro@sha256:aa1006d91a7265b33b86160031daad2fdf54ec2663ed5ccbd312567cc9beff2c AS linux-nitro
@@ -176,7 +180,7 @@ COPY --from=linux-nitro /bzImage /build/kernel/bzImage
 COPY --from=linux-nitro /linux.config /build/kernel/linux.config
 ```
 
-Extract the matching kernel from that image:
+Extract it:
 
 ```bash
 mkdir -p /tmp/caution-linux-nitro
@@ -188,7 +192,7 @@ docker cp caution-linux-nitro:/linux.config /tmp/caution-linux-nitro/linux.confi
 docker rm caution-linux-nitro
 ```
 
-Then boot the exported initramfs with QEMU:
+Boot:
 
 ```bash
 qemu-system-x86_64 \
@@ -196,10 +200,67 @@ qemu-system-x86_64 \
   -nographic \
   -kernel /tmp/caution-linux-nitro/bzImage \
   -initrd /path/to/eif-stage/output/rootfs.cpio.gz \
-  -append "console=ttyS0 reboot=k panic=1 pci=off nomodules nit.target=/run.sh"
+  -append "console=ttyS0 reboot=k panic=1 nomodules nit.target=/run.sh"
 ```
 
-This lets you see boot output and application logs directly in your terminal without needing SSH, debug mode, or a full AWS deployment. Nitro-specific features such as NSM attestation and real enclave vsock behavior are not fully available under plain QEMU, so use this for debugging the initramfs and application boot path rather than validating production attestation.
+This shows boot output and application logs. Networking will not work — the Nitro kernel has no virtio-net or vsock drivers.
+
+### With networking (standard kernel)
+
+To expose ports and test HTTP endpoints, use a standard x86_64 kernel:
+
+```bash
+docker run --rm --platform linux/amd64 \
+  -v /tmp/caution-linux-nitro:/out ubuntu:24.04 \
+  bash -c "apt-get update -q && apt-get install -y linux-image-generic \
+    && chmod 644 /boot/vmlinuz-* \
+    && cp /boot/vmlinuz-*-generic /out/vmlinuz-amd64"
+```
+
+Boot with port forwarding — adjust ports to match your `Procfile`:
+
+```bash
+qemu-system-x86_64 \
+  -m 512M \
+  -nographic \
+  -kernel /tmp/caution-linux-nitro/vmlinuz-amd64 \
+  -initrd /path/to/eif-stage/output/rootfs.cpio.gz \
+  -append "console=ttyS0 reboot=k panic=1 nomodules nit.target=/run.sh" \
+  -netdev user,id=net0,hostfwd=tcp:0.0.0.0:8083-:8083,hostfwd=tcp:0.0.0.0:49502-:49502 \
+  -device virtio-net-pci,netdev=net0
+```
+
+```bash
+# App
+curl http://localhost:8083/
+
+# Attestation — nonce is base64-encoded 32 bytes
+curl -X POST http://localhost:49502/attestation \
+  -H "Content-Type: application/json" \
+  -d '{"nonce": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="}'
+```
+
+Expected attestation response (correct — NSM not available in QEMU):
+
+```json
+{"errors":["unable to get nonced attestation: AttestationGeneration (...)","could not initialize the NSM driver"]}
+```
+
+Expected warnings that are harmless:
+
+- `socat: TUNSETIFF {"eth0"}: Invalid argument` — vsock TUN creation failed, but virtio-net eth0 still comes up
+- `open("/dev/vsock"): No such file or directory` — standard kernel has no vsock driver
+- `WARNING: NSM module not found at /nsm.ko` — expected, no hardware
+
+### Local limitations
+
+| Feature | Local QEMU | Production (Nitro) |
+|---|---|---|
+| App starts, logs visible | Yes | Yes |
+| Networking / port access | Standard kernel only | Yes (vsock tunnel) |
+| NSM / attestation document | No | Yes |
+| VSock proxies | No | Yes |
+| PCR measurements | No | Yes |
 
 ## Common issues
 
