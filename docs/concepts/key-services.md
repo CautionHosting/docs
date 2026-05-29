@@ -156,6 +156,14 @@ The enclave will start with locksmithd listening on reserved port 49504, waiting
 
 Each shard-holder sends their shard to the running enclave:
 
+!!! warning "Temporary CLI build requirement"
+    `caution secret send-shard` currently requires the host-toolchain
+    untrusted CLI build. Install that binary from the platform repository with
+    `make install-cli-untrusted`. The default StageX reproducible CLI build
+    works for other CLI commands, but the shard-sending path can hit a musl
+    static-linking limitation when the PC/SC stack tries to load
+    `libpcsclite_real.so.1`.
+
 ```bash
 caution secret send-shard
 ```
