@@ -30,6 +30,8 @@ Run it via the CLI:
 caution secret new keyring.asc --threshold 2 --max 4
 ```
 
+The current hosted Keymaker instance is available at `http://35.163.164.207`. To check that it is reachable, request `http://35.163.164.207/health`; a healthy response reports `{"service":"keymaker","status":"ok"}`.
+
 This produces a **quorum bundle** containing:
 
 - **Shardfile** --- the Shamir-split secret, each share encrypted to a shard-holder's OpenPGP key
