@@ -22,15 +22,16 @@ For public or non-sensitive configuration, such as ports, feature flags, or publ
 
 ### Keymaker
 
-Keymaker is the setup-time component. It generates the initial quorum: a master secret split into shards, each encrypted to a shard-holder's OpenPGP key.
+Keymaker is the setup-time component. It generates the initial quorum: a master secret split into shards, each encrypted to a shard-holder's OpenPGP key. The current hosted Keymaker instance is available at `http://35.163.164.207`.
 
-Run it via the CLI:
+The CLI reads the Keymaker base URL from `KEYMAKER_URL` when generating a quorum. Set it before running `caution secret new`:
 
 ```bash
+export KEYMAKER_URL=http://35.163.164.207
 caution secret new keyring.asc --threshold 2 --max 4
 ```
 
-The current hosted Keymaker instance is available at `http://35.163.164.207`. To check that it is reachable, request `http://35.163.164.207/health`; a healthy response reports `{"service":"keymaker","status":"ok"}`.
+To check that Keymaker is reachable, request `http://35.163.164.207/health`; a healthy response reports `{"service":"keymaker","status":"ok"}`.
 
 This produces a **quorum bundle** containing:
 
@@ -87,9 +88,14 @@ gpg --export --armor dave@example.com >> keyring.asc
 
 Use `>` only for the first key because it creates or replaces the file. Use `>>` for each additional key so the exported public key is appended to the existing `keyring.asc`.
 
+Set `KEYMAKER_URL` to the hosted Keymaker instance, then generate the quorum:
+
 ```bash
+export KEYMAKER_URL=http://35.163.164.207
 caution secret new keyring.asc --threshold 2 --max 4 --name "production secrets"
 ```
+
+If `KEYMAKER_URL` is unset, the CLI exits with `KEYMAKER_URL environment variable is required`.
 
 This creates a 2-of-4 quorum: any 2 of the 4 shard-holders can unlock the enclave.
 
