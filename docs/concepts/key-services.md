@@ -22,16 +22,23 @@ For public or non-sensitive configuration, such as ports, feature flags, or publ
 
 ### Keymaker
 
-Keymaker is the setup-time component. It generates the initial quorum: a master secret split into shards, each encrypted to a shard-holder's OpenPGP key. The current hosted Keymaker instance is available at `http://35.163.164.207`.
-
-The CLI reads the Keymaker base URL from `KEYMAKER_URL` when generating a quorum. Set it before running `caution secret new`:
+Keymaker is the setup-time component. It generates the initial quorum: a master secret split into shards, each encrypted to a shard-holder's OpenPGP key. Deploy it from the Locksmith repository before generating a quorum:
 
 ```bash
-export KEYMAKER_URL=http://35.163.164.207
+git clone https://codeberg.org/caution/locksmith
+cd locksmith
+caution init
+git push caution main
+```
+
+After the deployment finishes, set `KEYMAKER_URL` to the deployed Locksmith application URL before running `caution secret new`:
+
+```bash
+export KEYMAKER_URL=https://your-locksmith-deployment.example
 caution secret new keyring.asc --threshold 2 --max 4
 ```
 
-To check that Keymaker is reachable, request `http://35.163.164.207/health`; a healthy response reports `{"service":"keymaker","status":"ok"}`.
+To check that Keymaker is reachable, request `$KEYMAKER_URL/health`; a healthy response reports `{"service":"keymaker","status":"ok"}`.
 
 This produces a **quorum bundle** containing:
 
@@ -88,10 +95,10 @@ gpg --export --armor dave@example.com >> keyring.asc
 
 Use `>` only for the first key because it creates or replaces the file. Use `>>` for each additional key so the exported public key is appended to the existing `keyring.asc`.
 
-Set `KEYMAKER_URL` to the hosted Keymaker instance, then generate the quorum:
+Set `KEYMAKER_URL` to your deployed Locksmith application URL, then generate the quorum:
 
 ```bash
-export KEYMAKER_URL=http://35.163.164.207
+export KEYMAKER_URL=https://your-locksmith-deployment.example
 caution secret new keyring.asc --threshold 2 --max 4 --name "production secrets"
 ```
 
