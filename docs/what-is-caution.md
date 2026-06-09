@@ -12,6 +12,43 @@ Caution is a general-purpose, [verifiable](concepts/verifiability.md) confidenti
 
 It combines enclave isolation, [hardware attestation](concepts/attestation.md), [reproducible builds](concepts/reproducibility.md), and support for [end-to-end encryption](concepts/encryption.md). Together, these let users verify code integrity and, when end-to-end encryption is enabled, keep application data encrypted all the way into the enclave.
 
+In both fully managed and bring your own cloud deployments, Caution connects the operator's deployment workflow to an independent verification workflow:
+
+```mermaid
+flowchart TB
+    subgraph Operator["Operator workflow"]
+        Source["Application source<br/>Procfile and Containerfile"]
+        Push["git push caution main"]
+    end
+
+    subgraph Deployment["Caution deployment"]
+        Build["Standard Docker build<br/>from the repository root"]
+        Image["Enclave image<br/>with source manifest"]
+        Deploy["Deploy to AWS Nitro Enclave"]
+    end
+
+    subgraph Runtime["Running deployment"]
+        Enclave["Application inside enclave"]
+        Attestation["/attestation endpoint<br/>PCRs and source manifest"]
+    end
+
+    subgraph Verification["Independent verification"]
+        Verify["caution verify"]
+        Fetch["Fetch attestation<br/>and source manifest"]
+        Rebuild["Reproduce build locally<br/>from source and inputs"]
+        Compare["Compare expected PCRs<br/>with attested PCRs"]
+        Result["Verification result"]
+    end
+
+    Source --> Push --> Build --> Image --> Deploy --> Enclave --> Attestation
+    Verify --> Fetch
+    Attestation --> Fetch
+    Fetch --> Rebuild
+    Fetch --> Compare
+    Rebuild --> Compare
+    Compare --> Result
+```
+
 ## Why it exists
 
 Caution exists to move sensitive cloud services from "trust us" to "verify it yourself." It helps operators reduce blind trust by giving customers, auditors, and downstream services independent evidence of what is running. That matters when sensitive data, secrets, or automated decisions depend on software running outside the verifier's control.

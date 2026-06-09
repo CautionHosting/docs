@@ -9,7 +9,7 @@ Deploy Caution enclaves in your own AWS infrastructure while Caution handles the
 
 ## What is bring your own cloud?
 
-Bring your own cloud (BYOC) lets you run confidential enclaves in your own AWS account. A one-time setup script creates isolated AWS infrastructure and a role that can only interact with resources tagged for Caution, then Caution manages deployments within that environment. For full details, see the [bring your own cloud reference](../reference/bring-your-own-cloud.md).
+Bring your own cloud (BYOC) lets you run confidential enclaves in your own AWS account. A one-time setup script creates isolated AWS infrastructure and a scoped IAM identity that can only interact with resources tagged for Caution, then Caution manages deployments within that environment. For full details, see the [bring your own cloud reference](../reference/bring-your-own-cloud.md).
 
 !!! info "AWS Nitro support today"
     Caution currently supports deployments on AWS Nitro Enclaves. We are actively working on support for Intel TDX, AMD SEV-SNP, and TPM 2.0 attestations.
@@ -93,6 +93,51 @@ If you use another file, set `containerfile` in the `Procfile` and replace `Cont
 
 Choose how you want to provision the AWS environment for bring your own cloud deployments. Both paths continue through the Caution CLI for app registration, Git-based deployment, and verification.
 
+In both paths, setup uses your provisioning credentials to create tagged AWS resources and a scoped IAM user, then registers only the scoped deployment credentials with Caution:
+
+```mermaid
+flowchart TB
+    subgraph Local["Your setup environment"]
+        AppDir["Application directory"]
+        AwsCreds["AWS provisioning credentials"]
+        CliSetup["CLI-guided setup<br/>caution init --byoc"]
+        ManualSetup["Manual setup container<br/>bring-your-own-cloud-setup"]
+        ConfigFile["credentials.json.gpg<br/>manual path"]
+    end
+
+    subgraph Aws["Your AWS account"]
+        Resources["Tagged deployment resources<br/>VPC, subnets, IGW, routing, S3, launch template, ASG"]
+        InstanceRole["EC2 instance role<br/>read EIF images"]
+        BuilderRole["Builder role<br/>publish EIF images"]
+        ScopedUser["Scoped IAM user<br/>tag-limited policy"]
+    end
+
+    subgraph Caution["Caution"]
+        AppRecord["Caution app record"]
+        DeploymentCreds["Scoped deployment credentials"]
+    end
+
+    AppDir --> CliSetup
+    AwsCreds --> CliSetup
+    AwsCreds --> ManualSetup
+
+    CliSetup -->|provisions| Resources
+    CliSetup -->|creates| InstanceRole
+    CliSetup -->|creates| BuilderRole
+    CliSetup -->|creates| ScopedUser
+    CliSetup -->|registers automatically| AppRecord
+
+    ManualSetup -->|provisions| Resources
+    ManualSetup -->|creates| InstanceRole
+    ManualSetup -->|creates| BuilderRole
+    ManualSetup -->|creates| ScopedUser
+    ManualSetup --> ConfigFile
+    ConfigFile -->|caution init --byoc --config| AppRecord
+
+    ScopedUser --> DeploymentCreds
+    AppRecord --> DeploymentCreds
+```
+
 ### CLI-guided provisioning (recommended)
 
 Use this path if you want Caution to provision AWS infrastructure and register deployment credentials automatically.
@@ -148,6 +193,7 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 | **VPC** | Dedicated `/16` VPC with public subnets across multiple availability zones, internet gateway, and routing |
 | **S3 Bucket** | Stores enclave image files (EIFs). Named `caution-<deployment-id>-images` |
 | **EC2 Instance Role** | Allows enclave instances to read EIFs from the S3 bucket |
+| **Builder Role** | Allows builder instances to publish EIF objects into the S3 bucket |
 | **Launch Template** | Preconfigured template for enclave instances |
 | **Auto Scaling Group** | Manages enclave instances (starts at 0, Caution scales as needed) |
 | **Scoped IAM User** | Credentials for Caution, scoped to only these resources |

@@ -12,6 +12,47 @@ Caution's secret management system for enclaves offers services for managing key
 
 The system uses [Shamir secret sharing](https://en.wikipedia.org/wiki/Shamir%27s_secret_sharing) to split a master secret into multiple shards encrypted to PGP keys. A configurable quorum threshold of shard-holders must independently send their shards to the enclave before it can reconstruct the secret and derive cryptographic keys.
 
+At a high level, Keymaker prepares the quorum materials, and Locksmith unlocks them inside the enclave after enough shard-holders approve the deployment:
+
+```mermaid
+flowchart TB
+    subgraph Setup["Setup time"]
+        direction LR
+        Keyring["Shard-holder<br/>OpenPGP keys"]
+        Keymaker["Keymaker"]
+        Bundle["Quorum bundle<br/>shards, keyring, public key"]
+        Recipient["Encryption<br/>public key"]
+
+        Keyring --> Keymaker
+        Keymaker --> Bundle
+        Bundle --> Recipient
+    end
+
+    subgraph Repository["Application repository"]
+        direction LR
+        BundleFile[".caution/quorum-bundle.json"]
+        SecretFiles["Encrypted secrets<br/>.caution/secrets"]
+    end
+
+    subgraph Enclave["Runtime enclave"]
+        direction LR
+        Locksmithd["locksmithd<br/>port 49504"]
+        Keyforkd["keyforkd"]
+        Oneshot["locksmith-oneshot"]
+        App["Application process"]
+
+        Locksmithd --> Keyforkd
+        Keyforkd --> Oneshot
+        Oneshot --> App
+    end
+
+    Holders["Shard holders"] -->|send signed shards<br/>after attestation| Locksmithd
+    Bundle --> BundleFile
+    Recipient --> SecretFiles
+    BundleFile --> Locksmithd
+    SecretFiles --> Oneshot
+```
+
 ### Encrypted and public environment variables
 
 Use Locksmith for values that must remain secret, such as database URLs, API keys, and signing keys. These values are encrypted into `.asc` files, committed with the app, and decrypted inside the enclave after the quorum is met. See [Add encrypted secrets](#2-add-encrypted-secrets) for the setup flow.
@@ -181,6 +222,37 @@ Each shard-holder sends their shard to the running enclave:
 
 ```bash
 caution secret send-shard
+```
+
+For each shard-holder, the unlock flow looks like this:
+
+```mermaid
+sequenceDiagram
+    participant Holder as Shard-holder CLI
+    participant Locksmithd as locksmithd inside enclave
+    participant NSM as Nitro Security Module
+    participant Keyforkd as keyforkd
+    participant Oneshot as locksmith-oneshot
+    participant App as Application
+
+    Holder->>Locksmithd: Connect on port 49504
+    Holder->>Locksmithd: Request attestation
+    Locksmithd->>NSM: Generate attestation document
+    NSM-->>Locksmithd: Signed Nitro attestation
+    Locksmithd-->>Holder: Attestation and ephemeral key
+    Holder->>Holder: Verify attestation before sending
+    Holder->>Locksmithd: Send signed, encrypted shard
+    Locksmithd->>Locksmithd: Verify sender and count quorum
+
+    alt Quorum reached
+        Locksmithd->>Locksmithd: Reconstruct master secret
+        Locksmithd->>Keyforkd: Start key derivation service
+        Oneshot->>Keyforkd: Derive OpenPGP key
+        Oneshot->>Oneshot: Decrypt .asc secrets
+        Oneshot-->>App: Export environment variables
+    else Quorum not reached
+        Locksmithd-->>Holder: Wait for more valid shards
+    end
 ```
 
 This command:

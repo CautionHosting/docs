@@ -8,7 +8,7 @@ icon: lucide/book-marked
 
 ## Overview
 
-Bring your own cloud (BYOC) lets you run confidential enclaves in your own AWS account. A one-time setup script creates isolated AWS infrastructure and a role scoped to resources tagged for Caution, then Caution manages deployments within that environment.
+Bring your own cloud (BYOC) lets you run confidential enclaves in your own AWS account. A one-time setup script creates isolated AWS infrastructure and a scoped IAM identity limited to resources tagged for Caution, then Caution manages deployments within that environment.
 
 It is best for teams that:
 
@@ -46,6 +46,47 @@ In bring your own cloud, Caution runs the standard Docker application build and 
 ## How it works
 
 To deploy with bring your own cloud, you'll need a [containerized application](../guides/containerize-an-application.md), Docker, and AWS credentials for the target account. Caution builds from the repository root with `docker build -f <containerfile> .`; it does not run a custom `build` command or pass extra Docker build arguments. Public build-time values must be part of the image inputs, and secrets should use [Locksmith](../concepts/key-services.md).
+
+The deployment boundary looks like this:
+
+```mermaid
+flowchart TB
+    subgraph Operator["Your environment"]
+        Repo["Application repository<br/>Procfile and Containerfile"]
+        Setup["caution init --byoc"]
+        AwsCreds["AWS credentials<br/>for provisioning"]
+    end
+
+    subgraph Caution["Caution"]
+        Control["Caution control plane"]
+        Build["Standard Docker build"]
+        ScopedCreds["Scoped deployment credentials"]
+    end
+
+    subgraph Aws["Your AWS account"]
+        Iam["Scoped IAM user<br/>tag-limited permissions"]
+        Env["Provisioned AWS environment<br/>VPC, S3, roles, launch template, ASG"]
+        Eip["Elastic IP<br/>assigned during deploy"]
+        Ec2["EC2 parent instance<br/>launched by ASG"]
+        Enclave["AWS Nitro Enclave<br/>application runtime"]
+    end
+
+    Repo --> Setup
+    AwsCreds --> Setup
+    Setup -->|sets up| Env
+    Setup --> Iam
+    Iam --> ScopedCreds
+
+    Repo -->|git push caution main| Control
+    Control --> Build
+    Control -->|uses| ScopedCreds
+    Build -->|uploads EIF| Env
+    ScopedCreds -->|manage tagged resources| Env
+    ScopedCreds --> Eip
+    Env --> Ec2
+    Ec2 --> Enclave
+    Eip --> Ec2
+```
 
 Once you have everything in place, the setup flow looks like this:
 
