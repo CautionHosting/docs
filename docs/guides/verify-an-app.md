@@ -23,6 +23,9 @@ You need:
 - The app's attestation endpoint, or a local Caution deployment state in the app directory
 - Access to the source used to build the app, unless you are verifying against a known PCR file
 
+!!! note "macOS requires Docker Rosetta support"
+    On Apple Silicon Macs, enable Rosetta support in Docker Desktop before running `caution verify`. Open Docker Desktop settings, enable **Use Rosetta for x86_64/amd64 emulation on Apple Silicon**, then apply the change and restart Docker if prompted.
+
 !!! warning "Debug mode cannot be verified"
     AWS Nitro Enclaves zero out PCR values in debug mode. Remove `debug: true` from the `Procfile` and redeploy before verifying a production app.
 
