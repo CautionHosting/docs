@@ -4,7 +4,7 @@
 
 Caution helps teams deploy workloads to AWS Nitro Enclaves, verify source-to-enclave integrity with reproducible builds and hardware attestation, and optionally protect application data all the way into the enclave with end-to-end encryption.
 
-Application containers are built with standard Docker, `docker build -f <containerfile> .`, from the repository root. The legacy Procfile `build` field is not available, and Caution does not pass extra Docker build arguments; public build-time values must be part of the image inputs.
+Application containers are built with standard Docker, `docker build -f <containerfile> .`, from the repository root. The legacy Procfile `build` field is not available, and Caution does not pass extra Docker build arguments; public build-time values must be part of the image inputs. Secret values for Locksmith are encrypted from `.env` with `caution secret encrypt`, which writes `.caution/secrets/<KEY>.asc` files for enclave-only decryption. For fast development setup, `caution secret keygen ... --shoot-self-in-foot` is acceptable when you knowingly accept local plaintext private-key risk; do not use the generated private keyrings for production shard holders. `caution secret send-shard` currently requires the host-toolchain untrusted CLI build; untrusted means it is not built through StageX and inherits host-toolchain and host-library supply-chain risks.
 
 ## Start here
 

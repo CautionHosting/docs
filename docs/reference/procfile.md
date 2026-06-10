@@ -149,10 +149,12 @@ domain: secrets.example.com
 app_sources: https://codeberg.org/example/secret-app
 ```
 
-After deploying, send shards with `caution secret send-shard` from the
-host-toolchain untrusted CLI build (`make install-cli-untrusted`). See
-[Key services](../concepts/key-services.md#5-send-shards) for the current CLI
-build requirement.
+Before deploying, generate a quorum and run `caution secret encrypt` to write
+encrypted `.caution/secrets/*.asc` files. After deploying, send shards with
+`caution secret send-shard` from the host-toolchain untrusted CLI build
+(`make install-cli-untrusted`). See [Key services](../concepts/key-services.md)
+for the full setup flow, why this build is called untrusted, and the current
+shard-sending build requirement.
 
 ### Custom resources with multiple ports
 
