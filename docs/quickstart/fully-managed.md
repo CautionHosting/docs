@@ -109,11 +109,11 @@ run: /app/server
 app_sources: https://codeberg.org/myorg/myapp
 ```
 
-## Add encrypted environment variables
+## Add environment variables
 
-If your application needs secret environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and enable Locksmith in your `Procfile`.
+If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and enable Locksmith in your `Procfile`.
 
-Skip this step if your application does not need encrypted environment variables.
+Skip this step if your application does not need environment variables.
 
 ## Deploy the application
 

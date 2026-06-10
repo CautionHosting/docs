@@ -313,6 +313,22 @@ RUN echo "APP_PORT=3000" >> /etc/environment
 RUN echo "LOG_LEVEL=info" >> /etc/environment
 ```
 
+For multi-stage builds, make sure `/etc/environment` exists in the final runtime stage. Files written in an earlier build stage are not present in the final image unless you copy them:
+
+```dockerfile
+FROM stagex/pallet-rust AS build
+# Build your application and prepare public runtime configuration.
+RUN printf '%s\n' \
+  'APP_PORT=3000' \
+  'LOG_LEVEL=info' \
+  > /tmp/environment
+
+FROM stagex/core-filesystem AS run
+COPY --from=build /tmp/environment /etc/environment
+COPY --from=build /myapp /app/myapp
+ENTRYPOINT ["/app/myapp"]
+```
+
 ## Security model
 
 - **No single point of trust** --- the master secret only exists briefly during reconstruction, inside the enclave's encrypted memory
