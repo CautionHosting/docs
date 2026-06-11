@@ -150,6 +150,8 @@ caution init --byoc
 
 This command detects your AWS credentials, provisions the required AWS infrastructure, creates your app on Caution, and registers the deployment credentials automatically.
 
+Commit the generated `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
+
 ### Manual provisioning
 
 Use this path if you want more control over the AWS infrastructure setup before registering the deployment configuration with Caution.
@@ -181,6 +183,8 @@ To use the generated encrypted credentials, return to your application directory
 ```bash
 caution init --byoc --config /path/to/credentials.json.gpg
 ```
+
+Commit the generated `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
 ## What the setup creates
 

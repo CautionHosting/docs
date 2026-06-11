@@ -88,6 +88,8 @@ caution init
 
 A `Procfile` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `Procfile` is already included. If you're deploying your own application, you'll need to create one. See the [Procfile reference](../reference/procfile.md).
 
+Commit the generated `Procfile` and `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
+
 For your own app, make sure the container builds from the repository root with the standard Docker form:
 
 ```bash

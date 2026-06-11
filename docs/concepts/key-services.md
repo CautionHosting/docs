@@ -87,8 +87,7 @@ This produces a **quorum bundle** containing:
 - **Keyring** --- the public OpenPGP keyring of all shard-holders (used to verify shard submissions)
 - **Public key** --- the derived public key for encrypting secrets to the enclave
 
-The bundle is saved to `.caution/quorum-bundle.json` and optionally backed up to your Caution account.
-This data should be checked in as part of the repository.
+The bundle is saved to `.caution/quorum-bundle.json` and optionally backed up to your Caution account. Commit this file to your application repository so Caution can include it in the deployed image.
 
 ### Locksmithd
 
@@ -212,6 +211,8 @@ caution secret encrypt \
 ```
 
 Each `.asc` file contains a single value encrypted with the quorum's public key. The filename (minus `.asc`) becomes the environment variable name.
+
+Commit the generated `.caution/` files that Caution needs for deployment and runtime, including `.caution/deployment.json`, `.caution/quorum-bundle.json`, and encrypted `.caution/secrets/*.asc` files. Do not commit local plaintext inputs such as `.env` or generated private keyrings such as `alice.private.asc`.
 
 ### 3. Enable Locksmith in your Procfile
 
