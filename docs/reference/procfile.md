@@ -149,12 +149,19 @@ domain: secrets.example.com
 app_sources: https://codeberg.org/example/secret-app
 ```
 
-Before deploying, generate a quorum and run `caution secret encrypt` to write
-encrypted `.caution/secrets/*.asc` files. After deploying, send shards with
-`caution secret send-shard` from the host-toolchain untrusted CLI build
-(`make install-cli-untrusted`). See [Key services](../concepts/key-services.md)
-for the full setup flow, why this build is called untrusted, and the current
-shard-sending build requirement.
+Before deploying, generate a quorum, run `caution secret encrypt` to write
+encrypted `.caution/secrets/*.asc` files, and add the bundle and secrets to
+your `Containerfile`:
+
+```dockerfile
+ADD .caution/quorum-bundle.json /etc/caution/bundle.json
+ADD .caution/secrets/ /etc/caution/secrets/
+```
+
+After deploying, send shards with `caution secret send-shard` from the
+host-toolchain untrusted CLI build (`make install-cli-untrusted`). See
+[Key services](../concepts/key-services.md) for the full setup flow, why this
+build is called untrusted, and the current shard-sending build requirement.
 
 ### Custom resources with multiple ports
 

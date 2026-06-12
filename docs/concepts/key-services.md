@@ -124,45 +124,62 @@ Create an OpenPGP keyring with the public keys of all shard-holders, then genera
 
 #### Create `keyring.asc`
 
-For production shard holders, prefer an OpenPGP key stored on a smart card. [Keyfork](https://git.distrust.co/public/keyfork) supports offline OpenPGP key derivation and smart-card-oriented workflows.
+Each shard-holder certificate must carry **signing**, **encryption**, and **authentication** keys: Locksmith encrypts the holder's shard to the encryption key and verifies shard submissions with the signing key. `caution secret new` rejects keyrings whose certificates are missing any of these with `keyring contains no Keymaker-eligible public certificates`.
 
-For development or other cases where you knowingly accept plaintext private key risk, use the CLI helper. It creates Keymaker-compatible public and private OpenPGP keyring files and requires an explicit unsafe acknowledgement:
+=== "Development and demos"
 
-```bash
-caution secret keygen alice.asc --name "Alice" --email alice@example.com --shoot-self-in-foot
-```
+    For development, demos, short-lived test environments, or other cases where you knowingly accept plaintext private key risk, use the CLI helper. It creates Keymaker-compatible public and private OpenPGP keyring files and requires an explicit unsafe acknowledgement:
 
-For development, demos, and short-lived test environments, `--shoot-self-in-foot` is a reasonable way to get a quorum working quickly. It intentionally bypasses hardware-backed or passphrase-protected private-key handling, so treat the generated `*.private.asc` files as temporary local secrets: do not commit them, share them, or use them for production shard holders.
+    ```bash
+    caution secret keygen alice.asc --name "Alice" --email alice@example.com --shoot-self-in-foot
+    ```
 
-This writes `alice.asc` for Keymaker and `alice.private.asc` for Alice's later shard submission. The generated private keyring is unencrypted; anyone who can read it can submit that holder's shard. Alice will use it with `caution secret send-shard --keyring alice.private.asc`.
+    This writes `alice.asc` for Keymaker and `alice.private.asc` for Alice's later shard submission. `--shoot-self-in-foot` intentionally bypasses hardware-backed or passphrase-protected private-key handling: the private keyring is unencrypted, and anyone who can read it can submit that holder's shard. Treat `*.private.asc` files as temporary local secrets --- do not commit them, share them, or use them for production shard holders.
 
-Repeat key generation for each shard holder, then combine the public keys into one keyring:
+    Repeat key generation for each shard holder, then combine the public keys into one keyring:
 
-```bash
-cat alice.asc bob.asc carol.asc dave.asc > keyring.asc
-```
+    ```bash
+    caution secret keygen bob.asc --name "Bob" --email bob@example.com --shoot-self-in-foot
+    cat alice.asc bob.asc > keyring.asc
+    ```
 
-If you already manage OpenPGP keys with GnuPG, export each shard-holder's public key into the same ASCII-armored keyring file:
+    For a solo test environment, one key is enough --- skip the `cat` and pass `alice.asc` directly to `caution secret new`.
 
-```bash
-gpg --export --armor alice@example.com > keyring.asc
-gpg --export --armor bob@example.com >> keyring.asc
-gpg --export --armor carol@example.com >> keyring.asc
-gpg --export --armor dave@example.com >> keyring.asc
-```
+=== "Production (smart card / YubiKey)"
 
-Use `>` only for the first key because it creates or replaces the file. Use `>>` for each additional key so the exported public key is appended to the existing `keyring.asc`.
+    For production shard holders, keep private keys on OpenPGP smart cards such as YubiKeys. [Keyfork](https://git.distrust.co/public/keyfork) supports offline OpenPGP key derivation and smart-card-oriented workflows.
 
-Set `KEYMAKER_URL` to your deployed Locksmith application URL, then generate the quorum:
+    Export each shard-holder's public key into the same ASCII-armored keyring file:
+
+    ```bash
+    gpg --export --armor alice@example.com > keyring.asc
+    gpg --export --armor bob@example.com >> keyring.asc
+    gpg --export --armor carol@example.com >> keyring.asc
+    gpg --export --armor dave@example.com >> keyring.asc
+    ```
+
+    Use `>` only for the first key because it creates or replaces the file. Use `>>` for each additional key so the exported public key is appended to the existing `keyring.asc`.
+
+The CLI merges all armored blocks into a single keyring before uploading it to Keymaker, so both assembly styles produce equivalent bundles.
+
+#### Generate the quorum
+
+Set `KEYMAKER_URL` to your deployed Locksmith application URL, then pick `--threshold` and `--max` for your use case:
 
 ```bash
 export KEYMAKER_URL=https://your-locksmith-deployment.example
+
+# Solo development: one holder unlocks alone
+caution secret new alice.asc --threshold 1 --max 1
+
+# Team demo: both holders must approve
+caution secret new keyring.asc --threshold 2 --max 2
+
+# Production: any 2 of the 4 shard-holders can unlock the enclave
 caution secret new keyring.asc --threshold 2 --max 4 --name "production secrets"
 ```
 
-If `KEYMAKER_URL` is unset, the CLI exits with `KEYMAKER_URL environment variable is required`.
-
-This creates a 2-of-4 quorum: any 2 of the 4 shard-holders can unlock the enclave.
+`--max` must match the number of certificates in the keyring. If `KEYMAKER_URL` is unset, the CLI exits with `KEYMAKER_URL environment variable is required`.
 
 ### 2. Add encrypted secrets
 
@@ -226,7 +243,18 @@ ports: 3000
 
 List your application port in `ports`. Do not list port `49504` or any port in the reserved `49500`-`49600` range; Caution opens the Locksmith shard receiver automatically when `locksmith: true`.
 
-### 4. Deploy
+### 4. Include the bundle and secrets in your image
+
+`locksmithd` reads the quorum bundle from `/etc/caution/bundle.json` at startup. The bundle and encrypted secrets are not injected automatically — add them to your `Containerfile`:
+
+```dockerfile
+ADD .caution/quorum-bundle.json /etc/caution/bundle.json
+ADD .caution/secrets/ /etc/caution/secrets/
+```
+
+Both are safe to commit: the bundle contains only public key material and encrypted shards, and the `.asc` secrets are encrypted to the enclave-only key.
+
+### 5. Deploy
 
 ```bash
 git push caution main
@@ -234,7 +262,7 @@ git push caution main
 
 The enclave will start with locksmithd listening on reserved port 49504, waiting for shards.
 
-### 5. Send shards
+### 6. Send shards
 
 Each shard-holder sends their shard to the running enclave:
 
@@ -253,15 +281,30 @@ Each shard-holder sends their shard to the running enclave:
     static-linking limitation when the PC/SC stack tries to load
     `libpcsclite_real.so.1`.
 
-```bash
-caution secret send-shard
-```
+=== "Development and demos"
 
-If the shard-holder used the unsafe plaintext key helper, pass their private keyring:
+    Pass the private keyring written by `caution secret keygen`:
 
-```bash
-caution secret send-shard --keyring alice.private.asc
-```
+    ```bash
+    caution secret send-shard --keyring alice.private.asc
+    ```
+
+    Each holder sends with their own private keyring. For a 2-of-2 demo quorum, run it once per holder:
+
+    ```bash
+    caution secret send-shard --keyring alice.private.asc
+    caution secret send-shard --keyring bob.private.asc
+    ```
+
+=== "Production (smart card / YubiKey)"
+
+    Insert the smart card and run:
+
+    ```bash
+    caution secret send-shard
+    ```
+
+    The CLI finds the connected card matching a certificate in the bundle's keyring and prompts for the card PIN to sign the shard submission.
 
 For each shard-holder, the unlock flow looks like this:
 
