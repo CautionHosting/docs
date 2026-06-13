@@ -21,7 +21,7 @@ Technical reference documentation.
 
     ---
 
-    [SSH into the host](debugging.md), read enclave console output, and diagnose issues.
+    [SSH into the host](debug-enclave/), read enclave console output, and diagnose issues.
 
 - :lucide-layers-3: **Deployment models**
 
