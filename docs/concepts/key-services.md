@@ -262,7 +262,33 @@ git push caution main
 
 The enclave will start with locksmithd listening on reserved port 49504, waiting for shards.
 
-### 6. Send shards
+### 6. Verify and save trusted PCR values
+
+Before sending shards, each shard-holder must establish which enclave image they trust. The CLI refuses to send shards to an enclave whose PCR values don't match stored trusted hashes — this prevents shards from being sent to a tampered or unexpected image.
+
+Run `caution verify --save-pcrs` from your application directory to fetch the live PCR values from the running enclave, verify them against a locally reproduced build, and save them to `.caution/trusted_hashes.json`:
+
+```bash
+caution verify --save-pcrs
+```
+
+This writes `.caution/trusted_hashes.json`. Commit it so all shard-holders share the same trusted baseline. Subsequent deploys require re-running this command to update the stored values before sending shards.
+
+!!! note "Local QEMU development"
+    QEMU enclaves report all-zero PCR values. `caution verify --save-pcrs` detects this and refuses to save, because attestation cannot be verified in debug mode. Instead, create `.caution/trusted_hashes.json` manually:
+
+    ```json
+    {
+      "pcr0": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "pcr1": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "pcr2": "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+      "verified_at": "1970-01-01T00:00:00+00:00"
+    }
+    ```
+
+    This is safe to commit in development repositories. Never use it for production deployments.
+
+### 7. Send shards
 
 Each shard-holder sends their shard to the running enclave:
 

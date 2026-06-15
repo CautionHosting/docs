@@ -132,8 +132,10 @@ Caution builds a reproducible enclave image with the standard Docker build and d
 From your application directory, run the following command to rebuild the image, compare hashes, and confirm exactly what the enclave is running:
 
 ```bash
-caution verify
+caution verify --save-pcrs
 ```
+
+The `--save-pcrs` flag saves the verified PCR values to `.caution/trusted_hashes.json`. This file is required before sending locksmith shards — commit it alongside your other `.caution/` files.
 
 ## Next steps
 
