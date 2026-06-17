@@ -10,12 +10,12 @@ icon: lucide/layers-3
 
 Caution runs on AWS Nitro Enclaves and supports multiple deployment options depending on how much infrastructure ownership and operational control you want.
 
-Use [fully managed](../fully-managed.md) for the fastest path to production on Caution-managed infrastructure, or [bring your own cloud](../bring-your-own-cloud.md) when workloads and data must stay in your AWS account. If you want to operate the platform yourself, self-host using the [Caution source code on Codeberg](https://codeberg.org/caution){:target="_blank"}.
+Use [fully managed](../fully-managed.md) for the fastest path to production on Caution-managed infrastructure, or [bring your own compute](../byoc.md) when workloads and data must stay in your AWS account. If you want to operate the platform yourself, self-host using the [Caution source code on Codeberg](https://codeberg.org/caution){:target="_blank"}.
 
 | Model | Hosted in | Caution manages | You manage |
 |-------|-----------|-----------------|------------|
 | **Fully managed** | Caution-managed infrastructure | Infrastructure, enclave lifecycle, and public ingress | Application code and deployment configuration |
-| **Bring your own cloud** | Your AWS account | Builds, enclave lifecycle, and deployment orchestration in your AWS account | AWS account, billing, network boundaries, and data residency |
+| **Bring your own compute** | Your AWS account | Builds, enclave lifecycle, and deployment orchestration in your AWS account | AWS account, billing, network boundaries, and data residency |
 | **Self-host** | Your own environment | Nothing | Platform operations, infrastructure, and deployments |
 
 ## Fully managed
@@ -26,13 +26,13 @@ Fully managed is for teams that want Caution to host and operate deployments end
 - Use the [fully managed quickstart](../../quickstart/fully-managed.md) to deploy your first app.
 - See the [fully managed reference](../fully-managed.md) for responsibilities, requirements, and fit.
 
-## Bring your own cloud
+## Bring your own compute
 
-Bring your own cloud is for teams that want Caution to manage verifiable deployments in their own AWS account. Your data and workloads stay in your environment while Caution manages the enclave lifecycle within that boundary.
+Bring your own compute is for teams that want Caution to manage verifiable deployments in their own AWS account. Your data and workloads stay in your environment while Caution manages the enclave lifecycle within that boundary.
 
 - Start here if you need your own AWS account, billing boundary, or network controls.
-- Use the [bring your own cloud quickstart](../../quickstart/bring-your-own-cloud.md) to set up and deploy.
-- See the [bring your own cloud reference](../bring-your-own-cloud.md) for the operating model, security model, and maintenance details.
+- Use the [bring your own compute quickstart](../../quickstart/byoc.md) to set up and deploy.
+- See the [bring your own compute reference](../byoc.md) for the operating model, security model, and maintenance details.
 
 ## Self-host
 
@@ -49,7 +49,7 @@ Use this decision flow if you want the shortest path to a recommendation:
 ```mermaid
 flowchart LR
     A[Do workloads and data need to stay in your own AWS account?]
-    A -->|Yes| B[Bring your own cloud]
+    A -->|Yes| B[Bring your own compute]
     A -->|No| C[Do you want to operate the platform yourself?]
     C -->|Yes| D[Self-host]
     C -->|No| E[Fully managed]
@@ -61,7 +61,7 @@ flowchart LR
 - You do not have specific data residency requirements
 - You prefer Caution to handle operational concerns
 
-### Choose bring your own cloud if:
+### Choose bring your own compute if:
 
 - You want data and workloads to stay in your own AWS account
 - You need control over AWS billing and account boundaries

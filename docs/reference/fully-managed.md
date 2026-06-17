@@ -74,11 +74,11 @@ Once you have everything in place, the setup flow looks like this:
 
 <div class="grid cards" markdown>
 
-- :lucide-server: **Bring your own cloud**
+- :lucide-server: **Bring your own compute**
 
     ---
 
-    Run Caution enclaves in [your own AWS account](bring-your-own-cloud.md).
+    Run Caution enclaves in [your own AWS account](byoc.md).
 
 - :lucide-file-code: **Procfile**
 

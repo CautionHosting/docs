@@ -12,7 +12,7 @@ Caution is a general-purpose, [verifiable](concepts/verifiability.md) confidenti
 
 It combines enclave isolation, [hardware attestation](concepts/attestation.md), [reproducible builds](concepts/reproducibility.md), and support for [end-to-end encryption](concepts/encryption.md). Together, these let users verify code integrity and, when end-to-end encryption is enabled, keep application data encrypted all the way into the enclave.
 
-In both fully managed and bring your own cloud deployments, Caution connects the operator's deployment workflow to an independent verification workflow:
+In both fully managed and bring your own compute deployments, Caution connects the operator's deployment workflow to an independent verification workflow:
 
 ```mermaid
 flowchart TB
@@ -68,7 +68,7 @@ It gives organizations, customers, auditors, and downstream services integrity g
 | Attestation alone does not prove that a running enclave matches the intended source and build process. | Caution connects enclave measurements back to [intended source code, build inputs, and configuration](concepts/verifiability.md). |
 | Verifiers need a practical way to check a running enclave themselves. | Verification with [`caution verify`](guides/verify-an-app.md) validates the attestation, reproduces expected measurements from source, and compares them with the running enclave. |
 | Enclave deployments often require custom infrastructure and specialized security expertise. | Caution's [Git-based and CLI workflows](quickstart/) handle deployment, attestation, and verification, making confidential compute easier to adopt. |
-| Teams need different levels of infrastructure control. | Caution supports [fully managed](reference/fully-managed.md), [bring your own cloud](reference/bring-your-own-cloud.md), and self-hosted deployment models. |
+| Teams need different levels of infrastructure control. | Caution supports [fully managed](reference/fully-managed.md), [bring your own compute](reference/byoc.md), and self-hosted deployment models. |
 | Most enclave deployments depend on a single hardware root of trust. | Caution supports AWS Nitro Enclaves today and has [multi-hardware attestation](concepts/attestation.md#multi-hardware-attestation) support on the 2026 roadmap. |
 
 ## Who it is for
@@ -141,6 +141,6 @@ Caution does not determine whether source code is safe, bug-free, or appropriate
 
     ---
 
-    Compare [fully managed, bring your own cloud, and self-hosted](reference/deployment-models/) options.
+    Compare [fully managed, bring your own compute, and self-hosted](reference/deployment-models/) options.
 
 </div>

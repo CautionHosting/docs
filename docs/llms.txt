@@ -11,7 +11,7 @@ Application containers are built with standard Docker, `docker build -f <contain
 - What is Caution?: https://docs.caution.co/what-is-caution/
 - Quickstart: https://docs.caution.co/quickstart/
 - Fully managed quickstart: https://docs.caution.co/quickstart/fully-managed/
-- Bring your own cloud quickstart: https://docs.caution.co/quickstart/bring-your-own-cloud/
+- Bring your own compute quickstart: https://docs.caution.co/quickstart/byoc/
 
 ## How-to guides
 
@@ -36,7 +36,7 @@ Application containers are built with standard Docker, `docker build -f <contain
 - Containerizing: https://docs.caution.co/reference/containerizing/
 - Debugging: https://docs.caution.co/reference/debugging/
 - Fully managed: https://docs.caution.co/reference/fully-managed/
-- Bring your own cloud: https://docs.caution.co/reference/bring-your-own-cloud/
+- Bring your own compute: https://docs.caution.co/reference/byoc/
 
 ## Source
 

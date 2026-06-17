@@ -12,12 +12,12 @@
 
     [Start with fully managed :lucide-arrow-right:](fully-managed.md)
 
-- :lucide-server: **Bring your own cloud**
+- :lucide-server: **Bring your own compute**
 
     ---
 
     Deploy in your own AWS account. Best for keeping data and workloads in your environment.
 
-    [Start with bring your own cloud :lucide-arrow-right:](bring-your-own-cloud.md)
+    [Start with bring your own compute :lucide-arrow-right:](byoc.md)
 
 </div>

@@ -49,7 +49,7 @@ For internal systems where verification happens within your organization, source
 
 ## Fully private (BYOC)
 
-For maximum privacy, deploy to your own infrastructure using [bring your own cloud](../reference/bring-your-own-cloud.md). Source repositories never leave your network, and verification happens entirely within your VPC.
+For maximum privacy, deploy to your own infrastructure using [bring your own compute](../reference/byoc.md). Source repositories never leave your network, and verification happens entirely within your VPC.
 
 **How it works:**
 
@@ -86,10 +86,10 @@ You can also combine patterns. A service might have public-facing components wit
 
     Deploy using [Caution's managed infrastructure](../reference/fully-managed.md).
 
-- :lucide-server: **Bring your own cloud**
+- :lucide-server: **Bring your own compute**
 
     ---
 
-    Run Caution enclaves in [your own AWS account](../reference/bring-your-own-cloud.md).
+    Run Caution enclaves in [your own AWS account](../reference/byoc.md).
 
 </div>

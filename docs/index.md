@@ -36,7 +36,7 @@ Caution is fully open source, so teams can inspect, verify, and self-host the pl
 
     ---
 
-    Compare [fully managed, bring your own cloud, and self-hosted](./reference/deployment-models/) options.
+    Compare [fully managed, bring your own compute, and self-hosted](./reference/deployment-models/) options.
 
 - :lucide-shield-check: **Verifiability**
 

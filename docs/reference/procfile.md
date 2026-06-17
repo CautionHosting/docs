@@ -72,8 +72,8 @@ Resource values are defaults if not specified.
 | `ssh_keys` | - | OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
 | `ports` | - | Comma-separated list of ports to expose (vsock proxy + security group ingress). Do not include ports in the reserved `49500`-`49600` range. |
 | `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
-| `managed_on_prem` | `false` | Enable bring-your-own-cloud (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
-| `platform` | - | Cloud platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
+| `managed_on_prem` | `false` | Enable bring-your-own-compute (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
+| `platform` | - | Compute platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
 | `aws_region` | - | AWS region for BYOC (for example `us-east-1`). Required when `managed_on_prem: true` and `platform: aws`. |
 | `aws_instance_type` | - | Optional BYOC override for the AWS instance type. |
 | `aws_vpc_id` | - | Optional existing VPC ID for BYOC deployments. |
@@ -175,7 +175,7 @@ http_port: 3000
 
 With multiple ports, `http_port` is required to specify which port Caddy should reverse proxy. Port 9000 is exposed as raw TCP.
 
-### Bring your own cloud (AWS)
+### Bring your own compute (AWS)
 
 ```yaml
 run: /app/server

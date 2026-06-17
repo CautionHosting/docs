@@ -18,7 +18,7 @@ nav = [
 { "What is Caution?" = "what-is-caution.md" },
 { "Quickstart" = "quickstart/index.md" },
 { "Fully managed" = "quickstart/fully-managed.md" },
-{ "Bring your own cloud" = "quickstart/bring-your-own-cloud.md" },
+{ "Bring your own compute" = "quickstart/byoc.md" },
 ]},
 { "How-to guides" = [
 { "Verify an app" = "guides/verify-an-app.md" },
@@ -42,7 +42,7 @@ nav = [
 { "Deployment models" = [
 "reference/deployment-models/index.md",
 { "Fully managed" = "reference/fully-managed.md" },
-{ "Bring your own cloud" = "reference/bring-your-own-cloud.md" },
+{ "Bring your own compute" = "reference/byoc.md" },
 ]},
 ]},
 ]
