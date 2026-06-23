@@ -80,15 +80,15 @@ cd demo-hello-world-enclave
 
 ## Initialize the application
 
-From your application directory, run the following command to create a `Procfile` and other data required for the application:
+From your application directory, run the following command to create a `caution.hcl` and other data required for the application:
 
 ```bash
 caution init
 ```
 
-A `Procfile` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `Procfile` is already included. If you're deploying your own application, you'll need to create one. See the [Procfile reference](../reference/procfile.md).
+`caution.hcl` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `caution.hcl` is already included. If you're deploying your own application, you'll need to create one. See the [caution.hcl reference](../reference/caution-hcl.md).
 
-Commit the generated `Procfile` and `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
+Commit the generated `caution.hcl` and `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
 For your own app, make sure the container builds from the repository root with the standard Docker form:
 
@@ -96,24 +96,34 @@ For your own app, make sure the container builds from the repository root with t
 docker build -f Containerfile .
 ```
 
-If you use another file, set `containerfile` in the `Procfile` and replace `Containerfile` with that path. Caution uses this build shape and does not pass extra build arguments, so public build-time values need to be part of the image inputs. Use [Locksmith](../concepts/key-services.md) for secrets.
+If you use another file, set `containerfile` in the `build` block and replace `Containerfile` with that path. Caution uses this build shape and does not pass extra build arguments, so public build-time values need to be part of the image inputs. Use [Locksmith](../concepts/key-services.md) for secrets.
 
-At minimum, your `Procfile` should specify how to run your application:
+At minimum, your `caution.hcl` should specify how to run your application:
 
-```yaml
-run: /app/server
+```hcl
+enclave "main" {
+  unit "default" {
+    command = "/app/server"
+  }
+}
 ```
 
 For source verification, add your repository URL:
 
-```yaml
-run: /app/server
-app_sources: https://codeberg.org/myorg/myapp
+```hcl
+enclave "main" {
+  build {
+    app_sources = ["https://codeberg.org/myorg/myapp"]
+  }
+  unit "default" {
+    command = "/app/server"
+  }
+}
 ```
 
 ## Add environment variables
 
-If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and enable Locksmith in your `Procfile`.
+If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and reference secrets with `env::vault` in your `caution.hcl`.
 
 Skip this step if your application does not need environment variables.
 
@@ -159,10 +169,10 @@ Your application is now running in a verified enclave. Here's what to explore ne
 
     Learn how Caution [ensures code integrity](../concepts/verifiability.md) from source to production.
 
-- :lucide-file-code: **Procfile**
+- :lucide-file-code: **caution.hcl**
 
     ---
 
-    Configure how your application [runs and verifies](../reference/procfile.md).
+    Configure how your application [runs and verifies](../reference/caution-hcl.md).
 
 </div>

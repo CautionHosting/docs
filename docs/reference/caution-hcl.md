@@ -10,7 +10,7 @@ icon: lucide/file-code
 
 `caution.hcl` is the [HCL](https://github.com/hashicorp/hcl) configuration file that tells Caution how to build, run, and verify your application. Place it in the root of your repository. `caution init` generates a template for you.
 
-When both `caution.hcl` and a [`Procfile`](procfile.md) are present, Caution uses `caution.hcl`. To convert an existing Procfile, run `caution migrate-procfile`.
+When both `caution.hcl` and a [`Procfile`](procfile.md) are present, Caution uses `caution.hcl`. To convert an existing Procfile, run `caution apps migrate-procfile`.
 
 ```hcl
 enclave "main" {

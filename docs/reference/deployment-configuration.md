@@ -8,15 +8,19 @@ icon: lucide/settings-2
 
 ## Source verification
 
-To enable third-party verification and reproducibility of your deployment, you must specify the source repositories in your `Procfile`:
+To enable third-party verification and reproducibility of your deployment, you must specify the source repositories in your [`caution.hcl`](caution-hcl.md):
 
-```yaml
-app_sources: https://codeberg.org/myorg/myapp
+```hcl
+enclave "main" {
+  build {
+    app_sources = ["https://codeberg.org/myorg/myapp"]
+  }
+}
 ```
 
 | Field | Description |
 |-------|-------------|
-| `app_sources` | Comma-separated git URLs for your application source code |
+| `app_sources` | List of git URLs for your application source code |
 
 These URLs are embedded in the attestation manifest and used to pull all required source code for reproducibility.
 
@@ -28,17 +32,29 @@ Caution supports two modes for exposing your application to the network.
 
 ### End-to-end encryption (recommended)
 
-For full security, enable end-to-end encryption using [STEVE (Secure Transport Encryption via Enclave)](https://git.distrust.co/public/steve){:target="_blank"}:
+For full security, enable end-to-end encryption using [STEVE (Secure Transport Encryption via Enclave)](https://git.distrust.co/public/steve){:target="_blank"}. Add an `e2e_encryption` block inside `http`:
 
-```yaml
-e2e: true
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 3000
+  }
+  http {
+    domain = "your-domain.xyz"
+    port   = 3000
+    e2e_encryption {
+      enabled = true
+    }
+  }
+}
 ```
 
 Run the app on any unreserved port. The reserved app-facing range is `49500`-`49600`; STEVE uses port `49500` for the `/e2p/*` proxy path.
 
 This requires:
 
-1. **Procfile configuration**: Set `e2e: true` and specify your application port
+1. **`caution.hcl` configuration**: Set `e2e_encryption { enabled = true }` and front the application port with `http`
 2. **SDK integration**: Integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client application
 
 With e2e enabled, data is encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
@@ -49,14 +65,22 @@ See the [Encryption](../concepts/encryption.md) concepts page for details on how
 
 If you cannot use end-to-end encryption, you can expose ports directly. This example uses port `3000` only as a placeholder:
 
-```yaml
-run: /app/server --port 3000
-ports: 3000
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 3000
+  }
+  http {
+    domain = "your-domain.xyz"
+    port   = 3000
+  }
+}
 ```
 
 Use the port your application listens on. Do not declare ports in Caution's reserved `49500`-`49600` range.
 
-When a single port is specified, it is automatically reverse-proxied through Caddy with TLS termination on port 443. For multiple ports, use `http_port` to specify which one Caddy should proxy. The rest are exposed as raw TCP (useful for P2P or binary protocols).
+Each port your app exposes needs an `ingress` rule. The port named in `http` is reverse-proxied through Caddy with TLS termination on port 443; any other `ingress` ports are exposed as raw TCP (useful for P2P or binary protocols).
 
 This establishes a connection from the enclave to the host without STEVE encryption. Traffic is still protected by TLS, but the encryption terminates outside the enclave rather than inside it.
 
@@ -100,11 +124,11 @@ See [Verifiability](../concepts/verifiability.md) for more on why reproducibilit
 
     Use your own [domain name](../guides/set-up-a-custom-domain.md) for deployments.
 
-- :lucide-file-code: **Procfile**
+- :lucide-file-code: **caution.hcl**
 
     ---
 
-    Configure how your application [runs and verifies](procfile.md).
+    Configure how your application [runs and verifies](caution-hcl.md).
 
 - :lucide-shield-check: **Verifiability**
 

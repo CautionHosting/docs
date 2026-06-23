@@ -231,17 +231,29 @@ Each `.asc` file contains a single value encrypted with the quorum's public key.
 
 Commit the generated `.caution/` files that Caution needs for deployment and runtime, including `.caution/deployment.json`, `.caution/quorum-bundle.json`, and encrypted `.caution/secrets/*.asc` files. Do not commit local plaintext inputs such as `.env` or generated private keyrings such as `alice.private.asc`.
 
-### 3. Enable Locksmith in your Procfile
+### 3. Reference secrets in your caution.hcl
 
-This example uses port `3000` only as a placeholder:
+Reference each encrypted secret with `env::vault(...)` in the unit's `env` map. Using `env::vault` anywhere automatically enables Locksmith — there is no separate flag. This example uses port `3000` only as a placeholder:
 
-```yaml
-run: /app/server --port 3000
-locksmith: true
-ports: 3000
+```hcl
+enclave "main" {
+  network {
+    ingress {
+      cidr_ipv4 = "0.0.0.0/0"
+      port      = 3000
+    }
+  }
+  unit "default" {
+    command = "/app/server"
+    args    = ["--port", "3000"]
+    env = {
+      DATABASE_URL = env::vault("DATABASE_URL")
+    }
+  }
+}
 ```
 
-List your application port in `ports`. Do not list port `49504` or any port in the reserved `49500`-`49600` range; Caution opens the Locksmith shard receiver automatically when `locksmith: true`.
+Each `env::vault("NAME")` resolves to the secret decrypted from `.caution/secrets/NAME.asc`. Do not list port `49504` or any port in the reserved `49500`-`49600` range; Caution opens the Locksmith shard receiver automatically when secrets are used.
 
 ### 4. Include the bundle and secrets in your image
 
@@ -396,10 +408,10 @@ ENTRYPOINT ["/app/myapp"]
 
     Prove workload integrity with [hardware-backed cryptographic proofs](attestation.md).
 
-- :lucide-file-code: **Procfile**
+- :lucide-file-code: **caution.hcl**
 
     ---
 
-    Configure how your application [runs and verifies](../reference/procfile.md).
+    Configure how your application [runs and verifies](../reference/caution-hcl.md).
 
 </div>

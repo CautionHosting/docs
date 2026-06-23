@@ -11,11 +11,11 @@ Technical reference documentation.
 
     Configure [source verification and networking](deployment-configuration.md) options.
 
-- :lucide-file-code: **Procfile**
+- :lucide-file-code: **caution.hcl**
 
     ---
 
-    Configure how your application [runs and verifies](procfile.md).
+    Configure how your application [runs and verifies](caution-hcl.md).
 
 - :lucide-bug: **Debug an enclave**
 

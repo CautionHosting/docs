@@ -32,7 +32,8 @@ Application containers are built with standard Docker, `docker build -f <contain
 
 - Deployment models: https://docs.caution.co/reference/deployment-models/
 - Configuration: https://docs.caution.co/reference/deployment-configuration/
-- Procfile: https://docs.caution.co/reference/procfile/
+- caution.hcl: https://docs.caution.co/reference/caution-hcl/
+- Procfile (legacy): https://docs.caution.co/reference/procfile/
 - Containerizing: https://docs.caution.co/reference/containerizing/
 - Debugging: https://docs.caution.co/reference/debugging/
 - Fully managed: https://docs.caution.co/reference/fully-managed/

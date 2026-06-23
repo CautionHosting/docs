@@ -52,7 +52,7 @@ The deployment boundary looks like this:
 ```mermaid
 flowchart TB
     subgraph Operator["Your environment"]
-        Repo["Application repository<br/>Procfile and Containerfile"]
+        Repo["Application repository<br/>caution.hcl and Containerfile"]
         Setup["caution init --byoc"]
         AwsCreds["AWS credentials<br/>for provisioning"]
     end
@@ -170,11 +170,11 @@ To remove all resources created by the setup, see the cleanup instructions in th
 
     Follow a [practical guide](../guides/containerize-an-application.md) to building reproducible containers with StageX.
 
-- :lucide-file-code: **Procfile**
+- :lucide-file-code: **caution.hcl**
 
     ---
 
-    Configure how your application [runs and verifies](procfile.md).
+    Configure how your application [runs and verifies](caution-hcl.md).
 
 - :lucide-globe: **Set up a custom domain**
 

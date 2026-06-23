@@ -11,7 +11,7 @@ icon: lucide/box
 Your application needs:
 
 1. A `Containerfile` (or `Dockerfile`) that builds your application with `docker build -f <file> .` from the repository root
-2. A `Procfile` that tells Caution how to run it
+2. A `caution.hcl` that tells Caution how to run it
 
 ## Basic Containerfile
 
@@ -44,13 +44,13 @@ Caution builds application containers with the standard Docker form:
 docker build -f <containerfile> .
 ```
 
-The build context is the repository root. Replace `<containerfile>` with the file your project uses, such as `Containerfile` or `Dockerfile`. If your `Procfile` sets `containerfile`, test the same path locally:
+The build context is the repository root. Replace `<containerfile>` with the file your project uses, such as `Containerfile` or `Dockerfile`. If your `caution.hcl` sets `containerfile`, test the same path locally:
 
 ```bash
 docker build -f deploy/Containerfile .
 ```
 
-Caution no longer supports a separate `build` command in the `Procfile`, and it does not pass extra Docker build arguments. If your build needs public configuration, make it part of the image inputs instead:
+Caution does not run a custom build command in `caution.hcl`, and it does not pass extra Docker build arguments. If your build needs public configuration, make it part of the image inputs instead:
 
 ```dockerfile
 ENV APP_PORT=3000

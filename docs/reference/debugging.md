@@ -11,54 +11,60 @@ icon: lucide/bug
 Make sure:
 
 - Your app is deployed.
-- You can redeploy after setting `debug: true` or adding `ssh_keys`.
+- You can redeploy after enabling the `debug` block or adding `ssh_keys`.
 - You know the public IP address of the EC2 instance running the enclave.
 - SSH access is to the **host** EC2 instance, not the enclave itself.
 
 ## Enable debug access
 
-Debugging usually requires two separate settings: `debug: true` to read enclave console output, and `ssh_keys` to access the host EC2 instance.
+Debugging usually requires two separate settings in the enclave's `debug` block: `enabled = true` to read enclave console output, and `ssh_keys` to access the host EC2 instance.
 
 !!! warning "Do not use debug access in production"
     While debug access is enabled, do not send production traffic to the deployment, do not rely on PCR values from that enclave, and do not leave port 22 open longer than needed.
 
 ### Enable console output
 
-Add `debug: true` to your `Procfile` to make the enclave console readable:
+Add a `debug` block with `enabled = true` to your `caution.hcl` to make the enclave console readable:
 
-```yaml
-run: /app/server
-debug: true
-ports: 3000
+```hcl
+enclave "main" {
+  debug {
+    enabled = true
+  }
+  unit "default" {
+    command = "/app/server"
+  }
+}
 ```
-
-Use the port your application listens on; `3000` is only a placeholder.
 
 Debug mode passes `--debug-mode` to `nitro-cli run-enclave`, which allows you to read the enclave's console output. The tradeoff is that AWS zeros out all PCR values in debug mode, so `caution verify` will refuse to attest the enclave. **Do not use debug mode in production.**
 
-Redeploy after changing `debug` or `ssh_keys` settings.
+Redeploy after changing the `debug` block.
 
 ### Add SSH access to the host
 
-To SSH into the EC2 instance running the enclave, add your public key to the `Procfile`:
+To SSH into the EC2 instance running the enclave, add your public key to the `ssh_keys` list:
 
-```yaml
-run: /app/server
-debug: true
-ssh_keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample... user@host
+```hcl
+debug {
+  enabled  = true
+  ssh_keys = ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIExample... user@host"]
+}
 ```
 
-The key must be a full OpenSSH public key string starting with `ssh-ed25519`, `ssh-rsa`, `ecdsa-sha2-nistp256`, or similar. To add multiple keys, repeat the `ssh_keys` field:
+Each key must be a full OpenSSH public key string starting with `ssh-ed25519`, `ssh-rsa`, `ecdsa-sha2-nistp256`, or similar. Add multiple keys as list entries:
 
-```yaml
-ssh_keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFirst... user1@host
-ssh_keys: ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAISecond... user2@host
+```hcl
+ssh_keys = [
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFirst... user1@host",
+  "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAISecond... user2@host",
+]
 ```
 
 Adding `ssh_keys` automatically opens port 22 in the instance's security group.
 
 !!! danger "Do not leave SSH enabled in production"
-    SSH access and debug mode should only be used during development and testing. Before deploying to production, remove both `ssh_keys` and `debug: true` from your `Procfile`. Leaving SSH open exposes port 22 to the internet, and debug mode disables attestation verification. Both reduce the overall security of the system.
+    SSH access and debug mode should only be used during development and testing. Before deploying to production, remove the `debug` block from your `caution.hcl`. Leaving SSH open exposes port 22 to the internet, and debug mode disables attestation verification. Both reduce the overall security of the system.
 
 ## Connect to the host
 
@@ -113,7 +119,7 @@ If debug mode is enabled, stream the enclave's stdout/stderr:
 sudo nitro-cli console --enclave-id "$ENCLAVE_ID"
 ```
 
-This only works when `debug: true` is set in the `Procfile`. In production mode, the console is not accessible.
+This only works when `debug { enabled = true }` is set in `caution.hcl`. In production mode, the console is not accessible.
 
 ## Inspect network and proxy services
 
@@ -131,15 +137,14 @@ sudo systemctl status caddy.service
 sudo journalctl -u caddy.service --no-pager -n 50
 ```
 
-These examples use port `3000`. If your `Procfile` uses a different value in `ports`, replace `3000` with that port.
+These examples use port `3000`. If your `caution.hcl` exposes a different `ingress` port, replace `3000` with that port.
 
 ## Clean up debug access
 
-Before returning the app to production, remove debug access from the `Procfile`:
+Before returning the app to production, remove the `debug` block from `caution.hcl`:
 
-```yaml
-debug: false
-# Remove ssh_keys
+```hcl
+# Remove the entire debug { } block, including ssh_keys
 ```
 
 Redeploy after removing debug access, then run:
@@ -217,7 +222,7 @@ docker run --rm --platform linux/amd64 \
     && cp /boot/vmlinuz-*-generic /out/vmlinuz-amd64"
 ```
 
-Boot with port forwarding — adjust ports to match your `Procfile`:
+Boot with port forwarding — adjust ports to match your `caution.hcl`:
 
 ```bash
 qemu-system-x86_64 \
@@ -281,7 +286,7 @@ Common causes include insufficient memory or CPU allocation, or the EIF failing 
 
 Symptoms include connection timeouts, failed health checks, or Caddy returning an upstream or proxy error.
 
-Inspect network and proxy services, and verify the vsock proxy is running for your application port. These examples use port `3000`; if your `Procfile` uses a different value in `ports`, replace `3000` with that port:
+Inspect network and proxy services, and verify the vsock proxy is running for your application port. These examples use port `3000`; if your `caution.hcl` exposes a different `ingress` port, replace `3000` with that port:
 
 ```bash
 sudo systemctl status vsock-proxy-3000.service
