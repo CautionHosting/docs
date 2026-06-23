@@ -15,6 +15,9 @@ Make sure:
 - You know the public IP address of the EC2 instance running the enclave.
 - SSH access is to the **host** EC2 instance, not the enclave itself.
 
+!!! tip "Using an AI coding agent?"
+    Install the [`caution-platform` skill](../guides/build-with-an-ai-agent.md) so Claude Code or Codex can help debug local QEMU runs and Nitro deployments.
+
 ## Enable debug access
 
 Debugging usually requires two separate settings in the enclave's `debug` block: `enabled = true` to read enclave console output, and `ssh_keys` to access the host EC2 instance.

@@ -13,6 +13,9 @@ Your application needs:
 1. A `Containerfile` (or `Dockerfile`) that builds your application with `docker build -f <file> .` from the repository root
 2. A `caution.hcl` that tells Caution how to run it
 
+!!! tip "Using an AI coding agent?"
+    Install the [`stagex-reproducible-builds` skill](build-with-an-ai-agent.md) so Claude Code or Codex can write a reproducible `Containerfile` for you.
+
 ## Basic Containerfile
 
 A minimal Containerfile for a Rust application:

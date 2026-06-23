@@ -12,6 +12,9 @@ icon: lucide/file-code
 
 When both `caution.hcl` and a [`Procfile`](procfile.md) are present, Caution uses `caution.hcl`. To convert an existing Procfile, run `caution apps migrate-procfile`.
 
+!!! tip "Using an AI coding agent?"
+    Install the [`caution-platform` skill](../guides/build-with-an-ai-agent.md) so Claude Code or Codex can author and validate your `caution.hcl`.
+
 ```hcl
 enclave "main" {
   build {
