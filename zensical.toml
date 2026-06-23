@@ -37,7 +37,8 @@ nav = [
 { "Reference" = [
 "reference/index.md",
 { "Configuration" = "reference/deployment-configuration.md" },
-{ "Procfile" = "reference/procfile.md" },
+{ "caution.hcl" = "reference/caution-hcl.md" },
+{ "Procfile (legacy)" = "reference/procfile.md" },
 { "Debug an enclave" = "reference/debugging.md" },
 { "Deployment models" = [
 "reference/deployment-models/index.md",
