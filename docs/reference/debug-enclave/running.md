@@ -1,10 +1,10 @@
 ---
-icon: lucide/bug
+icon: lucide/play
 ---
 
-# Debug an enclave
+# Debug a Running Enclave
 
-<p class="docs-home-intro">Diagnose and fix issues with your enclave deployments.</p>
+<p class="docs-home-intro">Diagnose and fix issues with your running enclave deployments.</p>
 
 ## Before you start
 
