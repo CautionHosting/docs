@@ -27,16 +27,28 @@ You need:
     On Apple Silicon Macs, enable Rosetta support in Docker Desktop before running `caution verify`. Open Docker Desktop settings, enable **Use Rosetta for x86_64/amd64 emulation on Apple Silicon**, then apply the change and restart Docker if prompted.
 
 !!! warning "Debug mode cannot be verified"
-    AWS Nitro Enclaves zero out PCR values in debug mode. Remove `debug: true` from the `Procfile` and redeploy before verifying a production app.
+    AWS Nitro Enclaves zero out PCR values in debug mode. Remove the `debug` block from `caution.hcl` and redeploy before verifying a production app.
 
 ## Publish source information
 
-If you operate the app and want third parties to verify it from the remote manifest, include source locations in the `Procfile` before deploying. This example uses port `3000` only as a placeholder:
+If you operate the app and want third parties to verify it from the remote manifest, include source locations in `caution.hcl` before deploying. This example uses port `3000` only as a placeholder:
 
-```yaml
-run: /app/server --port 3000
-ports: 3000
-app_sources: https://codeberg.org/example/myapp
+```hcl
+enclave "main" {
+  build {
+    app_sources = ["https://codeberg.org/example/myapp"]
+  }
+  network {
+    ingress {
+      cidr_ipv4 = "0.0.0.0/0"
+      port      = 3000
+    }
+  }
+  unit "default" {
+    command = "/app/server"
+    args    = ["--port", "3000"]
+  }
+}
 ```
 
 Caution embeds the source URL and commit in the attestation manifest. Without `app_sources`, third parties cannot independently reproduce the app from the remote manifest. For private repositories, verifiers need their own source access and should use `--app-source-url` or `--from-local`.
@@ -132,7 +144,7 @@ Use the failure message to choose the next step:
 
 | Failure | What to do |
 |---------|------------|
-| Debug-mode warning | Remove `debug: true` from the `Procfile`, redeploy, and verify again. |
+| Debug-mode warning | Remove the `debug` block from `caution.hcl`, redeploy, and verify again. |
 | Missing remote manifest | Redeploy with current Caution tooling and `app_sources`, or use `--from-local` or `--pcrs`. |
 | Private source unavailable | Provide a Git URL with `--app-source-url`, or verify from an authorized local checkout with `--from-local`. |
 | PCR mismatch | Treat the app as unverified. Confirm the source commit, build inputs, and deployment are the ones you intended; then retry with `--no-cache`. |

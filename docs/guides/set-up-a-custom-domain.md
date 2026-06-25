@@ -10,15 +10,24 @@ icon: lucide/globe
 
 Caution allows you to point your own domain to your deployment. This involves two steps:
 
-1. Configure the domain in your `Procfile`
+1. Configure the domain in your `caution.hcl`
 2. Create a DNS A record pointing to your deployment's IP address
 
-## Step 1: Configure your Procfile
+## Step 1: Configure your caution.hcl
 
-Add the `domain` field to your `Procfile`:
+Set `domain` in the `http` block, fronting the port your app listens on:
 
-```yaml
-domain: api.yourdomain.com
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 8080
+  }
+  http {
+    domain = "api.yourdomain.com"
+    port   = 8080
+  }
+}
 ```
 
 ## Step 2: Get your deployment IP

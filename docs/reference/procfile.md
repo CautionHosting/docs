@@ -2,9 +2,12 @@
 icon: lucide/file-code
 ---
 
-# Procfile reference
+# Procfile reference (legacy)
 
 <p class="docs-home-intro">Configure how your application runs on Caution.</p>
+
+!!! warning "Legacy format"
+    The Procfile is still supported as a fallback, but [`caution.hcl`](caution-hcl.md) is the current configuration format and what `caution init` generates. When both files are present, Caution uses `caution.hcl`. To convert an existing Procfile, run `caution apps migrate-procfile`.
 
 ## Overview
 

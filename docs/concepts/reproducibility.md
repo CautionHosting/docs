@@ -12,6 +12,9 @@ Reproducibility means that for a fixed set of inputs, software always produces t
 
 While this may sound like the default behavior, most software today is not reproducible. Build outputs often vary due to factors such as timestamps, environment differences, non-deterministic tooling, or external dependencies.
 
+!!! tip "Using an AI coding agent?"
+    Install the [`stagex-reproducible-builds` skill](../guides/build-with-an-ai-agent.md) so Claude Code or Codex can make your build deterministic.
+
 ## Why it matters
 
 Reproducibility allows both software creators and users to verify the integrity of a build.

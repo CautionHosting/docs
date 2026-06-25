@@ -87,7 +87,7 @@ For your own app, make sure the container builds from the repository root with t
 docker build -f Containerfile .
 ```
 
-If you use another file, set `containerfile` in the `Procfile` and replace `Containerfile` with that path. Caution uses this build shape and does not pass extra build arguments, so public build-time values need to be part of the image inputs. Use [Locksmith](../concepts/key-services.md) for secrets.
+If you use another file, set `containerfile` in the `build` block and replace `Containerfile` with that path. Caution uses this build shape and does not pass extra build arguments, so public build-time values need to be part of the image inputs. Use [Locksmith](../concepts/key-services.md) for secrets.
 
 ## Set up your AWS environment
 
@@ -206,7 +206,7 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 
 ## Add environment variables
 
-If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and enable Locksmith in your `Procfile`.
+If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and reference secrets with `env::vault` in your `caution.hcl`.
 
 Skip this step if your application does not need environment variables.
 
@@ -258,11 +258,11 @@ Your application is now running in a verified enclave in your own AWS account. H
 
     Configure [source verification and networking](../reference/deployment-configuration.md) options.
 
-- :lucide-file-code: **Procfile**
+- :lucide-file-code: **caution.hcl**
 
     ---
 
-    Configure how your application [runs and verifies](../reference/procfile.md).
+    Configure how your application [runs and verifies](../reference/caution-hcl.md).
 
 - :lucide-shield-check: **Verifiability**
 

@@ -17,7 +17,7 @@ In both fully managed and bring your own compute deployments, Caution connects t
 ```mermaid
 flowchart TB
     subgraph Operator["Operator workflow"]
-        Source["Application source<br/>Procfile and Containerfile"]
+        Source["Application source<br/>caution.hcl and Containerfile"]
         Push["git push caution main"]
     end
 

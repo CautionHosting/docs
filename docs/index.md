@@ -44,4 +44,10 @@ Caution is fully open source, so teams can inspect, verify, and self-host the pl
 
     Learn how Caution [ensures code integrity](./concepts/verifiability.md) from source to production.
 
+- :lucide-bot: **Build with an AI agent**
+
+    ---
+
+    Install the [Caution skills](./guides/build-with-an-ai-agent.md) so Claude Code or Codex can package and debug your app.
+
 </div>
