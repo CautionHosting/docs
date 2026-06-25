@@ -38,7 +38,7 @@ Use these fields to control how Caution locates container inputs, deploys, runs,
 | `run` | **Required.** Command to execute your application. The full container filesystem is included in the EIF. |
 | `containerfile` | Path to a Containerfile/Dockerfile for building your app. Caution builds it with `docker build -f <containerfile> .` using the repository root as the build context. |
 | `oci_tarball` | Path to a pre-built OCI tarball. |
-| `binary` | Path to a static binary in the container. **Only that binary is extracted.** The rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. |
+| `binary` | Path to a static binary in the container. **Only that binary is extracted.** The rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. Incompatible with `locksmith: true`, which needs `/etc/caution/` in the filesystem. |
 
 </div>
 
@@ -160,6 +160,12 @@ your `Containerfile`:
 ADD .caution/quorum-bundle.json /etc/caution/bundle.json
 ADD .caution/secrets/ /etc/caution/secrets/
 ```
+
+!!! warning "Do not combine `binary:` with Locksmith"
+    `binary:` extracts only the named binary and drops the rest of the
+    filesystem — including `/etc/caution/`. The bundle never reaches the EIF
+    and `locksmithd` panics at boot with `has bundle: No such file or
+    directory`. Use `run:` (full filesystem) when `locksmith: true`.
 
 After deploying, send shards with `caution secret send-shard` from the
 host-toolchain untrusted CLI build (`make install-cli-untrusted`). See
