@@ -70,14 +70,8 @@
 }
 
 /* Logo styling */
-.md-header__button.md-logo img,
 .md-header__button.md-logo svg {
   height: 1rem;
-}
-
-/* Logo color for dark mode - invert black to white */
-[data-md-color-scheme="slate"] .md-logo img {
-  filter: invert(1);
 }
 
 /* Override quote admonition icon with open book */

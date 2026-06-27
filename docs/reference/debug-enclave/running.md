@@ -16,7 +16,7 @@ Make sure:
 - SSH access is to the **host** EC2 instance, not the enclave itself.
 
 !!! tip "Using an AI coding agent?"
-    Install the [`caution-platform` skill](../guides/build-with-an-ai-agent.md) so Claude Code or Codex can help debug local QEMU runs and Nitro deployments.
+    Install the [`caution-platform` skill](../../guides/build-with-an-ai-agent.md) so Claude Code or Codex can help debug local QEMU runs and Nitro deployments.
 
 ## Enable debug access
 

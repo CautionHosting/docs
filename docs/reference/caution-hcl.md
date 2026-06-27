@@ -219,8 +219,8 @@ debug {
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `enabled` | `false` | Enable [debug mode](debugging.md). Allows reading enclave console output but disables attestation verification. |
-| `ssh_keys` | - | List of OpenSSH public keys for [host SSH access](debugging.md#add-ssh-access-to-the-host). Opens port 22 on the instance. |
+| `enabled` | `false` | Enable [debug mode](debug-enclave/running.md). Allows reading enclave console output but disables attestation verification. |
+| `ssh_keys` | - | List of OpenSSH public keys for [host SSH access](debug-enclave/running.md#add-ssh-access-to-the-host). Opens port 22 on the instance. |
 
 ### `caution` / `provider` — account and BYOC
 
