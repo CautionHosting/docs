@@ -74,6 +74,6 @@ done
 
     ---
 
-    Diagnose and fix [enclave deployments](../reference/debugging.md).
+    Diagnose and fix [enclave deployments](../reference/debug-enclave/).
 
 </div>

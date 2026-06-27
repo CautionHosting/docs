@@ -18,6 +18,7 @@ Application containers are built with standard Docker, `docker build -f <contain
 - Verify an app: https://docs.caution.co/guides/verify-an-app/
 - Containerize an app: https://docs.caution.co/guides/containerize-an-application/
 - Set up a custom domain: https://docs.caution.co/guides/set-up-a-custom-domain/
+- Debug an enclave: https://docs.caution.co/reference/debug-enclave/
 
 ## Concepts
 
@@ -35,7 +36,6 @@ Application containers are built with standard Docker, `docker build -f <contain
 - caution.hcl: https://docs.caution.co/reference/caution-hcl/
 - Procfile (legacy): https://docs.caution.co/reference/procfile/
 - Containerizing: https://docs.caution.co/reference/containerizing/
-- Debugging: https://docs.caution.co/reference/debugging/
 - Fully managed: https://docs.caution.co/reference/fully-managed/
 - Bring your own compute: https://docs.caution.co/reference/byoc/
 

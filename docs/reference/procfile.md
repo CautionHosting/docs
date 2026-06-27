@@ -1,5 +1,5 @@
 ---
-icon: lucide/file-code
+icon: lucide/file-clock
 ---
 
 # Procfile reference (legacy)

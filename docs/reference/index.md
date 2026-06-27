@@ -17,12 +17,6 @@ Technical reference documentation.
 
     Configure how your application [runs and verifies](caution-hcl.md).
 
-- :lucide-bug: **Debug an enclave**
-
-    ---
-
-    [SSH into the host](debug-enclave/), read enclave console output, and diagnose issues.
-
 - :lucide-layers-3: **Deployment models**
 
     ---

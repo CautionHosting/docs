@@ -25,6 +25,11 @@ nav = [
 { "Containerize an app" = "guides/containerize-an-application.md" },
 { "Build with an AI agent" = "guides/build-with-an-ai-agent.md" },
 { "Set up a custom domain" = "guides/set-up-a-custom-domain.md" },
+{ "Debug an enclave" = [
+"reference/debug-enclave/index.md",
+{ "Debug a Running Enclave" = "reference/debug-enclave/running.md" },
+{ "Debug Enclave Reproducibility" = "reference/debug-enclave/reproducibility.md" },
+] },
 ]},
 { "Concepts" = [
 "concepts/index.md",
@@ -41,11 +46,6 @@ nav = [
 { "Configuration" = "reference/deployment-configuration.md" },
 { "caution.hcl" = "reference/caution-hcl.md" },
 { "Procfile (legacy)" = "reference/procfile.md" },
-{ "Debug an enclave" = [
-"reference/debug-enclave/index.md",
-{ "Debug a Running Enclave" = "reference/debug-enclave/running.md" },
-{ "Debug Enclave Reproducibility" = "reference/debug-enclave/reproducibility.md" },
-] },
 { "Deployment models" = [
 "reference/deployment-models/index.md",
 { "Fully managed" = "reference/fully-managed.md" },
@@ -150,7 +150,6 @@ features = [ # Zensical includes an announcement bar. This feature allows users 
     # Turn on this feature to expand all collapsible sections in the
     # navigation sidebar by default.
     # https://zensical.org/docs/setup/navigation/#navigation-expansion
-    "navigation.expand",
 
     # This feature turns on navigation elements in the footer that allow the
     # user to navigate to a next or previous page.
