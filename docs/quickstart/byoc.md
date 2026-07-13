@@ -150,6 +150,34 @@ caution init --byoc
 
 This command detects your AWS credentials, provisions the required AWS infrastructure, creates your app on Caution, and registers the deployment credentials automatically.
 
+#### Choose an AWS profile or account
+
+A Caution user can have BYOC apps in different AWS accounts. Run setup from each app's directory with the credentials for that app's target account.
+
+To select a named AWS profile, set `AWS_PROFILE` for the command and pass the target region explicitly:
+
+```bash
+AWS_PROFILE=production caution init --byoc --region us-east-1
+```
+
+The CLI reads static credentials (including an optional session token) for that profile from `~/.aws/credentials` and reads its default region from `~/.aws/config`. Profiles that depend on AWS SSO, `credential_process`, or an assumed role are not resolved directly; expose their resolved temporary credentials through the standard AWS environment variables instead:
+
+```bash
+export AWS_ACCESS_KEY_ID=your-temporary-access-key
+export AWS_SECRET_ACCESS_KEY=your-temporary-secret-key
+export AWS_SESSION_TOKEN=your-temporary-session-token # if required
+export AWS_REGION=us-east-1
+caution init --byoc
+```
+
+`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` take precedence over `AWS_PROFILE`. Unset them before selecting a named profile if they point to a different account. If the AWS CLI is installed, confirm the selected account before provisioning:
+
+```bash
+AWS_PROFILE=production aws sts get-caller-identity
+```
+
+Use credentials for the same AWS account when you later run `caution teardown --byoc`.
+
 Commit the generated `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
 ### Manual provisioning
@@ -195,7 +223,7 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 | Resource | Purpose |
 |----------|---------|
 | **VPC** | Dedicated `/16` VPC with public subnets across multiple availability zones, internet gateway, and routing |
-| **S3 Bucket** | Stores enclave image files (EIFs). Named `caution-<deployment-id>-images` |
+| **S3 Bucket** | Stores enclave image files (EIFs). Named `caution-<deployment-id>-images`; one is created for each BYOC app setup |
 | **EC2 Instance Role** | Allows enclave instances to read EIFs from the S3 bucket |
 | **Builder Role** | Allows builder instances to publish EIF objects into the S3 bucket |
 | **Launch Template** | Preconfigured template for enclave instances |
@@ -203,6 +231,8 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 | **Scoped IAM User** | Credentials for Caution, scoped to only these resources |
 
 </div>
+
+Each normal `caution init --byoc` setup generates a new deployment ID and a dedicated bucket. Subsequent deployments of that app reuse its bucket; the bucket is not shared with other BYOC apps in the same Caution user or AWS account. `caution teardown --byoc` empties and deletes the bucket along with the app's other BYOC resources.
 
 ## Add environment variables
 
