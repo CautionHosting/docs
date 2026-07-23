@@ -206,7 +206,7 @@ ADD .caution/quorum-bundle.json /etc/caution/bundle.json
 ADD .caution/secrets/ /etc/caution/secrets/
 ```
 
-After deploying, send shards with `caution secret send-shard` from the host-toolchain untrusted CLI build (`make install-cli-untrusted`). See [Key services](../concepts/key-services.md) for the full setup flow.
+After deploying, send shards with `caution secret send-shard` from the host-toolchain CLI build, which is the default `make install-cli` (also `make install-cli-host`). See [Key services](../concepts/key-services.md) for the full setup flow.
 
 ### `debug` — console and SSH access
 

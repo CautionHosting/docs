@@ -305,19 +305,20 @@ This writes `.caution/trusted_hashes.json`. Commit it so all shard-holders share
 Each shard-holder sends their shard to the running enclave:
 
 !!! warning "Temporary CLI build requirement"
-    `caution secret send-shard` currently requires the host-toolchain
-    untrusted CLI build. Install that binary from the platform repository with
-    `make install-cli-untrusted`.
+    `caution secret send-shard` requires the host-toolchain CLI build. This is
+    the default `make install-cli` (also available explicitly as
+    `make install-cli-host`), so the standard install already supports shard
+    sending.
 
-    "Untrusted" means this binary is not built through the StageX
-    reproducible build pipeline. It is compiled with the host toolchain and
-    linked against host system libraries, so it inherits supply-chain risks
-    from the local compiler, package manager, libc, PC/SC stack, and other
-    host dependencies. Those risks do not apply in the same way to the
-    StageX-built CLI. The default StageX reproducible CLI build works for
-    other CLI commands, but the shard-sending path can hit a musl
-    static-linking limitation when the PC/SC stack tries to load
-    `libpcsclite_real.so.1`.
+    The host-toolchain binary is not built through the StageX reproducible
+    build pipeline. It is compiled with the local toolchain and linked against
+    host system libraries, so bit-for-bit reproducibility is not guaranteed or
+    verified and it inherits supply-chain risks from the local compiler,
+    package manager, libc, PC/SC stack, and other host dependencies. Those
+    risks do not apply in the same way to the StageX-built CLI. The explicit
+    StageX reproducible build (`make install-cli-stagex`) works for other CLI
+    commands, but the shard-sending path can hit a musl static-linking
+    limitation when the PC/SC stack tries to load `libpcsclite_real.so.1`.
 
 === "Development and demos"
 

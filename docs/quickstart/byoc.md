@@ -36,7 +36,19 @@ AWS credentials should use a least-privilege IAM role when possible. Admin crede
 
 ## Install the CLI
 
-Follow the installation instructions in the [CLI README](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}.
+Clone the platform repository and run the automatic installer:
+
+```bash
+git clone https://codeberg.org/caution/platform
+cd platform
+make install-cli
+```
+
+On every supported platform (Linux/x86_64 and macOS/arm64) this builds the CLI
+with your local host toolchain, after a one-time acknowledgement that the build
+is not reproducibility-verified. To build the reproducible StageX CLI instead,
+run `make install-cli-stagex` (Linux/x86_64 only). See the [CLI README](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}
+for explicit build targets and verification options.
 
 ## Create an account
 
