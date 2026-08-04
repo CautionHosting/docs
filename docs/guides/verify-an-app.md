@@ -119,10 +119,13 @@ Expected PCR values:
   PCR2: ...
 
 ✓ PCR values match expected
+User data: {"tls":{"mode":"caddy","domain":"app.example.com","certfp":"..."}}
 ✓ Attestation verification PASSED
 ```
 
 If verification passes, the running enclave matches the source and build inputs used for the local reproduction.
+
+`caution verify` prints `User data` only after verifying the Nitro certificate chain, COSE signature, nonce, and expected PCRs. For [Attested TLS](../reference/deployment-configuration.md#attested-tls-compatibility-mode), you must still compare `user_data.tls.certfp` with the live leaf certificate's SHA-256 fingerprint; the CLI does not perform that comparison automatically.
 
 ## Inspect the reproduced build
 
@@ -152,7 +155,7 @@ Use the failure message to choose the next step:
 
 ## Verification and encryption
 
-Verification proves what code is running. If the app also needs to keep request and response data hidden from the host system, enable end-to-end encryption with STEVE. Standard TLS may terminate outside the enclave, while STEVE adds an encryption layer that terminates inside the attested enclave.
+Verification proves what code is running. If the app also needs to keep request and response data hidden from the host system, use STEVE for application-layer end-to-end encryption. Attested TLS is a compatibility mode that terminates ordinary TLS inside the enclave, but requires periodic external verification of the live certificate binding.
 
 See [Encryption](../concepts/encryption.md) for setup details.
 
