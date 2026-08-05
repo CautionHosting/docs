@@ -18,9 +18,9 @@ Caution is designed to provide evidence for these claims:
 - The enclave reports hardware-backed measurements for the running image.
 - The reported measurements can be reproduced from source code and build inputs.
 - A verifier can compare the reproduced measurements with the running enclave.
-- When end-to-end encryption is enabled, application data is encrypted all the way into the enclave.
+- Requests sent through an active, correctly configured STEVE v2 client are encrypted all the way into the enclave.
 
-These goals are strongest when the application source is available, the build is reproducible, the app runs outside debug mode, and end-to-end encryption is enabled for workloads that need to keep plaintext from the host.
+These goals are strongest when the application source is available, the build is reproducible, the app runs outside debug mode, and sensitive requests use an active, correctly configured STEVE v2 client.
 
 ## What Caution trusts today
 
@@ -66,7 +66,7 @@ For the strongest guarantees:
 - Publish source locations with `app_sources` so third parties can reproduce the build from the attestation manifest.
 - Keep production deployments outside debug mode.
 - Make the application build reproducible, not just the Caution platform components.
-- Enable end-to-end encryption when application data must remain hidden from the host or infrastructure operator.
+- Use an active, correctly configured STEVE v2 client when application data must remain hidden from the host or infrastructure operator.
 - Verify from a machine and network environment you trust.
 - Review the reproduced source and build artifacts before deciding whether to trust what the app does.
 

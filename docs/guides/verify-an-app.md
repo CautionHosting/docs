@@ -51,7 +51,7 @@ enclave "main" {
 }
 ```
 
-Caution embeds the source URL and commit in the attestation manifest. Without `app_sources`, third parties cannot independently reproduce the app from the remote manifest. For private repositories, verifiers need their own source access and should use `--app-source-url` or `--from-local`.
+Caution embeds the source URL and commit in the attestation manifest. Without `app_sources`, third parties cannot independently obtain the app source. Verifiers need an authorized local checkout, source tarball, or Git URL.
 
 Deploy or redeploy the app after changing source verification settings:
 
@@ -67,7 +67,7 @@ Run the default verification flow from the deployed app's repository:
 caution verify
 ```
 
-The CLI infers the attestation endpoint from local Caution deployment state, requests an attestation from the enclave, reproduces the build from the remote manifest, and compares the expected PCR values with the running enclave.
+The CLI infers the attestation endpoint from local Caution deployment state. It learns the app commit from the fresh attestation manifest, stages that commit from the local repository, reproduces the build, and verifies the resulting PCR values. If the manifest has no app commit, it stages local `HEAD`.
 
 ## Verify a remote app
 
@@ -85,14 +85,14 @@ Choose the mode that matches the source access you have.
 
 | Situation | Command |
 |-----------|---------|
-| Public source is listed in the remote manifest | `caution verify` |
-| You have the attestation endpoint but no local deployment state | `caution verify --attestation-url http://<host>/attestation` |
-| The manifest omits private source, but you have a Git URL | `caution verify --app-source-url git@codeberg.org:org/app.git` |
-| You have the exact source checked out locally | `caution verify --from-local` |
+| You have the app repository checked out locally | `caution verify` |
+| You have the app repository and an explicit endpoint | `caution verify --attestation-url http://<host>/attestation` |
+| You have a Git URL instead of a local checkout | `caution verify --app-source-url git@codeberg.org:org/app.git` |
+| You have an exact source archive | `caution verify --from-tarball source.tar.gz` |
 | You already have expected PCR values | `caution verify --pcrs pcrs.txt` |
 | You want to force a fresh local rebuild | `caution verify --no-cache` |
 
-You can combine `--attestation-url` with `--app-source-url`, `--from-local`, `--pcrs`, or `--no-cache` when verifying a remote app.
+`--from-tarball`, `--app-source-url`, and `--pcrs` are mutually exclusive source selectors. `--from-local` is accepted for one release but deprecated because local source is now the default. You can combine `--attestation-url` or `--no-cache` with one source selector.
 
 ## What the CLI checks
 
@@ -101,9 +101,10 @@ When you run `caution verify`, the CLI:
 1. Generates a fresh nonce to prevent replay attacks.
 2. Sends the nonce to the enclave attestation endpoint.
 3. Reads remote PCR values and manifest information from the attestation response.
-4. Calculates expected PCRs by reproducing the build, or reads expected PCRs from a PCR file you provide.
+4. Stages the selected source once, reads its existing configuration, and reproduces the build, or reads expected PCRs from a PCR file you provide.
 5. Verifies the Nitro attestation document, including the AWS Nitro certificate chain, certificate validity, COSE signature, nonce, and expected PCR values.
-6. Reports whether the deployed enclave matches the expected PCRs.
+6. For source-backed `mode = "tls"`, validates the attested TLS metadata and live certificate binding.
+7. Atomically writes `.caution/trusted_hashes.json`, preserving the previous file in a unique backup.
 
 The important success lines look like this:
 
@@ -118,14 +119,15 @@ Expected PCR values:
   PCR1: ...
   PCR2: ...
 
-✓ PCR values match expected
-User data: {"tls":{"mode":"caddy","domain":"app.example.com","certfp":"..."}}
+✓ Base Nitro attestation and expected PCR0/1/2 verified
+✓ TLS certificate binding verified
 ✓ Attestation verification PASSED
+Trusted state: .caution/trusted_hashes.json
 ```
 
-If verification passes, the running enclave matches the source and build inputs used for the local reproduction.
+For source-backed `mode = "tls"`, an HTTPS attestation request on the configured domain binds the leaf certificate from that same WebPKI-validated, non-redirected response. With a raw deployment-IP attestation URL, the CLI first requires DNS to contain that IP, then makes a hostname-validated HTTPS health request pinned to it. An empty or NXDOMAIN result skips TLS binding; other DNS, redirect, HTTPS, metadata, or fingerprint failures are fatal.
 
-`caution verify` prints `User data` only after verifying the Nitro certificate chain, COSE signature, nonce, and expected PCRs. For [Attested TLS](../reference/deployment-configuration.md#attested-tls-compatibility-mode), you must still compare `user_data.tls.certfp` with the live leaf certificate's SHA-256 fingerprint; the CLI does not perform that comparison automatically.
+Ordinary proxy-level HTTPS without `mode = "tls"` receives only the base Nitro/PCR verification. `--pcrs` is also PCR-only: it performs no TLS check and removes any stale `tls` object from the persisted trusted state.
 
 ## Inspect the reproduced build
 
@@ -148,8 +150,9 @@ Use the failure message to choose the next step:
 | Failure | What to do |
 |---------|------------|
 | Debug-mode warning | Remove the `debug` block from `caution.hcl`, redeploy, and verify again. |
-| Missing remote manifest | Redeploy with current Caution tooling and `app_sources`, or use `--from-local` or `--pcrs`. |
-| Private source unavailable | Provide a Git URL with `--app-source-url`, or verify from an authorized local checkout with `--from-local`. |
+| Manifest has no app commit | The CLI uses local `HEAD`; confirm that it is the intended source before trusting the result. |
+| Manifest commit is unavailable locally | Fetch that commit, use `--app-source-url`, use `--from-tarball`, or use `--pcrs`. |
+| Private source unavailable | Provide an authorized Git URL with `--app-source-url`, or verify from an authorized local checkout. |
 | PCR mismatch | Treat the app as unverified. Confirm the source commit, build inputs, and deployment are the ones you intended; then retry with `--no-cache`. |
 | Attestation endpoint unreachable | Check the exact endpoint URL from deployment output or app operator instructions. |
 

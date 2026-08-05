@@ -17,7 +17,7 @@ Different hardware platforms such as Intel TDX, AMD SEV-SNP, TPM 2.0, and Nitro 
 
 ## How attestation verification works
 
-When you run `caution verify`, the CLI performs a multi-step verification process to prove that the code running in a remote enclave matches exactly what you expect.
+When you run `caution verify`, the CLI authenticates fresh Nitro evidence and compares its measurements with values reproduced from source selected by the verifier.
 
 ### 1. Generate a challenge nonce
 
@@ -25,46 +25,47 @@ The CLI generates a random 32-byte nonce (number used once). This nonce prevents
 
 ### 2. Request attestation from the enclave
 
-The CLI sends the nonce to the enclave's public `/attestation` endpoint. Caution proxies that path internally to bootproofd on reserved port `49502`. The enclave's Nitro Security Module (NSM) generates an attestation document that includes:
+The CLI sends the nonce to the enclave's public `/attestation` endpoint. Caution proxies that path internally to bootproofd on reserved port `49502`. The response contains a signed Nitro attestation document and a sibling manifest used as source metadata.
+
+The signed document includes:
 
 - The nonce (echoed back)
 - [PCR values](https://docs.aws.amazon.com/enclaves/latest/user/set-up-attestation.html){:target="_blank"} (Platform Configuration Registers), cryptographic measurements of the enclave image
 - A certificate chain signed by the AWS Nitro root CA
-- A manifest containing source URLs and commit hashes
 
 The attestation document is signed using COSE (CBOR Object Signing and Encryption) with the NSM's private key.
 
-### 3. Verify the attestation document
+The manifest is not part of that signed Nitro evidence. It supplies source and commit metadata; the PCR comparison is what checks whether the selected source reproduces the measurements authenticated by Nitro.
 
-The CLI verifies the attestation document:
+### 3. Stage the selected source and reproduce the build
 
-1. **Certificate chain verification** - Validates that the signing certificate chains back to the AWS Nitro root CA, proving the attestation came from genuine Nitro hardware
-2. **Signature verification** - Verifies the COSE signature using the certificate's public key
-3. **Nonce verification** - Confirms the returned nonce matches the one sent, preventing replay attacks
+By default, run `caution verify` from a local application checkout. The CLI learns the app commit from the fresh response manifest, stages that commit from the local repository once, reads its existing configuration, and reproduces the enclave build. If the manifest has no app commit, it uses local `HEAD`.
 
-### 4. Reproduce the build
+Use `--app-source-url` for an explicit Git source or `--from-tarball` for an exact archive. Use `--pcrs` only when you already have expected PCR values; that mode does not inspect source or verify an Attested TLS certificate binding.
 
-Using the manifest from the attestation (which contains source URLs and commit hashes), the CLI reproduces the enclave build locally. This generates the expected PCR values - the same cryptographic measurements that would result from building the exact same code.
+### 4. Verify Nitro evidence and expected PCRs
 
-### 5. Compare PCR values
+The existing Bootproof verification checks the AWS Nitro certificate chain and validity, COSE signature, fresh nonce, and expected PCR0, PCR1, and PCR2. The authenticated PCRs are compared with the locally reproduced or explicitly supplied values.
 
-Finally, the CLI compares:
+For a source-backed `mode = "tls"` deployment, the CLI then validates the authenticated TLS metadata and live leaf-certificate binding. Only after every required check passes does it atomically update `.caution/trusted_hashes.json`, preserving the previous state in a unique backup.
+
+The PCR values cover:
 
 - **PCR0** - Hash of the enclave image
 - **PCR1** - Hash of the Linux kernel and bootstrap
 - **PCR2** - Hash of the application
 
-If all PCR values match, the verification passes. This proves that the remote enclave is running exactly the code specified in the manifest, built in exactly the same way.
+The important success lines are:
 
 ```text
-✓ Certificate chain verified against AWS Nitro root CA
-✓ COSE signature verification passed
-✓ Nonce verified (prevents replay attacks)
+✓ Base Nitro attestation and expected PCR0/1/2 verified
+✓ TLS certificate binding verified
 ✓ Attestation verification PASSED
+Trusted state: .caution/trusted_hashes.json
 ```
 
 !!! tip "Review the source code yourself"
-    During verification, all source code is pulled to `~/.cache/caution/reproductions/local/<your_build_id>`. The verification process output will show you the exact location. You can inspect this directory to review the exact code used to build the enclave image running inside the enclave.
+    The verification output shows the build artifacts directory. Inspect the staged source, configuration, generated build recipe, and manifest there before deciding whether to trust what the verified workload does.
 
 ## What PCR values represent
 

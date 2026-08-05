@@ -10,7 +10,7 @@ icon: lucide/compass
 
 Caution is a general-purpose, [verifiable](concepts/verifiability.md) confidential compute platform for deploying sensitive applications in secure enclaves. It connects running enclave measurements back to the intended source code and build inputs that produced the enclave image. It currently supports deployments on AWS Nitro Enclaves, with additional attestation backends in active development.
 
-It combines enclave isolation, [hardware attestation](concepts/attestation.md), [reproducible builds](concepts/reproducibility.md), and support for [end-to-end encryption](concepts/encryption.md). Together, these let users verify code integrity and, when end-to-end encryption is enabled, keep application data encrypted all the way into the enclave.
+It combines enclave isolation, [hardware attestation](concepts/attestation.md), [reproducible builds](concepts/reproducibility.md), and support for [end-to-end encryption](concepts/encryption.md). Together, these let users verify code integrity and keep requests protected by an active, correctly configured STEVE v2 client encrypted all the way into the enclave.
 
 In both fully managed and bring your own compute deployments, Caution connects the operator's deployment workflow to an independent verification workflow:
 
@@ -117,9 +117,9 @@ Caution's security model is designed to reduce trust in operators, infrastructur
 - **Isolation**: Workloads run inside confidential compute enclaves isolated from the host environment.
 - **[Verifiability](concepts/verifiability.md)**: `caution verify` checks that the running enclave matches the expected source and build inputs.
 - **[Reproducibility](concepts/reproducibility.md)**: Deterministic, source-bootstrapped tooling lets enclave images be rebuilt and compared from the application down to the kernel.
-- **[End-to-end encryption](concepts/encryption.md)**: When enabled, application data is encrypted all the way into the enclave, so infrastructure operators do not see plaintext.
+- **[End-to-end encryption](concepts/encryption.md)**: Requests protected by an active, correctly configured STEVE v2 client remain encrypted all the way into the enclave, so infrastructure operators do not see their plaintext.
 
-These capabilities are strongest when the application source is available, the build is reproducible, the app runs outside debug mode, and end-to-end encryption is enabled for workloads that need to keep plaintext from the host.
+These capabilities are strongest when the application source is available, the build is reproducible, the app runs outside debug mode, and sensitive requests use an active, correctly configured STEVE v2 client.
 
 This security model is grounded in the [Distrust Threat Model](https://distrust.co/threatmodel.html){:target="_blank"}, an adversary framework designed by the same team behind Distrust and Caution. The threat model assumes systems may already be compromised at some level. Caution applies that assumption by reducing reliance on operators, infrastructure, and deployment pipelines.
 

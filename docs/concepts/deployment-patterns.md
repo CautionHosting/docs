@@ -8,14 +8,14 @@ icon: lucide/git-branch
 
 ## Public verification
 
-For services where external users or third parties need to verify what code is running, the source code must be publicly available. Anyone can run `caution verify` against your deployment and independently confirm the code matches the attestation.
+For services where external users or third parties need to verify what code is running, the source code must be publicly available. A verifier can check out the repository and run `caution verify --attestation-url <url>` from it. The CLI uses the local checkout at the manifest commit by default.
 
 **How it works:**
 
-1. Source URLs are embedded in the enclave manifest
-2. Verifiers pull the public source code
-3. They rebuild the enclave image locally
-4. PCR values are compared against the attestation
+1. Source URLs and commits are published in the attestation response manifest
+2. Verifiers review an appropriate local checkout
+3. The CLI stages the manifest commit, rebuilds locally, and compares the PCR values with authenticated Nitro evidence
+4. As explicit alternatives, verifiers can select a Git source with `--app-source-url` or an exact archive with `--from-tarball`
 
 **Example use cases:**
 
@@ -31,13 +31,13 @@ For services where external users or third parties need to verify what code is r
 
 ## Private verification
 
-For internal systems where verification happens within your organization, source code can remain private. The CLI prompts for authentication when pulling from private repositories.
+For internal systems where verification happens within your organization, source code can remain private. Verify from an authorized local checkout, or use `--app-source-url` with credentials already configured for Git.
 
 **How it works:**
 
-1. Source URLs point to private repositories
-2. Verifiers authenticate to pull the code (only the repo URL is visible, not the code itself)
-3. Verification proceeds as normal within your organization
+1. Source URLs can point to private repositories
+2. Authorized verifiers check out the source locally or select an explicit Git URL or tarball
+3. Verification stages the manifest commit and proceeds within your organization
 
 **Example use cases:**
 

@@ -191,9 +191,10 @@ http {
 | `enabled` | - | Deprecated compatibility field. `true` is equivalent to `mode = "steve"` when `mode` is omitted. |
 | `key_exchange` | `"x25519"` | STEVE key exchange. Supported values are `"x25519"` and `"xwing-draft10"`. |
 | `cors_origins` | - | Exact HTTP(S) browser origins allowed to call `/e2p/v2/*`. Wildcards are rejected. |
-| `allow_plaintext_fallback` | `false` | Allow legacy plaintext application forwarding. Leave disabled for fail-closed routing. |
 
-`key_exchange`, `cors_origins`, and `allow_plaintext_fallback` are STEVE-specific and should be used with `mode = "steve"`. The client must pin the matching key-exchange identifier; STEVE does not negotiate or fall back to another suite. Changing the suite requires a new deployment and changes the measured enclave configuration.
+`key_exchange` and `cors_origins` are STEVE-specific and should be used with `mode = "steve"`. The client must pin the matching key-exchange identifier; STEVE does not negotiate or fall back to another suite. Changing the suite requires a new deployment and changes the measured enclave configuration.
+
+On the current Platform and STEVE branches, ordinary requests outside `/e2p/v2/*` can still reach the application without STEVE protection. `mode = "steve"` alone is not a fail-closed routing control.
 
 Attested TLS works with ordinary HTTPS clients and terminates TLS inside the enclave:
 

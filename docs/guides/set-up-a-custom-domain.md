@@ -63,7 +63,7 @@ http {
 The application must serve plaintext gRPC (h2c) on the configured port. TLS terminates inside the enclave before Caddy forwards the request to the application.
 
 !!! danger "Verify Attested TLS continuously"
-    Ordinary HTTPS clients do not verify the Nitro attestation. Periodically compare the live leaf certificate's SHA-256 fingerprint with authenticated `user_data.tls.certfp`, together with expected-PCR verification. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode) for the required procedure.
+    Ordinary HTTPS clients do not verify the Nitro attestation. Periodically run `caution verify` to enforce the expected PCRs and the authenticated live-certificate binding. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode).
 
 ## Step 2: Get your deployment IP
 

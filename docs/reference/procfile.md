@@ -83,7 +83,7 @@ Resource values are defaults if not specified.
 | `aws_subnet_id` | - | Optional existing subnet ID for BYOC deployments. |
 | `aws_security_group_id` | - | Optional existing security group ID for BYOC deployments. |
 
-Legacy `e2e: true` uses the default X25519 suite and cannot select X-Wing, configure CORS origins, or enable plaintext fallback. Use [`caution.hcl`](caution-hcl.md#encryption-modes) for these STEVE v2 options.
+Legacy `e2e: true` uses the default X25519 suite and cannot select X-Wing or configure CORS origins. [`caution.hcl`](caution-hcl.md#encryption-modes) provides those STEVE v2 options, but the current routing behavior still permits ordinary requests outside `/e2p/v2/*` to reach the application without STEVE protection.
 
 ## Reserved ports
 

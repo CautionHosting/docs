@@ -30,7 +30,7 @@ Attested TLS is available for clients that cannot integrate STEVE. It uses ordin
 
 Attested TLS is not a replacement for STEVE or RA-TLS. Unlike STEVE, it does not provide application-layer encryption with an attestation-aware client. Unlike RA-TLS, it does not bind attestation evidence into TLS authentication for the client to verify during the handshake. Standard clients remain compatible because they perform normal WebPKI verification.
 
-An external verifier must therefore periodically compare the live certificate fingerprint with the authenticated fingerprint while also enforcing the expected enclave PCRs. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode) for the required check.
+An external verifier must therefore periodically enforce both the expected enclave PCRs and the live certificate binding. `caution verify` performs both checks for a source-backed `mode = "tls"` deployment. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode).
 
 ## TLS and STEVE
 

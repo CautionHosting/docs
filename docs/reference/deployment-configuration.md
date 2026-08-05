@@ -22,7 +22,7 @@ enclave "main" {
 |-------|-------------|
 | `app_sources` | List of git URLs for your application source code |
 
-These URLs are embedded in the attestation manifest and used to pull all required source code for reproducibility.
+These URLs and the deployed commit are published in the attestation response manifest. By default, verifiers use a local checkout at that commit; `--app-source-url` selects an explicit Git source instead.
 
 Without `app_sources`, third parties cannot independently reproduce and verify your deployment.
 
@@ -58,7 +58,7 @@ This requires:
 1. **`caution.hcl` configuration**: Set `e2e_encryption { mode = "steve" }` and front the application port with `http`
 2. **SDK integration**: Integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client application and pin the deployment's key-exchange suite
 
-With e2e enabled, data is encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
+Requests sent through an active, correctly configured STEVE v2 client are encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
 
 #### Key exchange
 
@@ -80,6 +80,8 @@ Configure the client with the matching identifier:
 
 A mismatch or key-exchange failure aborts the session. STEVE does not negotiate suites or fall back from X-Wing to X25519.
 
+For X-Wing browser clients, deploy the complete matching SDK `dist/` tree, including `register.js`, `enclave-sw.js`, and `xwing/steve_xwing_wasm_bg.wasm`, and pin `expectedKeyExchange: "XWING-DRAFT10"`. The Platform configures the enclave suite but does not supply browser assets.
+
 #### CORS
 
 If a browser application calls STEVE from a different origin, list the browser application's exact origin in `cors_origins`:
@@ -95,24 +97,17 @@ Origins include the scheme, host, and optional port. `http://localhost:3000` and
 
 STEVE applies this policy only to `/e2p/v2/*`. Without `cors_origins`, STEVE sends no CORS headers and cross-origin browser requests to those endpoints fail.
 
-#### Plaintext fallback
+For a separate browser origin, set the SDK's `enclaveOrigin` to the deployment origin as well as listing the browser origin in `cors_origins`.
 
-STEVE rejects ordinary plaintext application requests by default. For legacy applications that intentionally retain plaintext forwarding, opt in explicitly:
+#### Current plaintext routing behavior
 
-```hcl
-e2e_encryption {
-  mode                     = "steve"
-  allow_plaintext_fallback = true
-}
-```
-
-Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_plaintext_fallback` disabled or omit it for protected deployments.
+On the current Platform and STEVE branches, `mode = "steve"` protects requests sent through an active, correctly configured STEVE v2 client to `/e2p/v2/*`. Ordinary application requests outside that protected path can still be forwarded in plaintext. Enabling STEVE mode alone is therefore not fail-closed; do not send sensitive data through unprotected endpoints.
 
 See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
 
 ### Attested TLS compatibility mode
 
-Attested TLS terminates standard TLS inside the enclave and works with ordinary HTTPS clients without an attestation-aware SDK. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field. The HCL selector is `mode = "tls"`; the authenticated metadata currently identifies the Caddy implementation with `user_data.tls.mode = "caddy"`.
+Attested TLS terminates standard TLS inside the enclave and works with ordinary HTTPS clients without an attestation-aware SDK. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field. Both the HCL selector and authenticated metadata use `mode = "tls"`.
 
 Enable it with `mode = "tls"`:
 
@@ -166,34 +161,25 @@ The gRPC client connects to `grpc.example.com:443` using normal TLS and HTTP/2. 
 !!! danger "Attested TLS requires periodic external verification"
     Attested TLS is a compatibility mode, not a replacement for STEVE or RA-TLS. STEVE provides application-layer encryption with an attestation-aware client. RA-TLS binds attestation evidence into TLS authentication so a compatible client verifies it during the handshake. Attested TLS does neither: an ordinary client verifies only the usual WebPKI certificate.
 
-    To rely on Attested TLS, regularly verify fresh Nitro evidence against reviewed source or expected PCR0, PCR1, and PCR2. Require `user_data.tls.mode` to be `caddy`, require `user_data.tls.domain` to match the requested hostname, and compare `user_data.tls.certfp` with the SHA-256 fingerprint of the leaf certificate presented by that endpoint. Missing, malformed, or unequal values leave the endpoint unverified.
+    To rely on Attested TLS, regularly verify fresh Nitro evidence against reviewed source and expected PCR0, PCR1, and PCR2. `caution verify` requires authenticated `user_data.tls.mode = "tls"`, the configured domain, and a matching lowercase SHA-256 leaf fingerprint. Missing, malformed, or unequal values leave the endpoint unverified.
 
-Set the domain and print the SHA-256 digest of the live leaf certificate in DER form:
-
-```sh
-DOMAIN=app.example.com
-
-openssl s_client -connect "${DOMAIN}:443" -servername "${DOMAIN}" \
-  -verify_return_error -verify_hostname "${DOMAIN}" </dev/null 2>/dev/null |
-  openssl x509 -outform DER |
-  openssl dgst -sha256
-```
-
-Then verify the enclave:
+Run verification from the application repository:
 
 ```sh
-caution verify --attestation-url "https://${DOMAIN}/attestation"
+caution verify --attestation-url "https://app.example.com/attestation"
 ```
 
-After verifying the AWS Nitro certificate chain, COSE signature, fresh nonce, and expected PCRs, `caution verify` prints the authenticated field:
+For an HTTPS attestation URL on the configured domain, the CLI disables redirects and compares the authenticated fingerprint with the leaf from that same WebPKI-validated response. Alternatively, pass the raw deployment IP:
 
-```text
-User data: {"tls":{"mode":"caddy","domain":"app.example.com","certfp":"..."}}
+```sh
+caution verify --attestation-url "http://192.0.2.10/attestation"
 ```
 
-The final hexadecimal digest from OpenSSL must equal `certfp`. `caution verify` authenticates and prints `user_data`, but does not automatically compare it with the live TLS certificate. The certificate publisher checks for changes every 60 seconds, so remain fail-closed during a renewal mismatch and retry after the next update.
+In the raw-IP flow, DNS must contain that IP. The CLI then makes a hostname-validated health request pinned to it. Empty or NXDOMAIN DNS skips TLS binding; wrong-IP DNS, transient resolver errors, redirects, HTTPS failures, malformed metadata, and fingerprint mismatch fail verification. Ordinary HTTPS without source-backed `mode = "tls"` remains PCR-only.
 
-For continuous enforcement, [Caution Canary](https://codeberg.org/caution/canary){:target="_blank"} supports an Attested TLS profile configured with `--e2e-mode caddy`. It enforces expected PCRs and compares the authenticated fingerprint with the leaf certificate observed on the same TLS connection carrying the `/attestation` response.
+The certificate publisher checks for changes every 60 seconds, so remain fail-closed during a renewal mismatch and retry after the next update. Do not use `--pcrs` for this check: it intentionally verifies only PCRs and persists no TLS binding.
+
+For continuous enforcement, [Caution Canary](https://codeberg.org/caution/canary){:target="_blank"} supports an Attested TLS profile configured with `--e2e-mode tls`. It enforces expected PCRs and compares the authenticated fingerprint with the leaf certificate observed on the same TLS connection carrying the `/attestation` response.
 
 ### Direct port exposure
 

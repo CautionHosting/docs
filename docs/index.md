@@ -12,7 +12,7 @@ Caution provides stronger software integrity and confidentiality assurances than
 
 - [x] **Verifiable deployments**: Independently verify that the code running in production matches the source code, all the way down to the kernel.
 
-- [x] **End-to-end encryption**: When enabled, application data remains encrypted all the way into the enclave and is not exposed to untrusted infrastructure operators.
+- [x] **End-to-end encryption**: Requests protected by an active, correctly configured STEVE v2 client remain encrypted all the way into the enclave and are not exposed to untrusted infrastructure operators.
 
 Caution is fully open source, so teams can inspect, verify, and self-host the platform themselves. If you prefer to run the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
 
