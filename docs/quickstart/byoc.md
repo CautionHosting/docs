@@ -160,23 +160,38 @@ To select a named AWS profile, set `AWS_PROFILE` for the command and pass the ta
 AWS_PROFILE=production caution init --byoc --region us-east-1
 ```
 
-The CLI reads static credentials (including an optional session token) for that profile from `~/.aws/credentials` and reads its default region from `~/.aws/config`. Profiles that depend on AWS SSO, `credential_process`, or an assumed role are not resolved directly; expose their resolved temporary credentials through the standard AWS environment variables instead:
+The CLI reads static credentials (including an optional session token) for that profile from `~/.aws/credentials` and reads its default region from `~/.aws/config`. Profiles that depend on AWS IAM Identity Center (SSO), `credential_process`, or an assumed role are not resolved directly.
+
+If the profile uses IAM Identity Center, authenticate it first:
 
 ```bash
-export AWS_ACCESS_KEY_ID=your-temporary-access-key
-export AWS_SECRET_ACCESS_KEY=your-temporary-secret-key
-export AWS_SESSION_TOKEN=your-temporary-session-token # if required
+aws sso login --profile production
+```
+
+Then use AWS CLI v2 to [resolve and export the profile's credentials](https://docs.aws.amazon.com/cli/latest/reference/configure/export-credentials.html){:target="_blank"} through the standard AWS environment variables:
+
+```bash
+eval "$(aws configure export-credentials --profile production --format env)"
 export AWS_REGION=us-east-1
+aws sts get-caller-identity
 caution init --byoc
 ```
 
-`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` take precedence over `AWS_PROFILE`. Unset them before selecting a named profile if they point to a different account. If the AWS CLI is installed, confirm the selected account before provisioning:
+Temporary credentials expire. Resolve and export them again before setup or teardown if the session has expired.
+
+`AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` take precedence over `AWS_PROFILE`. Unset the credential environment variables before selecting a named static profile if they point to a different account:
+
+```bash
+unset AWS_ACCESS_KEY_ID AWS_SECRET_ACCESS_KEY AWS_SESSION_TOKEN
+```
+
+If the AWS CLI is installed, confirm the identity that the setup will use before provisioning:
 
 ```bash
 AWS_PROFILE=production aws sts get-caller-identity
 ```
 
-Use credentials for the same AWS account when you later run `caution teardown --byoc`.
+When you later run `caution teardown --byoc`, use the same provisioning identity: either the same named static profile or freshly exported temporary credentials for the original role or SSO session. Equivalent credentials must be in the same AWS account and have permission to delete every resource created by setup. An account match alone does not prove that the credentials can perform teardown.
 
 Commit the generated `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
@@ -232,7 +247,7 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 
 </div>
 
-Each normal `caution init --byoc` setup generates a new deployment ID and a dedicated bucket. Subsequent deployments of that app reuse its bucket; the bucket is not shared with other BYOC apps in the same Caution user or AWS account. `caution teardown --byoc` empties and deletes the bucket along with the app's other BYOC resources.
+Each normal `caution init --byoc` setup generates a new deployment ID and a dedicated bucket. Subsequent Git-push deployments of that app reuse its bucket; the bucket is not shared with other BYOC apps in the same Caution user or AWS account. A successful `caution teardown --byoc` empties and deletes the bucket along with the app's other BYOC resources.
 
 ## Add environment variables
 
@@ -262,13 +277,21 @@ The `--save-pcrs` flag saves the verified PCR values to `.caution/trusted_hashes
 
 ## Cleanup
 
-To tear down a BYOC deployment from the CLI, run:
+!!! warning "Use provisioning credentials and verify cleanup"
+    Teardown requires the same provisioning identity used during setup, or equivalent credentials in the same AWS account with permission to delete the provisioned resources. Confirm the selected identity immediately before teardown.
+
+    The current CLI destroys the Caution app before attempting AWS cleanup and can remove local state even if that cleanup fails. Back up `.caution/deployment.json` and `~/.caution/<app>/bring-your-own-compute.json` before teardown. If the command reports that AWS teardown may have failed, verify the S3 bucket and other resources in AWS and follow the manual cleanup instructions below.
+
+With a named static profile, confirm the identity and select that profile for teardown:
 
 ```bash
-caution teardown --byoc
+AWS_PROFILE=production aws sts get-caller-identity
+AWS_PROFILE=production caution teardown --byoc
 ```
 
-Run this from your application directory (or ensure local BYOC state exists in `~/.caution/<app>/bring-your-own-cloud.json`) and make sure your AWS credentials are available.
+If setup used temporary role or SSO credentials, resolve and export them again using the earlier AWS CLI v2 flow, confirm them with `aws sts get-caller-identity`, then run `caution teardown --byoc`.
+
+Run teardown from your application directory (or ensure local BYOC state exists in `~/.caution/<app>/bring-your-own-compute.json`). Deployments created by older CLI versions may use the legacy `bring-your-own-cloud.json` filename, which the current CLI also recognizes.
 
 If you need manual cleanup details, see the cleanup instructions in the [BYOC repo](https://codeberg.org/caution/bring-your-own-cloud-setup){:target="_blank"}.
 
