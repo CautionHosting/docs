@@ -178,17 +178,22 @@ http {
   domain = "secure.example.com"
   port   = 8080
   e2e_encryption {
-    enabled      = true
+    mode         = "steve"
+    key_exchange = "x25519"
     cors_origins = ["https://app.example.com"]
   }
 }
 ```
 
-| Field | Description |
-|-------|-------------|
-| `mode` | Set `"steve"` for STEVE or `"tls"` for Attested TLS. |
-| `enabled` | Legacy switch. `true` enables STEVE when `mode` is omitted. |
-| `cors_origins` | List of allowed CORS origins for STEVE. |
+| Field | Default | Description |
+|-------|---------|-------------|
+| `mode` | - | Set `"steve"` for STEVE v2 or `"tls"` for Attested TLS. |
+| `enabled` | - | Deprecated compatibility field. `true` is equivalent to `mode = "steve"` when `mode` is omitted. |
+| `key_exchange` | `"x25519"` | STEVE key exchange. Supported values are `"x25519"` and `"xwing-draft10"`. |
+| `cors_origins` | - | Exact HTTP(S) browser origins allowed to call `/e2p/v2/*`. Wildcards are rejected. |
+| `allow_plaintext_fallback` | `false` | Allow legacy plaintext application forwarding. Leave disabled for fail-closed routing. |
+
+`key_exchange`, `cors_origins`, and `allow_plaintext_fallback` are STEVE-specific and should be used with `mode = "steve"`. The client must pin the matching key-exchange identifier; STEVE does not negotiate or fall back to another suite. Changing the suite requires a new deployment and changes the measured enclave configuration.
 
 Attested TLS works with ordinary HTTPS clients and terminates TLS inside the enclave:
 
@@ -373,8 +378,9 @@ enclave "main" {
       domain = "secure.example.com"
       port   = 3000
       e2e_encryption {
-        enabled      = true
-        cors_origins = ["*"]
+        mode         = "steve"
+        key_exchange = "x25519"
+        cors_origins = ["https://app.example.com"]
       }
     }
   }

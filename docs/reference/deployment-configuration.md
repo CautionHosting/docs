@@ -44,7 +44,8 @@ network {
     domain = "your-domain.xyz"
     port   = 3000
     e2e_encryption {
-      enabled = true
+      mode         = "steve"
+      key_exchange = "x25519"
     }
   }
 }
@@ -54,10 +55,58 @@ Run the app on any unreserved port. The reserved app-facing range is `49500`-`49
 
 This requires:
 
-1. **`caution.hcl` configuration**: Set `e2e_encryption { enabled = true }` and front the application port with `http`
-2. **SDK integration**: Integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client application
+1. **`caution.hcl` configuration**: Set `e2e_encryption { mode = "steve" }` and front the application port with `http`
+2. **SDK integration**: Integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client application and pin the deployment's key-exchange suite
 
 With e2e enabled, data is encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
+
+#### Key exchange
+
+`key_exchange` fixes one suite for the deployment. X25519 is the default. To use X-Wing draft-10 instead:
+
+```hcl
+e2e_encryption {
+  mode         = "steve"
+  key_exchange = "xwing-draft10"
+}
+```
+
+Configure the client with the matching identifier:
+
+| `caution.hcl` | Browser SDK | Rust SDK |
+|---------------|-------------|----------|
+| `"x25519"` | `"X25519"` | `KeyExchangeSuite::X25519` |
+| `"xwing-draft10"` | `"XWING-DRAFT10"` | `KeyExchangeSuite::XWingDraft10` |
+
+A mismatch or key-exchange failure aborts the session. STEVE does not negotiate suites or fall back from X-Wing to X25519.
+
+#### CORS
+
+If a browser application calls STEVE from a different origin, list the browser application's exact origin in `cors_origins`:
+
+```hcl
+e2e_encryption {
+  mode         = "steve"
+  cors_origins = ["https://app.example.com"]
+}
+```
+
+Origins include the scheme, host, and optional port. `http://localhost:3000` and `http://127.0.0.1:3000` are different origins and must be listed separately when both are used. Wildcard origins are rejected.
+
+STEVE applies this policy only to `/e2p/v2/*`. Without `cors_origins`, STEVE sends no CORS headers and cross-origin browser requests to those endpoints fail.
+
+#### Plaintext fallback
+
+STEVE rejects ordinary plaintext application requests by default. For legacy applications that intentionally retain plaintext forwarding, opt in explicitly:
+
+```hcl
+e2e_encryption {
+  mode                     = "steve"
+  allow_plaintext_fallback = true
+}
+```
+
+Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_plaintext_fallback` disabled or omit it for protected deployments.
 
 See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
 

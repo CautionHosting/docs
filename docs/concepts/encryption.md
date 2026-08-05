@@ -14,9 +14,15 @@ For proper end-to-end encryption, data must remain protected all the way into th
 
 ## STEVE
 
-Caution leverages [Secure Transport Encryption via Enclave (STEVE)](https://distrust.co/blog/steve.html){:target="_blank"}, a system which is designed as a transparent proxy which is easy to use with existing solutions.
+Caution uses [Secure Transport Encryption via Enclave (STEVE)](https://distrust.co/blog/steve.html){:target="_blank"}, a transparent proxy designed to work with existing applications.
 
-STEVE works through a proxy service inside the enclave and an SDK integrated into the application. It verifies the attested key from a confidential compute workload and uses that key to encrypt data so it is exposed only in the client and inside the enclave.
+STEVE v2 establishes a per-session encrypted channel between a client SDK and the STEVE proxy inside an AWS Nitro Enclave. The outer TLS connection terminates on the untrusted host, but protected application data remains encrypted until it reaches STEVE inside the enclave.
+
+Each deployment pins one key-exchange suite. X25519 is the compatibility default. X-Wing draft-10 combines ML-KEM-768 and X25519. Clients must pin the same suite as the deployment; STEVE does not negotiate or fall back to another suite.
+
+STEVE binds each session to fresh Nitro evidence. The browser SDK verifies the Nitro evidence and session binding, but does not currently compare PCRs with an independently supplied expected-PCR policy. The native Rust SDK requires expected PCR0, PCR1, and PCR2 values.
+
+To enable STEVE for your deployment, add an `e2e_encryption` block to your [`caution.hcl`](../reference/caution-hcl.md#encryption-modes) and integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client. See [Network connectivity](../reference/deployment-configuration.md#network-connectivity) for the full walkthrough, including `cors_origins` for browser-based clients calling the proxy from a different origin.
 
 ## Attested TLS compatibility mode
 
