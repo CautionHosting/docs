@@ -47,7 +47,7 @@ Use `--app-source-url` for an explicit Git source or `--from-tarball` for an exa
 
 The existing Bootproof verification checks the AWS Nitro certificate chain and validity, COSE signature, fresh nonce, and expected PCR0, PCR1, and PCR2. The authenticated PCRs are compared with the locally reproduced or explicitly supplied values.
 
-For a source-backed `mode = "tls"` deployment, the CLI then validates the authenticated TLS metadata and live leaf-certificate binding. Only after every required check passes does it atomically update `.caution/trusted_hashes.json`, preserving the previous state in a unique backup.
+When the selected source uses the Attested TLS browser-compatibility mode (`mode = "tls"` in `caution.hcl`), the CLI then validates the authenticated TLS metadata and live leaf-certificate binding. Only after every required check passes does it atomically update `.caution/trusted_hashes.json`, preserving the previous state in a unique backup.
 
 The PCR values cover:
 

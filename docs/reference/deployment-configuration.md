@@ -107,7 +107,7 @@ See the [Encryption](../concepts/encryption.md) concepts page for details on how
 
 ### Attested TLS compatibility mode
 
-Attested TLS terminates standard TLS inside the enclave and works with ordinary HTTPS clients without an attestation-aware SDK. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field. Both the HCL selector and authenticated metadata use `mode = "tls"`.
+Attested TLS is Caution's end-to-end encryption compatibility mode for browsers and other ordinary HTTPS clients that cannot integrate STEVE-specific code. It preserves the standard HTTPS client contract while terminating TLS inside the enclave. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field. The HCL selector and authenticated metadata use `mode = "tls"`.
 
 Enable it with `mode = "tls"`:
 
@@ -158,10 +158,10 @@ network {
 
 The gRPC client connects to `grpc.example.com:443` using normal TLS and HTTP/2. Your application must listen for plaintext gRPC (h2c) on port `50051`; Caddy terminates TLS inside the enclave and forwards the HTTP/2 stream to that port. Omit `upstream_protocol`, or set it to `"http"`, for an HTTP/1.1 application.
 
-!!! danger "Attested TLS requires periodic external verification"
-    Attested TLS is a compatibility mode, not a replacement for STEVE or RA-TLS. STEVE provides application-layer encryption with an attestation-aware client. RA-TLS binds attestation evidence into TLS authentication so a compatible client verifies it during the handshake. Attested TLS does neither: an ordinary client verifies only the usual WebPKI certificate.
+!!! danger "Attested TLS requires periodic and ad hoc external verification"
+    Attested TLS is a compatibility mode, not a replacement for STEVE or RA-TLS. It deliberately leaves the client's expectations unchanged: an ordinary client verifies only the usual WebPKI certificate, not Nitro evidence. STEVE provides the stronger client-aware design by using STEVE-specific client code for an application-layer encrypted session bound to fresh Nitro evidence. RA-TLS instead binds attestation evidence into TLS authentication so a compatible client verifies it during the handshake.
 
-    To rely on Attested TLS, regularly verify fresh Nitro evidence against reviewed source and expected PCR0, PCR1, and PCR2. `caution verify` requires authenticated `user_data.tls.mode = "tls"`, the configured domain, and a matching lowercase SHA-256 leaf fingerprint. Missing, malformed, or unequal values leave the endpoint unverified.
+    To rely on Attested TLS, carefully verify fresh Nitro evidence against reviewed source and expected PCR0, PCR1, and PCR2 on a regular schedule and after relevant deployment, DNS, or certificate changes. `caution verify` requires authenticated `user_data.tls.mode = "tls"`, the configured domain, and a matching lowercase SHA-256 leaf fingerprint. Missing, malformed, or unequal values leave the endpoint unverified.
 
 Run verification from the application repository:
 
@@ -175,7 +175,7 @@ For an HTTPS attestation URL on the configured domain, the CLI disables redirect
 caution verify --attestation-url "http://192.0.2.10/attestation"
 ```
 
-In the raw-IP flow, DNS must contain that IP. The CLI then makes a hostname-validated health request pinned to it. Empty or NXDOMAIN DNS skips TLS binding; wrong-IP DNS, transient resolver errors, redirects, HTTPS failures, malformed metadata, and fingerprint mismatch fail verification. Ordinary HTTPS without source-backed `mode = "tls"` remains PCR-only.
+In the raw-IP flow, DNS must contain that IP. The CLI then makes a hostname-validated health request pinned to it. Empty or NXDOMAIN DNS skips TLS binding; wrong-IP DNS, transient resolver errors, redirects, HTTPS failures, malformed metadata, and fingerprint mismatch fail verification. Ordinary HTTPS that is not configured for Attested TLS remains PCR-only.
 
 The certificate publisher checks for changes every 60 seconds, so remain fail-closed during a renewal mismatch and retry after the next update. Do not use `--pcrs` for this check: it intentionally verifies only PCRs and persists no TLS binding.
 

@@ -26,11 +26,13 @@ To enable STEVE for your deployment, add an `e2e_encryption` block to your [`cau
 
 ## Attested TLS compatibility mode
 
-Attested TLS is available for clients that cannot integrate STEVE. It uses ordinary HTTPS, terminates TLS inside the enclave, and attests the TLS certificate by placing the leaf certificate's SHA-256 fingerprint in authenticated Nitro `user_data`.
+Attested TLS is Caution's end-to-end encryption compatibility mode for browsers and other clients that cannot integrate STEVE-specific code. It preserves the ordinary HTTPS client contract, terminates TLS inside the enclave, and attests the TLS certificate by placing the leaf certificate's SHA-256 fingerprint in authenticated Nitro `user_data`.
 
 Attested TLS is not a replacement for STEVE or RA-TLS. Unlike STEVE, it does not provide application-layer encryption with an attestation-aware client. Unlike RA-TLS, it does not bind attestation evidence into TLS authentication for the client to verify during the handshake. Standard clients remain compatible because they perform normal WebPKI verification.
 
-An external verifier must therefore periodically enforce both the expected enclave PCRs and the live certificate binding. `caution verify` performs both checks for a source-backed `mode = "tls"` deployment. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode).
+That compatibility deliberately leaves the client's expectations unchanged: the client verifies the normal WebPKI certificate, not Nitro evidence. An external verifier must therefore carefully enforce both the expected enclave PCRs and the live certificate binding on a regular schedule and after relevant deployment, DNS, or certificate changes. `caution verify` performs both checks for a source-backed Attested TLS deployment (selected with `mode = "tls"` in `caution.hcl`).
+
+Where client integration is possible, prefer STEVE. It provides the stronger design by using STEVE-specific client code to establish an application-layer encrypted session bound to fresh Nitro evidence. This requires integrating STEVE's browser SDK and service worker, or a native STEVE client. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode).
 
 ## TLS and STEVE
 

@@ -103,7 +103,7 @@ When you run `caution verify`, the CLI:
 3. Reads remote PCR values and manifest information from the attestation response.
 4. Stages the selected source once, reads its existing configuration, and reproduces the build, or reads expected PCRs from a PCR file you provide.
 5. Verifies the Nitro attestation document, including the AWS Nitro certificate chain, certificate validity, COSE signature, nonce, and expected PCR values.
-6. For source-backed `mode = "tls"`, validates the attested TLS metadata and live certificate binding.
+6. For the source-backed Attested TLS browser-compatibility mode, validates the attested TLS metadata and live certificate binding.
 7. Atomically writes `.caution/trusted_hashes.json`, preserving the previous file in a unique backup.
 
 The important success lines look like this:
@@ -125,9 +125,9 @@ Expected PCR values:
 Trusted state: .caution/trusted_hashes.json
 ```
 
-For source-backed `mode = "tls"`, an HTTPS attestation request on the configured domain binds the leaf certificate from that same WebPKI-validated, non-redirected response. With a raw deployment-IP attestation URL, the CLI first requires DNS to contain that IP, then makes a hostname-validated HTTPS health request pinned to it. An empty or NXDOMAIN result skips TLS binding; other DNS, redirect, HTTPS, metadata, or fingerprint failures are fatal.
+For the source-backed Attested TLS browser-compatibility mode (`mode = "tls"` in `caution.hcl`), an HTTPS attestation request on the configured domain binds the leaf certificate from that same WebPKI-validated, non-redirected response. With a raw deployment-IP attestation URL, the CLI first requires DNS to contain that IP, then makes a hostname-validated HTTPS health request pinned to it. An empty or NXDOMAIN result skips TLS binding; other DNS, redirect, HTTPS, metadata, or fingerprint failures are fatal.
 
-Ordinary proxy-level HTTPS without `mode = "tls"` receives only the base Nitro/PCR verification. `--pcrs` is also PCR-only: it performs no TLS check and removes any stale `tls` object from the persisted trusted state.
+Attested TLS deliberately preserves ordinary browser HTTPS expectations, so the client does not validate Nitro evidence. Run this verification periodically and ad hoc after relevant deployment, DNS, or certificate changes. Where STEVE-specific client code can be integrated, STEVE provides the stronger client-aware design. Ordinary proxy-level HTTPS that is not configured for Attested TLS receives only the base Nitro/PCR verification. `--pcrs` is also PCR-only: it performs no TLS check and removes any stale `tls` object from the persisted trusted state.
 
 ## Inspect the reproduced build
 
