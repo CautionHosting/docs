@@ -310,14 +310,17 @@ Each shard-holder sends their shard to the running enclave:
     `make install-cli-host`), so the standard install already supports shard
     sending.
 
-    The host-toolchain binary is not built through the StageX reproducible
-    build pipeline. It is compiled with the local toolchain and linked against
-    host system libraries, so bit-for-bit reproducibility is not guaranteed or
-    verified and it inherits supply-chain risks from the local compiler,
-    package manager, libc, PC/SC stack, and other host dependencies. Those
-    risks do not apply in the same way to the StageX-built CLI. The explicit
-    StageX reproducible build (`make install-cli-stagex`) works for other CLI
-    commands, but the shard-sending path can hit a musl static-linking
+    The host-toolchain binary is not built through StageX's reproducible,
+    full-source-bootstrapped build pipeline. These are distinct properties:
+    reproducibility provides bit-for-bit identical outputs that can be
+    independently verified, while full-source bootstrapping provides an
+    auditable build chain without opaque bootstrap binaries. Because the host
+    build uses the local toolchain and links against host system libraries,
+    neither property is guaranteed. It also inherits supply-chain risks from
+    the local compiler, package manager, libc, PC/SC stack, and other host
+    dependencies. Those risks do not apply in the same way to the StageX-built
+    CLI. The explicit StageX build (`make install-cli-stagex`) works for other
+    CLI commands, but the shard-sending path can hit a musl static-linking
     limitation when the PC/SC stack tries to load `libpcsclite_real.so.1`.
 
 === "Development and demos"
