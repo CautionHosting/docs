@@ -63,9 +63,9 @@ See the [Encryption](../concepts/encryption.md) concepts page for details on how
 
 ### Attested TLS compatibility mode
 
-Attested TLS terminates standard TLS inside the enclave and works with ordinary HTTPS clients without an attestation-aware SDK. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field.
+Attested TLS terminates standard TLS inside the enclave and works with ordinary HTTPS clients without an attestation-aware SDK. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field. The HCL selector is `mode = "tls"`; the authenticated metadata currently identifies the Caddy implementation with `user_data.tls.mode = "caddy"`.
 
-The configuration value remains `mode = "caddy"` because Caddy currently provides the enclave TLS endpoint:
+Enable it with `mode = "tls"`:
 
 ```hcl
 network {
@@ -80,13 +80,39 @@ network {
     domain = "app.example.com"
     port   = 3000
     e2e_encryption {
-      mode = "caddy"
+      mode = "tls"
     }
   }
 }
 ```
 
 The domain must resolve directly to the deployment, the application port must have an `ingress` rule, and outbound egress is required for certificate issuance. Do not place a CDN or other TLS-terminating proxy in front of the deployment.
+
+#### gRPC services
+
+Attested TLS can front a gRPC service. Set `upstream_protocol = "h2c"` so Caddy uses cleartext HTTP/2 for the enclave-local connection to the application:
+
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 50051
+  }
+  egress {
+    cidr_ipv4 = "0.0.0.0/0"
+  }
+  http {
+    domain            = "grpc.example.com"
+    port              = 50051
+    upstream_protocol = "h2c"
+    e2e_encryption {
+      mode = "tls"
+    }
+  }
+}
+```
+
+The gRPC client connects to `grpc.example.com:443` using normal TLS and HTTP/2. Your application must listen for plaintext gRPC (h2c) on port `50051`; Caddy terminates TLS inside the enclave and forwards the HTTP/2 stream to that port. Omit `upstream_protocol`, or set it to `"http"`, for an HTTP/1.1 application.
 
 !!! danger "Attested TLS requires periodic external verification"
     Attested TLS is a compatibility mode, not a replacement for STEVE or RA-TLS. STEVE provides application-layer encryption with an attestation-aware client. RA-TLS binds attestation evidence into TLS authentication so a compatible client verifies it during the handshake. Attested TLS does neither: an ordinary client verifies only the usual WebPKI certificate.
