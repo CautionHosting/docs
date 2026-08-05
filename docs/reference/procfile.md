@@ -168,9 +168,11 @@ ADD .caution/secrets/ /etc/caution/secrets/
     directory`. Use `run:` (full filesystem) when `locksmith: true`.
 
 After deploying, send shards with `caution secret send-shard` from the
-host-toolchain untrusted CLI build (`make install-cli-untrusted`). See
+host-toolchain CLI build, which is the default `make install-cli` (also
+`make install-cli-host`). See
 [Key services](../concepts/key-services.md) for the full setup flow, why this
-build is called untrusted, and the current shard-sending build requirement.
+build is not reproducibility-verified, and the current shard-sending build
+requirement.
 
 ### Custom resources with multiple ports
 
