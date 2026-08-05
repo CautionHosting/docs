@@ -30,6 +30,41 @@ network {
 }
 ```
 
+To terminate TLS inside the enclave while remaining compatible with ordinary HTTPS clients, enable Attested TLS with `mode = "tls"`. This also requires outbound egress for certificate issuance:
+
+```hcl
+network {
+  egress {
+    cidr_ipv4 = "0.0.0.0/0"
+  }
+  http {
+    domain = "api.yourdomain.com"
+    port   = 8080
+    e2e_encryption {
+      mode = "tls"
+    }
+  }
+}
+```
+
+For a gRPC service, also set `upstream_protocol = "h2c"` in the `http` block so the enclave TLS proxy uses cleartext HTTP/2 when forwarding to your application:
+
+```hcl
+http {
+  domain            = "grpc.yourdomain.com"
+  port              = 50051
+  upstream_protocol = "h2c"
+  e2e_encryption {
+    mode = "tls"
+  }
+}
+```
+
+The application must serve plaintext gRPC (h2c) on the configured port. TLS terminates inside the enclave before Caddy forwards the request to the application.
+
+!!! danger "Verify Attested TLS continuously"
+    Ordinary HTTPS clients do not verify the Nitro attestation. Periodically compare the live leaf certificate's SHA-256 fingerprint with authenticated `user_data.tls.certfp`, together with expected-PCR verification. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode) for the required procedure.
+
 ## Step 2: Get your deployment IP
 
 After deploying your application, retrieve the IP address using either method:
@@ -71,3 +106,4 @@ DNS propagation typically takes a few minutes to a few hours depending on your p
 - TLS certificates are automatically provisioned for your custom domain
 - Only one domain per deployment is currently supported
 - The domain must be configured before deployment for TLS to work correctly
+- For Attested TLS, point DNS directly to the deployment and disable any CDN or proxy TLS termination

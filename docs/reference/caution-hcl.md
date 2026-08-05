@@ -158,17 +158,20 @@ Do not declare ports in the reserved `49500`-`49600` range (see [Reserved ports]
 
 #### `http`
 
-The `http` block fronts one port with Caddy for TLS termination on port 443.
+The `http` block fronts one port with TLS on port 443. By default TLS terminates on the host; with [Attested TLS](deployment-configuration.md#attested-tls-compatibility-mode), it terminates inside the enclave.
 
 | Field | Description |
 |-------|-------------|
 | `domain` | Domain name for the deployment. |
 | `port` | Port to reverse proxy through Caddy. **Must be covered by an `ingress` rule.** |
-| `e2e_encryption` | Optional block enabling [end-to-end encryption](#end-to-end-encryption). |
+| `upstream_protocol` | Protocol used by enclave Caddy to reach the application in Attested TLS mode. Defaults to `"http"`; use `"h2c"` for gRPC. |
+| `e2e_encryption` | Optional block selecting [STEVE or Attested TLS](#encryption-modes). |
 
-#### End-to-end encryption
+#### Encryption modes
 
-Add an `e2e_encryption` block inside `http` to enable end-to-end encryption via the STEVE proxy.
+Add an `e2e_encryption` block inside `http` to select STEVE end-to-end encryption or Attested TLS.
+
+STEVE uses an attestation-aware client and provides application-layer encryption:
 
 ```hcl
 http {
@@ -176,15 +179,43 @@ http {
   port   = 8080
   e2e_encryption {
     enabled      = true
-    cors_origins = ["*"]
+    cors_origins = ["https://app.example.com"]
   }
 }
 ```
 
 | Field | Description |
 |-------|-------------|
-| `enabled` | Set `true` to enable end-to-end encryption. |
-| `cors_origins` | List of allowed CORS origins. |
+| `mode` | Set `"steve"` for STEVE or `"tls"` for Attested TLS. |
+| `enabled` | Legacy switch. `true` enables STEVE when `mode` is omitted. |
+| `cors_origins` | List of allowed CORS origins for STEVE. |
+
+Attested TLS works with ordinary HTTPS clients and terminates TLS inside the enclave:
+
+```hcl
+http {
+  domain = "secure.example.com"
+  port   = 8080
+  e2e_encryption {
+    mode = "tls"
+  }
+}
+```
+
+Attested TLS requires egress for certificate issuance and periodic external verification of the attested certificate fingerprint. See [Deployment configuration](deployment-configuration.md#attested-tls-compatibility-mode) for the complete security procedure.
+
+For a gRPC application, set the upstream protocol to h2c (cleartext HTTP/2). Client connections still use TLS; only the enclave-local connection from Caddy to the application is cleartext:
+
+```hcl
+http {
+  domain            = "grpc.example.com"
+  port              = 50051
+  upstream_protocol = "h2c"
+  e2e_encryption {
+    mode = "tls"
+  }
+}
+```
 
 ### Secrets
 

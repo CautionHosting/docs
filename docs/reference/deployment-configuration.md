@@ -28,9 +28,9 @@ Without `app_sources`, third parties cannot independently reproduce and verify y
 
 ## Network connectivity
 
-Caution supports two modes for exposing your application to the network.
+Caution supports three ways to expose your application to the network.
 
-### End-to-end encryption (recommended)
+### STEVE end-to-end encryption (recommended)
 
 For full security, enable end-to-end encryption using [STEVE (Secure Transport Encryption via Enclave)](https://git.distrust.co/public/steve){:target="_blank"}. Add an `e2e_encryption` block inside `http`:
 
@@ -60,6 +60,91 @@ This requires:
 With e2e enabled, data is encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
 
 See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
+
+### Attested TLS compatibility mode
+
+Attested TLS terminates standard TLS inside the enclave and works with ordinary HTTPS clients without an attestation-aware SDK. Caution attests the TLS certificate by placing the SHA-256 fingerprint of its DER-encoded leaf certificate in the authenticated Nitro `user_data.tls.certfp` field. The HCL selector is `mode = "tls"`; the authenticated metadata currently identifies the Caddy implementation with `user_data.tls.mode = "caddy"`.
+
+Enable it with `mode = "tls"`:
+
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 3000
+  }
+  egress {
+    cidr_ipv4 = "0.0.0.0/0"
+  }
+  http {
+    domain = "app.example.com"
+    port   = 3000
+    e2e_encryption {
+      mode = "tls"
+    }
+  }
+}
+```
+
+The domain must resolve directly to the deployment, the application port must have an `ingress` rule, and outbound egress is required for certificate issuance. Do not place a CDN or other TLS-terminating proxy in front of the deployment.
+
+#### gRPC services
+
+Attested TLS can front a gRPC service. Set `upstream_protocol = "h2c"` so Caddy uses cleartext HTTP/2 for the enclave-local connection to the application:
+
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 50051
+  }
+  egress {
+    cidr_ipv4 = "0.0.0.0/0"
+  }
+  http {
+    domain            = "grpc.example.com"
+    port              = 50051
+    upstream_protocol = "h2c"
+    e2e_encryption {
+      mode = "tls"
+    }
+  }
+}
+```
+
+The gRPC client connects to `grpc.example.com:443` using normal TLS and HTTP/2. Your application must listen for plaintext gRPC (h2c) on port `50051`; Caddy terminates TLS inside the enclave and forwards the HTTP/2 stream to that port. Omit `upstream_protocol`, or set it to `"http"`, for an HTTP/1.1 application.
+
+!!! danger "Attested TLS requires periodic external verification"
+    Attested TLS is a compatibility mode, not a replacement for STEVE or RA-TLS. STEVE provides application-layer encryption with an attestation-aware client. RA-TLS binds attestation evidence into TLS authentication so a compatible client verifies it during the handshake. Attested TLS does neither: an ordinary client verifies only the usual WebPKI certificate.
+
+    To rely on Attested TLS, regularly verify fresh Nitro evidence against reviewed source or expected PCR0, PCR1, and PCR2. Require `user_data.tls.mode` to be `caddy`, require `user_data.tls.domain` to match the requested hostname, and compare `user_data.tls.certfp` with the SHA-256 fingerprint of the leaf certificate presented by that endpoint. Missing, malformed, or unequal values leave the endpoint unverified.
+
+Set the domain and print the SHA-256 digest of the live leaf certificate in DER form:
+
+```sh
+DOMAIN=app.example.com
+
+openssl s_client -connect "${DOMAIN}:443" -servername "${DOMAIN}" \
+  -verify_return_error -verify_hostname "${DOMAIN}" </dev/null 2>/dev/null |
+  openssl x509 -outform DER |
+  openssl dgst -sha256
+```
+
+Then verify the enclave:
+
+```sh
+caution verify --attestation-url "https://${DOMAIN}/attestation"
+```
+
+After verifying the AWS Nitro certificate chain, COSE signature, fresh nonce, and expected PCRs, `caution verify` prints the authenticated field:
+
+```text
+User data: {"tls":{"mode":"caddy","domain":"app.example.com","certfp":"..."}}
+```
+
+The final hexadecimal digest from OpenSSL must equal `certfp`. `caution verify` authenticates and prints `user_data`, but does not automatically compare it with the live TLS certificate. The certificate publisher checks for changes every 60 seconds, so remain fail-closed during a renewal mismatch and retry after the next update.
+
+For continuous enforcement, [Caution Canary](https://codeberg.org/caution/canary){:target="_blank"} supports an Attested TLS profile configured with `--e2e-mode caddy`. It enforces expected PCRs and compares the authenticated fingerprint with the leaf certificate observed on the same TLS connection carrying the `/attestation` response.
 
 ### Direct port exposure
 
