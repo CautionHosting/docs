@@ -51,7 +51,7 @@ enclave "main" {
 }
 ```
 
-Caution embeds the source URL and commit in the attestation manifest. Without `app_sources`, third parties cannot independently obtain the app source. Verifiers need an authorized local checkout, source tarball, or Git URL.
+Caution includes the source URL and commit in the unsigned response manifest used to select reproduction inputs. Trust comes from verifying that the reproduced PCRs match the signed Nitro attestation. Without `app_sources`, third parties cannot independently obtain the app source. Verifiers need an authorized local checkout, source tarball, or Git URL.
 
 Deploy or redeploy the app after changing source verification settings:
 
@@ -67,7 +67,7 @@ Run the default verification flow from the deployed app's repository:
 caution verify
 ```
 
-The CLI infers the attestation endpoint from local Caution deployment state. It learns the app commit from the fresh attestation manifest, stages that commit from the local repository, reproduces the build, and verifies the resulting PCR values. If the manifest has no app commit, it stages local `HEAD`.
+The CLI infers the attestation endpoint from local Caution deployment state. It reads the app commit from the fresh response's unsigned manifest metadata, stages that commit from the local repository, reproduces the build, and verifies the resulting PCR values. If the manifest has no app commit, it stages local `HEAD`.
 
 ## Verify a remote app
 
@@ -91,8 +91,17 @@ Choose the mode that matches the source access you have.
 | You have an exact source archive | `caution verify --from-tarball source.tar.gz` |
 | You already have expected PCR values | `caution verify --pcrs pcrs.txt` |
 | You want to force a fresh local rebuild | `caution verify --no-cache` |
+| You only want to inspect the remote attestation | `caution verify --inspect-attestation` |
 
-`--from-tarball`, `--app-source-url`, and `--pcrs` are mutually exclusive source selectors. `--from-local` is accepted for one release but deprecated because local source is now the default. You can combine `--attestation-url` or `--no-cache` with one source selector.
+`--from-tarball`, `--app-source-url`, and `--pcrs` are mutually exclusive source selectors. `--from-local` is accepted for one release but deprecated because local source is now the default. You can combine `--attestation-url` or `--no-cache` with one source selector. Inspection accepts `--attestation-url` but conflicts with source selectors, `--no-cache`, and `--save-pcrs` because it does not perform verification.
+
+## Inspect without verifying
+
+```bash
+caution verify --inspect-attestation --attestation-url http://<host>/attestation
+```
+
+This fetches a fresh-nonce response, parses the COSE payload, prints normalized JSON to stdout, and exits. The JSON marks verification as `not_performed`, encodes CBOR byte strings as `base64:<value>`, and places the sibling unsigned manifest under `response_metadata`. A warning is printed to stderr. No Nitro signature, PCR, source, build, TLS, or persistence check is performed, so this output is debugging evidence only.
 
 ## What the CLI checks
 
@@ -100,19 +109,20 @@ When you run `caution verify`, the CLI:
 
 1. Generates a fresh nonce to prevent replay attacks.
 2. Sends the nonce to the enclave attestation endpoint.
-3. Reads remote PCR values and manifest information from the attestation response.
+3. Parses and immediately prints the remote PCRs and `user_data` as unverified values, and labels the response manifest as unsigned metadata.
 4. Stages the selected source once, reads its existing configuration, and reproduces the build, or reads expected PCRs from a PCR file you provide.
 5. Verifies the Nitro attestation document, including the AWS Nitro certificate chain, certificate validity, COSE signature, nonce, and expected PCR values.
-6. For the source-backed Attested TLS browser-compatibility mode, validates the attested TLS metadata and live certificate binding.
+6. For the source-backed Attested TLS browser-compatibility mode, validates the verified `user_data` metadata and live certificate binding.
 7. Atomically writes `.caution/trusted_hashes.json`, preserving the previous file in a unique backup.
 
 The important success lines look like this:
 
 ```text
-Remote PCR values (from deployed enclave):
+Remote PCR values (unverified until verification succeeds):
   PCR0: ...
   PCR1: ...
   PCR2: ...
+Remote user data (unverified): ...
 
 Expected PCR values:
   PCR0: ...
@@ -124,6 +134,8 @@ Expected PCR values:
 ✓ Attestation verification PASSED
 Trusted state: .caution/trusted_hashes.json
 ```
+
+The base-verification success line authenticates the PCRs and `user_data` displayed earlier; the CLI does not print `user_data` a second time. UTF-8 control characters are escaped, and non-UTF-8 `user_data` is shown as hexadecimal.
 
 For the source-backed Attested TLS browser-compatibility mode (`mode = "tls"` in `caution.hcl`), an HTTPS attestation request on the configured domain binds the leaf certificate from that same WebPKI-validated, non-redirected response. With a raw deployment-IP attestation URL, the CLI first requires DNS to contain that IP, then makes a hostname-validated HTTPS health request pinned to it. An empty or NXDOMAIN result skips TLS binding; other DNS, redirect, HTTPS, metadata, or fingerprint failures are fatal.
 
