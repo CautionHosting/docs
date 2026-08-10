@@ -24,6 +24,10 @@ STEVE binds each session to fresh Nitro evidence. The browser SDK verifies the N
 
 To enable STEVE for your deployment, add an `e2e_encryption` block to your [`caution.hcl`](../reference/caution-hcl.md#encryption-modes) and integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client. See [Network connectivity](../reference/deployment-configuration.md#network-connectivity) for the full walkthrough, including `cors_origins` for browser-based clients calling the proxy from a different origin.
 
+The [STEVE v2 protocol specification](https://git.distrust.co/public/steve/src/branch/main/docs/steve-v2-protocol.md){:target="_blank"} defines the exact wire limits and recovery rules. Current clients cap session, confirmation, and application protocol responses at 65,536, 4,096, and 33,619,968 bytes respectively; STEVE caps an upstream response body at 33,554,432 bytes. STEVE returns upstream redirects to the client instead of following them.
+
+The browser and native SDKs do not automatically retry a timed-out or otherwise ambiguous protected request because the application may already have executed it. Callers must apply their own idempotency policy before retrying. The native SDK preserves repeated response header fields; browser clients remain subject to Fetch restrictions such as `Set-Cookie` handling.
+
 ## Attested TLS compatibility mode
 
 Attested TLS is Caution's end-to-end encryption compatibility mode for browsers and other clients that cannot integrate STEVE-specific code. It preserves the ordinary HTTPS client contract, terminates TLS inside the enclave, and attests the TLS certificate by placing the leaf certificate's SHA-256 fingerprint in authenticated Nitro `user_data`.

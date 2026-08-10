@@ -69,6 +69,8 @@ caution verify
 
 The CLI infers the attestation endpoint from local Caution deployment state. It reads the app commit from the fresh response's unsigned manifest metadata, stages that commit from the local repository, reproduces the build, and verifies the resulting PCR values. If the manifest has no app commit, it stages local `HEAD`.
 
+Current deployments also pin the Platform framework archive to an exact commit in the response manifest. Source-backed verification uses that deployed pin. A manifestless local build such as `caution apps build` instead queries the configured Platform API's public `/.well-known/caution/build-inputs` endpoint, pins the advertised Platform commit, and includes it in the local build cache identity. That endpoint reports operator-advertised current inputs; it is not app-specific or attested. For a deployed app, rely on the manifest-backed PCR verification result rather than the endpoint alone.
+
 ## Verify a remote app
 
 If you are verifying an app from outside its deployment directory, pass the attestation endpoint explicitly:
@@ -151,7 +153,7 @@ During verification, the CLI prints a build artifacts directory. Open that direc
 | `app/` | Application source and packaged files |
 | `enclave/` | EnclaveOS source, including init and attestation service code |
 | `run.sh` | Generated startup script |
-| `manifest.json` | Build provenance, source URLs, commits, and metadata |
+| `manifest.json` | Build provenance, pinned Platform framework source, source URLs, commits, and metadata |
 
 Reviewing these files is the step that turns attestation into practical verifiability: you can inspect capabilities in source, then prove that the deployed enclave corresponds to that source.
 

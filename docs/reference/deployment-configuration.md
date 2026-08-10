@@ -99,9 +99,20 @@ STEVE applies this policy only to `/e2p/v2/*`. Without `cors_origins`, STEVE sen
 
 For a separate browser origin, set the SDK's `enclaveOrigin` to the deployment origin as well as listing the browser origin in `cors_origins`.
 
-#### Current plaintext routing behavior
+#### Plaintext fallback
 
-On the current Platform and STEVE branches, `mode = "steve"` protects requests sent through an active, correctly configured STEVE v2 client to `/e2p/v2/*`. Ordinary application requests outside that protected path can still be forwarded in plaintext. Enabling STEVE mode alone is therefore not fail-closed; do not send sensitive data through unprotected endpoints.
+STEVE rejects ordinary plaintext application requests by default. It still permits `GET /`, plus `GET` or `HEAD` requests for the fixed browser bootstrap assets (`enclave-sw.js`, `register.js`, `attestation-widget.js`, and the X-Wing WASM), so a default-scope service worker can start. These narrow exceptions are not protected application routes; custom scopes or asset paths need equivalent narrow ingress routing.
+
+For legacy applications that intentionally retain plaintext forwarding, opt in explicitly:
+
+```hcl
+e2e_encryption {
+  mode                     = "steve"
+  allow_plaintext_fallback = true
+}
+```
+
+Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_plaintext_fallback` disabled or omit it for protected deployments.
 
 See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
 
