@@ -6,7 +6,7 @@ icon: lucide/shield-check
 
 <p class="docs-home-intro">Make attested, end-to-end encrypted requests to a Caution application with the STEVE CLI or native Rust SDK.</p>
 
-STEVE protects a request only when the client establishes the STEVE v2 protocol. An ordinary HTTPS client does not verify Nitro attestation or add STEVE's application-layer encryption.
+STEVE protects a request only when the client establishes the STEVE v2 protocol. In the default fail-closed configuration, an ordinary HTTPS application request is rejected with `403 {"error":"e2e_required"}` and `Cache-Control: no-store` instead of being forwarded without STEVE protection.
 
 ## Configure the deployment
 
@@ -32,6 +32,29 @@ network {
 ```
 
 `cors_origins` is needed for browser applications on another origin. List each exact origin; wildcard origins are rejected. Omit `key_exchange` for the default X25519 suite. X-Wing deployments must set `key_exchange = "xwing-draft10"`, and every client must independently select `XWING-DRAFT10`. STEVE does not negotiate or fall back between suites.
+
+### Understand public routes
+
+Fail-closed routing does not make bootstrap and platform endpoints secret:
+
+- Caution serves `/.well-known/caution/health` and `/attestation` outside the application route.
+- STEVE forwards `GET /` and `GET` or `HEAD` requests for `/enclave-sw.js`, `/register.js`, `/attestation-widget.js`, and `/xwing/steve_xwing_wasm_bg.wasm` as public browser bootstrap material.
+- Other ordinary application requests are rejected without contacting the application. E2P endpoints remain available independently.
+
+Browser deployments using a custom service-worker scope or different bootstrap paths need corresponding narrow routing support in the deployment. Do not enable general plaintext fallback merely to serve custom bootstrap assets.
+
+### Migrate a legacy plaintext client
+
+If an existing client cannot yet use STEVE, temporarily opt that deployment into legacy forwarding:
+
+```hcl
+e2e_encryption {
+  mode                     = "steve"
+  allow_plaintext_fallback = true
+}
+```
+
+This forwards ordinary application requests without STEVE's application-layer encryption. Use it only for a bounded migration, then remove the option and redeploy. It does not change E2P behavior.
 
 Deploy the application after changing the configuration:
 
@@ -111,7 +134,7 @@ PCR0, PCR1, and PCR2 must all match one profile. Values from different profiles 
 
 ### Use trust on first use
 
-Use a durable store instead of `--pcrs` when continuity after a controlled first connection is sufficient:
+Use a durable store instead of `--pcrs` when continuity after a controlled first connection is sufficient. The two trust options are mutually exclusive:
 
 ```bash
 ./target/release/steve-cli \
@@ -192,10 +215,13 @@ For X-Wing, select the suite explicitly:
 use steve_sdk::KeyExchangeSuite;
 
 let client = Client::builder("https://secure.example.com", expected)?
+    .application_context(b"payments-production")
     .expected_key_exchange(KeyExchangeSuite::XWingDraft10)
     .connect()
     .await?;
 ```
+
+The default native context is bound to the normalized STEVE origin. Add a stable `application_context` when separate applications on the same origin need distinct session and TOFU trust bindings. Changing it selects a different trust record.
 
 The native client rotates sessions before server expiry, applies bounded request deadlines, disables redirects, and never automatically retries an application request.
 

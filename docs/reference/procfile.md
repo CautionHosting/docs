@@ -68,12 +68,12 @@ Resource values are defaults if not specified.
 | Field | Default | Description |
 |-------|---------|-------------|
 | `domain` | - | Domain name for the deployment. |
-| `e2e` | `false` | Enable end-to-end encryption via STEVE proxy. |
+| `e2e` | `false` | Enable STEVE. Ordinary plaintext application routes are rejected by default. |
 | `locksmith` | `false` | Enable [Locksmith](../concepts/key-services.md) secret management. Runs locksmithd inside the enclave to receive sharded secrets via quorum. |
 | `debug` | `false` | Enable [debug mode](debug-enclave/running.md). Allows reading enclave console output but disables attestation verification. |
 | `no_cache` | `false` | Disable Docker build cache. |
 | `ssh_keys` | - | OpenSSH public keys for [host SSH access](debug-enclave/running.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
-| `ports` | - | Comma-separated list of ports to expose (vsock proxy + security group ingress). Do not include ports in the reserved `49500`-`49600` range. |
+| `ports` | - | Comma-separated application ports. With `e2e: true`, the HTTP application port remains enclave-local instead of receiving a separate VSOCK proxy; other ports are exposed through VSOCK and security-group ingress. Do not include ports in the reserved `49500`-`49600` range. |
 | `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
 | `managed_on_prem` | `false` | Enable bring-your-own-compute (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
 | `platform` | - | Compute platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
@@ -143,6 +143,8 @@ app_sources: https://codeberg.org/example/secure-app
 ```
 
 Since only one port is specified, it is automatically used as the `http_port`.
+
+The legacy Procfile format has no plaintext-compatibility setting. `e2e: true` therefore uses fail-closed STEVE routing. If a bounded migration requires `allow_plaintext_fallback`, first run `caution apps migrate-procfile` and configure it in `caution.hcl`; keep the option unset for normal deployments.
 
 ### With Locksmith secret management
 

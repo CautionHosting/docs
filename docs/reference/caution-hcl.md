@@ -191,11 +191,15 @@ http {
 | `enabled` | - | Deprecated compatibility field. `true` is equivalent to `mode = "steve"` when `mode` is omitted. |
 | `key_exchange` | `"x25519"` | STEVE key exchange. Supported values are `"x25519"` and `"xwing-draft10"`. |
 | `cors_origins` | - | Exact HTTP(S) browser origins allowed to call `/e2p/v2/*`. Wildcards are rejected. |
-| `allow_plaintext_fallback` | `false` | Allow legacy plaintext application forwarding. Leave disabled for fail-closed routing. |
+| `allow_plaintext_fallback` | `false` | Legacy compatibility opt-in for ordinary plaintext application forwarding. Leave disabled for fail-closed routing. |
 
 `key_exchange`, `cors_origins`, and `allow_plaintext_fallback` are STEVE-specific and should be used with `mode = "steve"`. The client must pin the matching key-exchange identifier; STEVE does not negotiate or fall back to another suite. Changing the suite requires a new deployment and changes the measured enclave configuration.
 
 See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration.
+
+STEVE is fail-closed by default. When `allow_plaintext_fallback` is omitted or `false`, an ordinary application request that does not use E2P is rejected with `403 {"error":"e2e_required"}` and `Cache-Control: no-store` without contacting the application.
+
+Set `allow_plaintext_fallback = true` only while migrating legacy clients that cannot yet use STEVE. It restores ordinary plaintext forwarding through STEVE and therefore removes the end-to-end encryption guarantee for those requests. Remove the option after migration.
 
 Attested TLS works with ordinary HTTPS clients and terminates TLS inside the enclave:
 

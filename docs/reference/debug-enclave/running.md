@@ -94,7 +94,7 @@ sudo nitro-cli describe-enclaves
 # Enclave service logs
 sudo journalctl -u nitro-enclave.service --no-pager -n 100
 
-# Vsock proxy status (bridges host ports to enclave; replace 3000 with your app port)
+# Direct-mode app-port proxy (intentionally absent for STEVE and Attested TLS)
 sudo systemctl status vsock-proxy-3000.service
 
 # Network proxy (provides enclave internet access)
@@ -114,6 +114,8 @@ sudo cat /var/log/user-data.log
 !!! note "AWS Nitro service names"
     These service names apply to Caution deployments on AWS Nitro Enclaves.
 
+    For a STEVE deployment, the application HTTP port is intentionally enclave-local and has no `vsock-proxy-<app-port>.service`. Check `vsock-proxy-49500.service` and Caddy instead. Attested TLS similarly keeps the application port inside the enclave and forwards port `443`.
+
 ## Read enclave console output
 
 If debug mode is enabled, stream the enclave's stdout/stderr:
@@ -129,7 +131,7 @@ This only works when `debug { enabled = true }` is set in `caution.hcl`. In prod
 Check the host-side services that connect traffic to the enclave:
 
 ```bash
-# Vsock proxy status (bridges host ports to enclave)
+# Direct-mode app-port proxy (absent for STEVE and Attested TLS)
 sudo systemctl status vsock-proxy-3000.service
 
 # Network proxy (provides enclave internet access)
@@ -140,7 +142,7 @@ sudo systemctl status caddy.service
 sudo journalctl -u caddy.service --no-pager -n 50
 ```
 
-These examples use port `3000`. If your `caution.hcl` exposes a different `ingress` port, replace `3000` with that port.
+These examples use port `3000`. For direct ingress, replace it with the configured application port. For STEVE, check `vsock-proxy-49500.service`; absence of an application-port proxy is expected.
 
 ## Clean up debug access
 
@@ -289,13 +291,18 @@ Common causes include insufficient memory or CPU allocation, or the EIF failing 
 
 Symptoms include connection timeouts, failed health checks, or Caddy returning an upstream or proxy error.
 
-Inspect network and proxy services, and verify the vsock proxy is running for your application port. These examples use port `3000`; if your `caution.hcl` exposes a different `ingress` port, replace `3000` with that port:
+Inspect the services for the configured encryption mode. Direct ingress requires the application-port VSOCK proxy. STEVE intentionally omits that proxy and instead requires the STEVE proxy on port `49500` and host Caddy:
 
 ```bash
+# Direct ingress only
 sudo systemctl status vsock-proxy-3000.service
+
+# STEVE ingress
+sudo systemctl status vsock-proxy-49500.service
+sudo systemctl status caddy.service
 ```
 
-If the proxy is running but the app isn't responding, use `sudo nitro-cli console` with debug mode to check whether your application started correctly inside the enclave.
+If the mode-appropriate proxies are running but the app is not responding, use `sudo nitro-cli console` with debug mode to check whether the application and STEVE started correctly inside the enclave.
 
 ### Attestation fails after debugging
 

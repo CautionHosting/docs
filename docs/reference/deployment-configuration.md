@@ -104,7 +104,7 @@ For a separate browser origin, set the SDK's `enclaveOrigin` to the deployment o
 
 #### Plaintext fallback
 
-STEVE rejects ordinary plaintext application requests by default. It still permits `GET /`, plus `GET` or `HEAD` requests for the fixed browser bootstrap assets (`enclave-sw.js`, `register.js`, `attestation-widget.js`, and the X-Wing WASM), so a default-scope service worker can start. These narrow exceptions are not protected application routes; custom scopes or asset paths need equivalent narrow ingress routing.
+STEVE rejects ordinary plaintext application requests by default with `403 {"error":"e2e_required"}` and `Cache-Control: no-store`, without contacting the application. It still permits `GET /`, plus `GET` or `HEAD` requests for the fixed browser bootstrap assets (`enclave-sw.js`, `register.js`, `attestation-widget.js`, and the X-Wing WASM), so a default-scope service worker can start. The platform health endpoint at `/.well-known/caution/health` and `/attestation` also remain public. These narrow exceptions are not protected application routes; custom scopes or asset paths need equivalent narrow ingress routing.
 
 For legacy applications that intentionally retain plaintext forwarding, opt in explicitly:
 
@@ -116,6 +116,8 @@ e2e_encryption {
 ```
 
 Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_plaintext_fallback` disabled or omit it for protected deployments.
+
+The configured application HTTP port remains an enclave-local upstream. Caution does not expose that port through a host HTTP VSOCK proxy or a separate enclave VSOCK port proxy in STEVE mode. Additional ingress ports are independent raw interfaces and are not protected by STEVE; do not send sensitive plaintext over them.
 
 See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration. See [Encryption](../concepts/encryption.md) for the trust model.
 

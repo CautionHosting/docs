@@ -18,9 +18,11 @@ Caution is designed to provide evidence for these claims:
 - The enclave reports hardware-backed measurements for the running image.
 - The reported measurements can be reproduced from source code and build inputs.
 - A verifier can compare the reproduced measurements with the running enclave.
-- Requests sent through an active, correctly configured STEVE v2 client are encrypted all the way into the enclave.
+- Requests sent through an active, correctly configured STEVE v2 client are encrypted all the way into the enclave, and ordinary application routes fail closed by default.
 
 These goals are strongest when the application source is available, the build is reproducible, the app runs outside debug mode, and sensitive requests use an active, correctly configured STEVE v2 client.
+
+Public browser bootstrap assets, platform health and attestation endpoints, and any additional raw ingress ports are outside STEVE's application-request guarantee.
 
 ## What Caution trusts today
 
@@ -42,7 +44,7 @@ Caution reduces trust in operators and deployment systems, but it does not remov
 | An operator claims to run one version of software but deploys another. | Verification compares the running enclave measurements with measurements reproduced from reviewed source and build inputs. |
 | A deployment pipeline swaps or modifies the enclave image. | A PCR mismatch causes verification to fail. |
 | A host operator tries to inspect enclave memory. | The workload runs inside a confidential compute enclave isolated from the host. |
-| A host or proxy terminates normal TLS outside the enclave. | End-to-end encryption can keep application data encrypted until it reaches the enclave. |
+| A host or proxy terminates normal TLS outside the enclave. | STEVE can keep protected application requests encrypted until they reach the enclave. |
 | An old attestation document is replayed. | Verification uses a fresh nonce so old attestation documents cannot be reused. |
 | A verifier needs evidence independent of Caution's infrastructure. | `caution verify` runs locally and reproduces expected measurements from source. |
 
@@ -54,7 +56,7 @@ Caution reduces trust in operators and deployment systems, but it does not remov
 | Compromised source repositories, dependencies, or build inputs | If a verifier reviews and reproduces compromised inputs, Caution can prove those inputs produced the running enclave, but it cannot determine that the inputs are trustworthy. |
 | A compromised verifier machine | If the machine running `caution verify` is compromised, its output can be tampered with. |
 | Debug-mode deployments | AWS Nitro Enclaves zero out PCR values in debug mode, so production verification is not meaningful while debug mode is enabled. |
-| Plaintext exposure when end-to-end encryption is disabled | Standard TLS may terminate outside the enclave. Use end-to-end encryption when plaintext must be hidden from the host. |
+| Plaintext exposure when end-to-end encryption is disabled, legacy plaintext fallback is enabled, or data uses a separate raw ingress port | Standard TLS or a raw protocol may expose plaintext outside the enclave. Use STEVE clients and keep plaintext fallback disabled when data must be hidden from the host. |
 | Missing or unavailable source code | Without source access or known expected PCRs, a verifier cannot independently reproduce the build. |
 | Non-reproducible application builds | If the application build is not reproducible, attestation can show that a deployment has not changed, but not that it matches specific source code. |
 | Compromised Nitro hardware, firmware, or attestation roots | Current Caution deployments rely on AWS Nitro for hardware isolation and attestation. If that trust root lies or is compromised, Caution cannot independently prove Nitro's claims today. |
@@ -66,7 +68,7 @@ For the strongest guarantees:
 - Publish source locations with `app_sources` so third parties can reproduce the build from the attestation manifest.
 - Keep production deployments outside debug mode.
 - Make the application build reproducible, not just the Caution platform components.
-- Use an active, correctly configured STEVE v2 client when application data must remain hidden from the host or infrastructure operator.
+- Use an active, correctly configured STEVE v2 client when application data must remain hidden from the host or infrastructure operator, keep plaintext fallback disabled, and do not send sensitive plaintext over additional raw ingress ports.
 - Verify from a machine and network environment you trust.
 - Review the reproduced source and build artifacts before deciding whether to trust what the app does.
 

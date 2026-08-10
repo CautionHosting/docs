@@ -22,6 +22,8 @@ Each deployment pins one key-exchange suite. X25519 is the compatibility default
 
 STEVE binds each session to fresh Nitro evidence. The browser SDK verifies the Nitro evidence and session binding, but does not currently compare PCRs with an independently supplied expected-PCR policy. The native Rust SDK requires expected PCR0, PCR1, and PCR2 values.
 
+STEVE deployments are fail-closed by default: an ordinary application request that does not use the E2P protocol is rejected without reaching the application. This protects the application HTTP route from plaintext downgrade, but it does not encrypt public browser bootstrap assets, platform health and attestation endpoints, or additional raw ingress ports configured by the application.
+
 STEVE provides three client surfaces:
 
 | Client | Purpose | Workload identity policy |
