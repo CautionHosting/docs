@@ -285,7 +285,7 @@ From your application directory, reproduce the image and verify that the running
 caution verify
 ```
 
-The command automatically saves verified PCR values to `.caution/trusted_hashes.json`. This file is required before sending locksmith shards — commit it alongside your other `.caution/` files.
+Successful verification saves the verified PCR values to `.caution/trusted_hashes.json`. This file is required before sending locksmith shards and can be used by native STEVE clients — commit it alongside your other `.caution/` files.
 
 ## Cleanup
 

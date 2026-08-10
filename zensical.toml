@@ -22,6 +22,7 @@ nav = [
 ]},
 { "How-to guides" = [
 { "Verify an app" = "guides/verify-an-app.md" },
+{ "Use STEVE clients" = "guides/use-steve-clients.md" },
 { "Containerize an app" = "guides/containerize-an-application.md" },
 { "Build with an AI agent" = "guides/build-with-an-ai-agent.md" },
 { "Set up a custom domain" = "guides/set-up-a-custom-domain.md" },

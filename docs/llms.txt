@@ -18,6 +18,7 @@ Current deployments pin the Platform framework archive in the response manifest.
 ## How-to guides
 
 - Verify an app: https://docs.caution.co/guides/verify-an-app/
+- Use STEVE clients: https://docs.caution.co/guides/use-steve-clients/
 - Containerize an app: https://docs.caution.co/guides/containerize-an-application/
 - Set up a custom domain: https://docs.caution.co/guides/set-up-a-custom-domain/
 - Debug an enclave: https://docs.caution.co/reference/debug-enclave/

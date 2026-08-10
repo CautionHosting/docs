@@ -195,6 +195,8 @@ http {
 
 `key_exchange`, `cors_origins`, and `allow_plaintext_fallback` are STEVE-specific and should be used with `mode = "steve"`. The client must pin the matching key-exchange identifier; STEVE does not negotiate or fall back to another suite. Changing the suite requires a new deployment and changes the measured enclave configuration.
 
+See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration.
+
 Attested TLS works with ordinary HTTPS clients and terminates TLS inside the enclave:
 
 ```hcl

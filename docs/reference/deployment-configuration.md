@@ -53,10 +53,13 @@ network {
 
 Run the app on any unreserved port. The reserved app-facing range is `49500`-`49600`; STEVE uses port `49500` for the `/e2p/*` proxy path.
 
+This example pins the default X25519 suite explicitly. Browser clients on another origin also require an exact `cors_origins` entry; wildcard origins are rejected.
+
 This requires:
 
 1. **`caution.hcl` configuration**: Set `e2e_encryption { mode = "steve" }` and front the application port with `http`
-2. **SDK integration**: Integrate the [STEVE SDK](https://git.distrust.co/public/steve#usage){:target="_blank"} into your client application and pin the deployment's key-exchange suite
+2. **Client integration**: Use the native Rust SDK, STEVE CLI, or browser SDK and pin the deployment's key-exchange suite
+3. **Workload policy**: Native clients must use independently verified pinned PCRs or explicitly chosen durable TOFU
 
 Requests sent through an active, correctly configured STEVE v2 client are encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
 
@@ -114,7 +117,7 @@ e2e_encryption {
 
 Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_plaintext_fallback` disabled or omit it for protected deployments.
 
-See the [Encryption](../concepts/encryption.md) concepts page for details on how STEVE works.
+See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration. See [Encryption](../concepts/encryption.md) for the trust model.
 
 ### Attested TLS compatibility mode
 

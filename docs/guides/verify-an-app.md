@@ -139,6 +139,8 @@ Trusted state: .caution/trusted_hashes.json
 
 The base-verification success line authenticates the PCRs and `user_data` displayed earlier; the CLI does not print `user_data` a second time. UTF-8 control characters are escaped, and non-UTF-8 `user_data` is shown as hexadecimal.
 
+Successful verification also writes `.caution/trusted_hashes.json`, backing up any previous trusted state first. Native STEVE clients and the STEVE CLI can use this file as their pinned PCR policy. Distribute it through an authenticated channel when the client runs on another machine.
+
 For the source-backed Attested TLS browser-compatibility mode (`mode = "tls"` in `caution.hcl`), an HTTPS attestation request on the configured domain binds the leaf certificate from that same WebPKI-validated, non-redirected response. With a raw deployment-IP attestation URL, the CLI first requires DNS to contain that IP, then makes a hostname-validated HTTPS health request pinned to it. An empty or NXDOMAIN result skips TLS binding; other DNS, redirect, HTTPS, metadata, or fingerprint failures are fatal.
 
 Attested TLS deliberately preserves ordinary browser HTTPS expectations, so the client does not validate Nitro evidence. Run this verification periodically and ad hoc after relevant deployment, DNS, or certificate changes. Where STEVE-specific client code can be integrated, STEVE provides the stronger client-aware design. Ordinary proxy-level HTTPS that is not configured for Attested TLS receives only the base Nitro/PCR verification. `--pcrs` is also PCR-only: it performs no TLS check and removes any stale `tls` object from the persisted trusted state.
@@ -174,7 +176,7 @@ Use the failure message to choose the next step:
 
 Verification proves what code is running. If the app also needs to keep request and response data hidden from the host system, use STEVE for application-layer end-to-end encryption. Attested TLS is a compatibility mode that terminates ordinary TLS inside the enclave, but requires periodic external verification of the live certificate binding.
 
-See [Encryption](../concepts/encryption.md) for setup details.
+See [Use STEVE clients](use-steve-clients.md) for pinned PCRs, TOFU, CLI commands, and native Rust integration.
 
 ## See also
 
