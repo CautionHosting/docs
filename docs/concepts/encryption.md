@@ -20,7 +20,7 @@ STEVE v2 establishes a per-session encrypted channel between a client SDK and th
 
 Each deployment pins one key-exchange suite. X25519 is the compatibility default. X-Wing draft-10 combines ML-KEM-768 and X25519. Clients must pin the same suite as the deployment; STEVE does not negotiate or fall back to another suite.
 
-STEVE binds each session to fresh Nitro evidence. The browser SDK verifies the Nitro evidence and session binding, but does not currently compare PCRs with an independently supplied expected-PCR policy. The native Rust SDK requires expected PCR0, PCR1, and PCR2 values.
+STEVE binds each session to fresh Nitro evidence. The browser SDK verifies the Nitro evidence and session binding, but does not currently compare PCRs with an independently supplied expected-PCR policy. The native Rust SDK requires an explicit PCR policy: one or more pinned PCR0, PCR1, and PCR2 profiles, or application-owned durable TOFU.
 
 STEVE deployments are fail-closed by default: an ordinary application request that does not use the E2P protocol is rejected without reaching the application. This protects the application HTTP route from plaintext downgrade, but it does not encrypt public browser bootstrap assets, platform health and attestation endpoints, or additional raw ingress ports configured by the application.
 
@@ -46,7 +46,7 @@ Attested TLS is Caution's end-to-end encryption compatibility mode for browsers 
 
 Attested TLS is not a replacement for STEVE or RA-TLS. Unlike STEVE, it does not provide application-layer encryption with an attestation-aware client. Unlike RA-TLS, it does not bind attestation evidence into TLS authentication for the client to verify during the handshake. Standard clients remain compatible because they perform normal WebPKI verification.
 
-That compatibility deliberately leaves the client's expectations unchanged: the client verifies the normal WebPKI certificate, not Nitro evidence. An external verifier must therefore carefully enforce both the expected enclave PCRs and the live certificate binding on a regular schedule and after relevant deployment, DNS, or certificate changes. `caution verify` performs both checks for a source-backed Attested TLS deployment (selected with `mode = "tls"` in `caution.hcl`).
+That compatibility deliberately leaves the client's expectations unchanged: the client verifies the normal WebPKI certificate, not Nitro evidence. An external verifier must therefore carefully enforce both the expected enclave PCRs and the live certificate binding on a regular schedule and after relevant deployment, DNS, or certificate changes. For a source-backed Attested TLS deployment (selected with `mode = "tls"` in `caution.hcl`), `caution verify` verifies the PCRs and attempts the live certificate binding. A raw-IP run with no DNS answer skips that binding and is PCR-only; it must not be treated as Attested TLS verification.
 
 Where client integration is possible, prefer STEVE. It provides the stronger design by using STEVE-specific client code to establish an application-layer encrypted session bound to fresh Nitro evidence. This requires integrating STEVE's browser SDK and service worker, or a native STEVE client. See [Deployment configuration](../reference/deployment-configuration.md#attested-tls-compatibility-mode).
 

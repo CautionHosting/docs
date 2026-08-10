@@ -177,7 +177,7 @@ The gRPC client connects to `grpc.example.com:443` using normal TLS and HTTP/2. 
 !!! danger "Attested TLS requires periodic and ad hoc external verification"
     Attested TLS is a compatibility mode, not a replacement for STEVE or RA-TLS. It deliberately leaves the client's expectations unchanged: an ordinary client verifies only the usual WebPKI certificate, not Nitro evidence. STEVE provides the stronger client-aware design by using STEVE-specific client code for an application-layer encrypted session bound to fresh Nitro evidence. RA-TLS instead binds attestation evidence into TLS authentication so a compatible client verifies it during the handshake.
 
-    To rely on Attested TLS, carefully verify fresh Nitro evidence against reviewed source and expected PCR0, PCR1, and PCR2 on a regular schedule and after relevant deployment, DNS, or certificate changes. `caution verify` requires authenticated `user_data.tls.mode = "tls"`, the configured domain, and a matching lowercase SHA-256 leaf fingerprint. Missing, malformed, or unequal values leave the endpoint unverified.
+    To rely on Attested TLS, carefully verify fresh Nitro evidence against reviewed source and expected PCR0, PCR1, and PCR2 on a regular schedule and after relevant deployment, DNS, or certificate changes. A completed `caution verify` certificate binding requires authenticated `user_data.tls.mode = "tls"`, the configured domain, and a matching lowercase SHA-256 leaf fingerprint. Missing, malformed, or unequal values leave the endpoint unverified.
 
 Run verification from the application repository:
 
@@ -191,7 +191,7 @@ For an HTTPS attestation URL on the configured domain, the CLI disables redirect
 caution verify --attestation-url "http://192.0.2.10/attestation"
 ```
 
-In the raw-IP flow, DNS must contain that IP. The CLI then makes a hostname-validated health request pinned to it. Empty or NXDOMAIN DNS skips TLS binding; wrong-IP DNS, transient resolver errors, redirects, HTTPS failures, malformed metadata, and fingerprint mismatch fail verification. Ordinary HTTPS that is not configured for Attested TLS remains PCR-only.
+In the raw-IP flow, DNS must contain that IP. The CLI then makes a hostname-validated health request pinned to it. Empty or NXDOMAIN DNS skips TLS binding; wrong-IP DNS, transient resolver errors, redirects, HTTPS failures, malformed metadata, and fingerprint mismatch fail verification. On the no-DNS skip path, `caution verify` still reports attestation verification passed and writes PCR-only trusted state without a `tls` object. Do not treat that result as Attested TLS verification; configure DNS and rerun. Ordinary HTTPS that is not configured for Attested TLS remains PCR-only.
 
 The certificate publisher checks for changes every 60 seconds, so remain fail-closed during a renewal mismatch and retry after the next update. Do not use `--pcrs` for this check: it intentionally verifies only PCRs and persists no TLS binding.
 

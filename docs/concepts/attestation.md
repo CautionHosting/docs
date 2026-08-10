@@ -47,7 +47,7 @@ Use `--app-source-url` for an explicit Git source or `--from-tarball` for an exa
 
 The existing Bootproof verification checks the AWS Nitro certificate chain and validity, COSE signature, fresh nonce, and expected PCR0, PCR1, and PCR2. The authenticated PCRs are compared with the locally reproduced or explicitly supplied values.
 
-When the selected source uses the Attested TLS browser-compatibility mode (`mode = "tls"` in `caution.hcl`), the CLI then validates the authenticated TLS metadata and live leaf-certificate binding. Only after every required check passes does it atomically update `.caution/trusted_hashes.json`, preserving the previous state in a unique backup.
+When the selected source uses the Attested TLS browser-compatibility mode (`mode = "tls"` in `caution.hcl`), the CLI validates the authenticated TLS metadata and live leaf-certificate binding when the configured domain is available. In the raw-IP flow, no DNS answer produces a warning and skips the binding; the command still reports attestation verification passed and persists PCR-only trusted state without a `tls` object. That result does not verify Attested TLS and must be repeated after DNS is configured. Every trusted-state update is atomic and preserves the previous state in a unique backup.
 
 The PCR values cover:
 
@@ -55,7 +55,7 @@ The PCR values cover:
 - **PCR1** - Hash of the Linux kernel and bootstrap
 - **PCR2** - Hash of the application
 
-The important success lines are:
+For a source-backed Attested TLS deployment with a completed certificate binding, the important success lines are:
 
 ```text
 ✓ Base Nitro attestation and expected PCR0/1/2 verified
