@@ -14,6 +14,12 @@ This is stronger than the common confidential compute guarantee. Many systems ca
 
 Verification does not decide whether source code is safe. It gives you a cryptographic link between the code you reviewed and the enclave serving traffic.
 
+## Inspect attestation in a browser
+
+The public `/verify` page authenticates fresh nonce-bound AWS Nitro evidence and displays its PCR0, PCR1, and PCR2 values without requiring a Caution account. Enter an HTTPS application domain or explicit HTTPS attestation endpoint. The endpoint must allow cross-origin browser POST requests. Use `caution verify --attestation-url <url>` for HTTP or raw-IP endpoints.
+
+Browser attestation does not authenticate the sibling response manifest, reproduce source, establish a STEVE encrypted session, or automatically prove that the enclave is the expected deployment. The current browser verifier does not pin expected PCRs; compare them manually only after obtaining reviewed values through an independent trusted source. Use the CLI from a reviewed checkout for source reproduction and expected-PCR enforcement.
+
 ## Before you start
 
 You need:
