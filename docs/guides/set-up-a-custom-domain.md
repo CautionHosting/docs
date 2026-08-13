@@ -116,14 +116,14 @@ expire.
 
 !!! warning "Avoid repeated redeploys while HTTPS is failing"
     TLS certificate issuance is subject to certificate-authority rate limits.
-    A redeploy can request another certificate for the same hostname. Let’s
+    A redeploy can request another certificate for the same hostname. Let's
     Encrypt currently permits five certificates for the same exact set of
     hostnames in seven days, refilling one every 34 hours. If DNS resolves but
     HTTPS certificate setup fails, stop redeploying, check the
     [host Caddy logs](../reference/debug-enclave/running.md#inspect-enclave-startup)
     if debug access is already enabled, and wait until the reported retry time.
     Revoking old certificates does not reset the limit. See
-    [Let’s Encrypt rate limits](https://letsencrypt.org/docs/rate-limits/).
+    [Let's Encrypt rate limits](https://letsencrypt.org/docs/rate-limits/).
 
 ## Redeployment, suspension, and destruction
 
