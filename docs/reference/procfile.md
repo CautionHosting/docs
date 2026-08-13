@@ -67,7 +67,7 @@ Resource values are defaults if not specified.
 
 | Field | Default | Description |
 |-------|---------|-------------|
-| `domain` | - | Domain name for the deployment. |
+| `domain` | - | Custom subdomain for the deployment. Point its customer-owned CNAME at the stable `DNS target`; see [Set up a custom domain](../guides/set-up-a-custom-domain.md). |
 | `e2e` | `false` | Enable STEVE. Ordinary plaintext application routes are rejected by default. |
 | `locksmith` | `false` | Enable [Locksmith](../concepts/key-services.md) secret management. Runs locksmithd inside the enclave to receive sharded secrets via quorum. |
 | `debug` | `false` | Enable [debug mode](debug-enclave/running.md). Allows reading enclave console output but disables attestation verification. |

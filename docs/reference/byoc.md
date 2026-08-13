@@ -30,6 +30,7 @@ In bring your own compute, Caution runs the standard Docker application build an
 - Your AWS account and billing
 - Network configuration and VPC
 - Where your data resides
+- Your custom domain and its customer-owned CNAME
 
 </div>
 <div markdown>
@@ -39,6 +40,7 @@ In bring your own compute, Caution runs the standard Docker application build an
 - Standard Docker application builds
 - Enclave lifecycle management
 - Deployment orchestration in your AWS account, including uploading EIFs to your S3 bucket, launch templates, and Elastic IP assignment
+- A stable Caution-managed DNS target that follows the app's current Elastic IP
 
 </div>
 </div>

@@ -162,7 +162,7 @@ The `http` block fronts one port with TLS on port 443. By default TLS terminates
 
 | Field | Description |
 |-------|-------------|
-| `domain` | Domain name for the deployment. |
+| `domain` | Custom subdomain for HTTP and TLS routing. Point its customer-owned CNAME at the deployment's stable `DNS target`; see [Set up a custom domain](../guides/set-up-a-custom-domain.md). |
 | `port` | Port to reverse proxy through Caddy. **Must be covered by an `ingress` rule.** |
 | `upstream_protocol` | Protocol used by enclave Caddy to reach the application in Attested TLS mode. Defaults to `"http"`; use `"h2c"` for gRPC. |
 | `e2e_encryption` | Optional block selecting [STEVE or Attested TLS](#encryption-modes). |
