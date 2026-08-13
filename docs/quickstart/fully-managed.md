@@ -149,6 +149,11 @@ git push caution main
 
 Caution builds a reproducible enclave image with the standard Docker build and deploys it into the enclave.
 
+Deployment output includes a stable `DNS target` for the app. If you configured
+a custom domain in `caution.hcl`, create a CNAME from that subdomain to the DNS
+target rather than an A record to the current IP. See [Set up a custom
+domain](../guides/set-up-a-custom-domain.md).
+
 ## Verify the deployment
 
 From your application directory, reproduce the image and verify that the running enclave matches its expected PCRs:

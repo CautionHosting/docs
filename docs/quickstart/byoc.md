@@ -277,6 +277,11 @@ git push caution main
 
 Caution builds a reproducible enclave image with the standard Docker build and deploys it into the AWS environment you provisioned.
 
+Deployment output includes a stable Caution-managed `DNS target`. If you
+configured a custom domain in `caution.hcl`, create a CNAME from that subdomain
+to the DNS target rather than an A record to the Elastic IP in your AWS account.
+See [Set up a custom domain](../guides/set-up-a-custom-domain.md).
+
 ## Verify the deployment
 
 From your application directory, reproduce the image and verify that the running enclave matches its expected PCRs:
@@ -292,7 +297,11 @@ Successful verification saves the verified PCR values to `.caution/trusted_hashe
 !!! warning "Use provisioning credentials and verify cleanup"
     Teardown requires the same provisioning identity used during setup, or equivalent credentials in the same AWS account with permission to delete the provisioned resources. Confirm the selected identity immediately before teardown.
 
-    The current CLI destroys the Caution app before attempting AWS cleanup and can remove local state even if that cleanup fails. Back up `.caution/deployment.json` and `~/.caution/<app>/bring-your-own-compute.json` before teardown. If the command reports that AWS teardown may have failed, verify the S3 bucket and other resources in AWS and follow the manual cleanup instructions below.
+    The CLI destroys the Caution app before attempting AWS cleanup. If AWS
+    cleanup then fails, it retains `.caution/deployment.json` and
+    `~/.caution/<app>/bring-your-own-compute.json` so you can retry with the
+    correct credentials. The app deletion has already completed, so keep that
+    local state until AWS teardown succeeds or you finish manual cleanup.
 
 With a named static profile, confirm the identity and select that profile for teardown:
 

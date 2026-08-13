@@ -222,6 +222,15 @@ This establishes a connection from the enclave to the host without STEVE encrypt
 
 Use this only when e2e encryption is not feasible for your use case.
 
+### Custom domain DNS
+
+The `domain` value configures HTTP and TLS routing, but it does not create a
+record in your DNS provider. After deployment, point a customer-owned CNAME at
+the stable `DNS target` shown by the CLI or dashboard. Do not point an A record
+directly at the current Elastic IP: the IP can change on redeployment while the
+managed target remains stable. See [Set up a custom domain](../guides/set-up-a-custom-domain.md)
+for the complete DNS and lifecycle behavior.
+
 ## Reproducibility requirements
 
 For full verifiability benefits, your application must be reproducible. A reproducible build produces bit-for-bit identical outputs from the same inputs, allowing anyone to verify that your deployed binary matches your source code.
