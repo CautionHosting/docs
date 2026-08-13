@@ -108,46 +108,24 @@ Choose how you want to provision the AWS environment for bring your own compute 
 In both paths, setup uses your provisioning credentials to create tagged AWS resources and a scoped IAM user, then registers only the scoped deployment credentials with Caution:
 
 ```mermaid
-flowchart TB
-    subgraph Local["Your setup environment"]
-        AppDir["Application directory"]
-        AwsCreds["AWS provisioning credentials"]
-        CliSetup["CLI-guided setup<br/>caution init --byoc"]
-        ManualSetup["Manual setup container<br/>bring-your-own-cloud-setup"]
-        ConfigFile["credentials.json.gpg<br/>manual path"]
+sequenceDiagram
+    participant Local as Your setup environment
+    participant Aws as Your AWS account
+    participant Caution
+
+    alt CLI-guided setup (recommended)
+        Local->>Local: From app directory, run caution init --byoc
+        Local->>Aws: Provision using AWS credentials
+        Aws->>Aws: Create tagged resources, EC2 role,<br/>builder role, and scoped IAM user
+        Local->>Caution: Create app and register scoped credentials automatically
+    else Manual setup
+        Local->>Aws: Run bring-your-own-cloud-setup<br/>using AWS credentials
+        Aws->>Aws: Create tagged resources, EC2 role,<br/>builder role, and scoped IAM user
+        Local->>Local: Write encrypted credentials.json.gpg
+        Local->>Caution: From app directory, run<br/>caution init --byoc --config …
     end
 
-    subgraph Aws["Your AWS account"]
-        Resources["Tagged deployment resources<br/>VPC, subnets, IGW, routing, S3, launch template, ASG"]
-        InstanceRole["EC2 instance role<br/>read EIF images"]
-        BuilderRole["Builder role<br/>publish EIF images"]
-        ScopedUser["Scoped IAM user<br/>tag-limited policy"]
-    end
-
-    subgraph Caution["Caution"]
-        AppRecord["Caution app record"]
-        DeploymentCreds["Scoped deployment credentials"]
-    end
-
-    AppDir --> CliSetup
-    AwsCreds --> CliSetup
-    AwsCreds --> ManualSetup
-
-    CliSetup -->|provisions| Resources
-    CliSetup -->|creates| InstanceRole
-    CliSetup -->|creates| BuilderRole
-    CliSetup -->|creates| ScopedUser
-    CliSetup -->|registers automatically| AppRecord
-
-    ManualSetup -->|provisions| Resources
-    ManualSetup -->|creates| InstanceRole
-    ManualSetup -->|creates| BuilderRole
-    ManualSetup -->|creates| ScopedUser
-    ManualSetup --> ConfigFile
-    ConfigFile -->|caution init --byoc --config| AppRecord
-
-    ScopedUser --> DeploymentCreds
-    AppRecord --> DeploymentCreds
+    Note over Local,Caution: Provisioning credentials stay local.<br/>Only scoped deployment credentials are registered with Caution.
 ```
 
 ### CLI-guided provisioning (recommended)
