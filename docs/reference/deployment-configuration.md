@@ -59,7 +59,7 @@ This requires:
 
 1. **`caution.hcl` configuration**: Set `e2e_encryption { mode = "steve" }` and front the application port with `http`
 2. **Client integration**: Use the native Rust SDK, STEVE CLI, or browser SDK and pin the deployment's key-exchange suite
-3. **Workload policy**: Native clients must use independently verified pinned PCRs or explicitly chosen durable TOFU
+3. **Workload policy**: Use independently verified pinned PCR profiles or explicitly chosen durable TOFU. Native clients require a policy; browser omission is legacy `not-checked` behavior
 
 Requests sent through an active, correctly configured STEVE v2 client are encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
 
@@ -119,7 +119,7 @@ Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_pla
 
 The configured application HTTP port remains an enclave-local upstream. Caution does not expose that port through a host HTTP VSOCK proxy or a separate enclave VSOCK port proxy in STEVE mode. Additional ingress ports are independent raw interfaces and are not protected by STEVE; do not send sensitive plaintext over them.
 
-See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration. See [Encryption](../concepts/encryption.md) for the trust model.
+See [Use STEVE clients](../guides/use-steve-clients.md) for browser, CLI, and native integration, including pinned PCRs, upgrade allowlists, and TOFU. See [Encryption](../concepts/encryption.md) for the trust model.
 
 ### Attested TLS compatibility mode
 

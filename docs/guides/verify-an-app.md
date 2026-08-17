@@ -182,7 +182,7 @@ Use the failure message to choose the next step:
 
 Verification proves what code is running. If the app also needs to keep request and response data hidden from the host system, use STEVE for application-layer end-to-end encryption. Attested TLS is a compatibility mode that terminates ordinary TLS inside the enclave, but requires periodic external verification of the live certificate binding.
 
-See [Use STEVE clients](use-steve-clients.md) for pinned PCRs, TOFU, CLI commands, and native Rust integration.
+See [Use STEVE clients](use-steve-clients.md) for browser, CLI, and native integration, including pinned PCRs and TOFU.
 
 ## See also
 
