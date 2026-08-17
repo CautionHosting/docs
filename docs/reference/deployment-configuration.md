@@ -119,7 +119,7 @@ Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_pla
 
 The configured application HTTP port remains an enclave-local upstream. Caution does not expose that port through a host HTTP VSOCK proxy or a separate enclave VSOCK port proxy in STEVE mode. Additional ingress ports are independent raw interfaces and are not protected by STEVE; do not send sensitive plaintext over them.
 
-See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration. See [Encryption](../concepts/encryption.md) for the trust model.
+See [Use STEVE clients](../guides/use-steve-clients.md) for browser, CLI, and native integration, including pinned PCRs, upgrade allowlists, and TOFU. See [Encryption](../concepts/encryption.md) for the trust model.
 
 ### Attested TLS compatibility mode
 

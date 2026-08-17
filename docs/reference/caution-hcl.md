@@ -195,7 +195,7 @@ http {
 
 `key_exchange`, `cors_origins`, and `allow_plaintext_fallback` are STEVE-specific and should be used with `mode = "steve"`. The client must pin the matching key-exchange identifier; STEVE does not negotiate or fall back to another suite. Changing the suite requires a new deployment and changes the measured enclave configuration.
 
-See [Use STEVE clients](../guides/use-steve-clients.md) for pinned PCRs, upgrade allowlists, TOFU, CLI commands, and native Rust integration.
+See [Use STEVE clients](../guides/use-steve-clients.md) for browser, CLI, and native integration, including pinned PCRs, upgrade allowlists, and TOFU.
 
 STEVE is fail-closed by default. When `allow_plaintext_fallback` is omitted or `false`, an ordinary application request that does not use E2P is rejected with `403 {"error":"e2e_required"}` and `Cache-Control: no-store` without contacting the application.
 

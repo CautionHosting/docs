@@ -20,7 +20,7 @@ STEVE v2 establishes a per-session encrypted channel between a client SDK and th
 
 Each deployment pins one key-exchange suite. X25519 is the compatibility default. X-Wing draft-10 combines ML-KEM-768 and X25519. Clients must pin the same suite as the deployment; STEVE does not negotiate or fall back to another suite.
 
-STEVE binds each session to fresh Nitro evidence. The browser SDK verifies the Nitro evidence and session binding, but does not currently compare PCRs with an independently supplied expected-PCR policy. The native Rust SDK requires an explicit PCR policy: one or more pinned PCR0, PCR1, and PCR2 profiles, or application-owned durable TOFU.
+STEVE binds each session to fresh Nitro evidence. The browser SDK can enforce one or more pinned PCR profiles or durable browser TOFU; policy remains optional for backward compatibility. The native Rust SDK always requires pinned profiles or application-owned durable TOFU.
 
 STEVE deployments are fail-closed by default: an ordinary application request that does not use the E2P protocol is rejected without reaching the application. This protects the application HTTP route from plaintext downgrade, but it does not encrypt public browser bootstrap assets, platform health and attestation endpoints, or additional raw ingress ports configured by the application.
 
@@ -30,11 +30,11 @@ STEVE provides three client surfaces:
 |--------|---------|--------------------------|
 | Native Rust SDK | Integrate protected requests into a native application | Requires pinned PCR profiles or application-owned durable TOFU |
 | STEVE CLI | Make one protected GET or POST request | Uses pinned PCR files or a durable TOFU store |
-| Browser page API and service worker | Register protection from the page while the worker owns encrypted `fetch()` transport | Verifies Nitro session binding, but does not yet enforce independently supplied expected PCRs |
+| Browser page API and service worker | Protect intercepted `fetch()` calls or send an explicit protected request through the worker | Optional pinned PCR profiles or durable browser TOFU; omission reports `not-checked` |
 
-Pinned PCRs authenticate a reviewed deployment from the first connection. TOFU verifies Nitro evidence before enrollment and provides continuity afterward, but it does not independently authenticate workload identity on first use.
+Pinned PCRs authenticate a reviewed deployment from the first connection only when the expected values arrive through an independently authenticated channel. TOFU verifies Nitro evidence before enrollment and provides continuity afterward, but it does not independently authenticate workload identity on first use. Losing the browser TOFU record or clearing all same-origin site data reopens enrollment. Losing only persisted policy configuration fails closed while its policy-required marker remains. Same-origin page, worker, or configuration replacement remains outside this guarantee.
 
-To enable STEVE for your deployment, add an `e2e_encryption` block to your [`caution.hcl`](../reference/caution-hcl.md#encryption-modes) and integrate a supported client. See [Use STEVE clients](../guides/use-steve-clients.md) for native setup and trust-policy examples, and [Network connectivity](../reference/deployment-configuration.md#network-connectivity) for the deployment walkthrough, including `cors_origins` for browser-based clients calling the proxy from a different origin.
+To enable STEVE for your deployment, add an `e2e_encryption` block to your [`caution.hcl`](../reference/caution-hcl.md#encryption-modes) and integrate a supported client. See [Use STEVE clients](../guides/use-steve-clients.md) for browser, CLI, and native setup and trust-policy examples, and [Network connectivity](../reference/deployment-configuration.md#network-connectivity) for the deployment walkthrough, including `cors_origins` for browser-based clients calling the proxy from a different origin.
 
 The [STEVE v2 protocol specification](https://git.distrust.co/public/steve/src/branch/main/docs/steve-v2-protocol.md){:target="_blank"} defines the exact wire limits and recovery rules. Current clients cap session, confirmation, and application protocol responses at 65,536, 4,096, and 33,619,968 bytes respectively; STEVE caps an upstream response body at 33,554,432 bytes. STEVE returns upstream redirects to the client instead of following them.
 
@@ -68,7 +68,7 @@ The data is additionally wrapped in TLS, which provides standard transport-layer
 
     ---
 
-    Make attested encrypted requests with the [CLI or native Rust SDK](../guides/use-steve-clients.md).
+    Make attested encrypted requests with the [browser, CLI, or native Rust SDK](../guides/use-steve-clients.md).
 
 - :lucide-key-round: **Key Services**
 
