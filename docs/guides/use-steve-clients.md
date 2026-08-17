@@ -144,8 +144,11 @@ Additional indices must be integers from 0 through 255. Duplicates and redundant
 PCR0/1/2 entries canonicalize to the sorted union with mandatory PCR0/1/2. The
 worker records exactly that selected set after Nitro evidence, session binding,
 and key confirmation succeed. Later sessions and rotations must match the exact
-stored set. `client.getStatus()` reports `attestation.pcrTrust` as `pinned`,
-`tofu-enrolled`, or `tofu-matched`.
+stored set. The record is scoped by worker scope, enclave origin, and suite, but
+not by the selected indices; changing the selection therefore conflicts with
+the existing record. `client.getStatus()` reports `attestation.pcrTrust` as
+`not-checked`, `pinned`, `tofu-enrolled`, or `tofu-matched`, and reports
+`checks.expectedPcrPolicy` as `not-checked` or `verified`.
 
 PCR policy remains optional only for browser backward compatibility. Omitting
 it on first configuration reports `not-checked`; omitting it from a later
@@ -170,13 +173,18 @@ const { policy, status } = await client.replacePcrPolicy(nextPolicy)
 Replacement validates and persists the configuration, resets the active
 session, and returns before the new policy is attested. The next `initialize()`
 or protected request enforces it. Replacement, `pcrPolicy: null`, and `reset()`
-do not migrate or delete an enrolled TOFU record; re-enrollment requires an
-explicit origin-controlled storage migration or clearing all site data.
+do not migrate or delete an enrolled TOFU record. The SDK exposes no TOFU-record
+management API; re-enrollment requires origin-controlled storage migration or
+clearing all site data.
 
 `initialize()`, `rotateSession()`, and `reset()` return status; `getStatus()`
-does not change session state. Client methods reject with `SteveError`, which
-exposes machine-readable `code` and `stage`, a diagnostic `message`, and optional
-`httpStatus`. Handle unknown future codes and do not parse `message`.
+does not change session state. A failed explicit rotation preserves the prior
+accepted, unexpired session; an expiry-triggered request does not fall back to
+it. Client methods reject with `SteveError`, which exposes machine-readable
+`code` and `stage`, a diagnostic `message`, and optional `httpStatus`. Handle
+unknown future codes, do not parse `message`, and see the
+[browser SDK API reference](https://git.distrust.co/public/steve/src/branch/main/steve-js-sdk/README.md#client-api){:target="_blank"}
+for the stable codes.
 
 ## Use the STEVE CLI
 

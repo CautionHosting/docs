@@ -59,7 +59,7 @@ This requires:
 
 1. **`caution.hcl` configuration**: Set `e2e_encryption { mode = "steve" }` and front the application port with `http`
 2. **Client integration**: Use the native Rust SDK, STEVE CLI, or browser SDK and pin the deployment's key-exchange suite
-3. **Workload policy**: Native clients must use independently verified pinned PCRs or explicitly chosen durable TOFU
+3. **Workload policy**: Use independently verified pinned PCR profiles or explicitly chosen durable TOFU. Native clients require a policy; browser omission is legacy `not-checked` behavior
 
 Requests sent through an active, correctly configured STEVE v2 client are encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
 
