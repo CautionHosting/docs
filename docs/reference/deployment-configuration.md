@@ -58,7 +58,7 @@ This example pins the default X25519 suite explicitly. Browser clients on anothe
 This requires:
 
 1. **`caution.hcl` configuration**: Set `e2e_encryption { mode = "steve" }` and front the application port with `http`
-2. **Client integration**: Use the native Rust SDK, STEVE CLI, or browser SDK and pin the deployment's key-exchange suite
+2. **Client integration**: Use the native Rust SDK, generated Swift/UniFFI facade, STEVE CLI, or browser SDK and pin the deployment's key-exchange suite
 3. **Workload policy**: Use independently verified pinned PCR profiles or explicitly chosen durable TOFU. Native clients require a policy; browser omission is legacy `not-checked` behavior
 
 Requests sent through an active, correctly configured STEVE v2 client are encrypted on the client and only decrypted inside the enclave. The STEVE proxy uses reserved port `49500` inside the enclave and forwards decrypted traffic to your application.
@@ -76,10 +76,10 @@ e2e_encryption {
 
 Configure the client with the matching identifier:
 
-| `caution.hcl` | Browser SDK | Rust SDK |
-|---------------|-------------|----------|
-| `"x25519"` | `"X25519"` | `KeyExchangeSuite::X25519` |
-| `"xwing-draft10"` | `"XWING-DRAFT10"` | `KeyExchangeSuite::XWingDraft10` |
+| `caution.hcl` | Browser SDK | STEVE CLI | Rust SDK | Swift/UniFFI |
+|---------------|-------------|-----------|----------|--------------|
+| `"x25519"` | `"X25519"` | `--key-exchange X25519` | `KeyExchangeSuite::X25519` | `.x25519` |
+| `"xwing-draft10"` | `"XWING-DRAFT10"` | `--key-exchange XWING-DRAFT10` | `KeyExchangeSuite::XWingDraft10` | `.xwingDraft10` |
 
 A mismatch or key-exchange failure aborts the session. STEVE does not negotiate suites or fall back from X-Wing to X25519.
 
@@ -119,7 +119,7 @@ Requests that bypass the STEVE SDK are not end-to-end encrypted. Keep `allow_pla
 
 The configured application HTTP port remains an enclave-local upstream. Caution does not expose that port through a host HTTP VSOCK proxy or a separate enclave VSOCK port proxy in STEVE mode. Additional ingress ports are independent raw interfaces and are not protected by STEVE; do not send sensitive plaintext over them.
 
-See [Use STEVE clients](../guides/use-steve-clients.md) for browser, CLI, and native integration, including pinned PCRs, upgrade allowlists, and TOFU. See [Encryption](../concepts/encryption.md) for the trust model.
+See [Use STEVE clients](../guides/use-steve-clients.md) for browser, CLI, Rust, and Swift integration, including pinned PCRs, upgrade allowlists, and TOFU. See [Encryption](../concepts/encryption.md) for the trust model.
 
 ### Attested TLS compatibility mode
 

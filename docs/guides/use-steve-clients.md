@@ -4,7 +4,7 @@ icon: lucide/shield-check
 
 # Use STEVE clients
 
-<p class="docs-home-intro">Make attested, end-to-end encrypted requests to a Caution application with the STEVE browser, CLI, or native Rust SDK.</p>
+<p class="docs-home-intro">Make attested, end-to-end encrypted requests to a Caution application with the STEVE browser, CLI, native Rust SDK, or generated Swift bindings.</p>
 
 STEVE protects a request only when the client establishes the STEVE v2 protocol. In the default fail-closed configuration, an ordinary HTTPS application request is rejected with `403 {"error":"e2e_required"}` and `Cache-Control: no-store` instead of being forwarded without STEVE protection.
 
@@ -80,7 +80,7 @@ A successful verification writes the independently reproduced PCR0, PCR1, and PC
 
 The file establishes which workload a pinned client accepts. Review and distribute it through an authenticated channel. Do not bootstrap expected PCRs from the same untrusted endpoint response without reproducing and verifying the deployment.
 
-The native SDK and CLI require all three PCRs to be 48 bytes and nonzero. Debug-mode, all-zero PCRs are rejected.
+The Rust SDK, Swift facade, and CLI require all three PCRs to be 48 bytes and nonzero. Debug-mode, all-zero PCRs are rejected.
 
 ## Choose a client
 
@@ -88,6 +88,7 @@ The native SDK and CLI require all three PCRs to be 48 bytes and nonzero. Debug-
 |--------|----------|------------|
 | STEVE CLI | One request, scripting, and diagnostics | One or more pinned profiles, or durable TOFU |
 | Native Rust SDK | Application integration | One or more pinned profiles, or application-owned durable TOFU |
+| Swift through UniFFI | Apple application integration over the Rust SDK | One or more pinned profiles, or Swift-owned durable TOFU |
 | Browser page API and service worker | Intercepted `fetch()` protection or explicit protected requests through the worker | Optional pinned profiles or durable browser TOFU; omission reports `not-checked` |
 
 Prefer pinned PCRs when the client must authenticate a deployment from its first connection. The values must arrive through an independently authenticated channel. TOFU provides continuity after first use, not independently authenticated workload identity on that first connection.
@@ -116,7 +117,7 @@ await client.initialize()
 Use `client.send()` when a call must enter the protected worker path explicitly:
 
 ```javascript
-const { response, sessionId } = await client.send('/api/secret', {
+const { response, sessionId, exchange } = await client.send('/api/secret', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json' },
   body: JSON.stringify({ operation: 'read' })
@@ -127,7 +128,12 @@ The path must begin with one `/` and contain no origin, authority, or fragment.
 The call supplies no implicit browser credentials or cookies. STEVE returns an
 upstream `3xx` response without following it; a redirect of the outer protocol
 request fails. The SDK never retries and returns the base64url ID of the session
-that protected the request.
+that protected the request plus a non-secret `exchange` receipt. The receipt
+reports the protocol and protection, session and sequence, selected suite, PCR
+trust result, outer status, and serialized plaintext, ciphertext, and envelope
+sizes. It is returned only after the protected response validates and contains
+no keys, nonces, ciphertext, or application data. `sessionId` equals
+`exchange.sessionId`.
 
 Each pinned profile requires nonzero 96-hex-character PCR0, PCR1, and PCR2
 values and may contain additional PCR indices. Multiple profiles support a
@@ -299,6 +305,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 }
 ```
 
+Each successful response exposes `response.exchange()` with the same non-secret
+receipt as the browser API: the exact session and sequence, suite, PCR trust
+result, outer status, and serialized record sizes. It does not expose
+cryptographic secrets, ciphertext, or application data.
+
 For an upgrade window, construct `PcrPolicy::pinned([current, next])` and connect with `Client::new_with_policy`. Each profile must contain nonzero 48-byte PCR0, PCR1, and PCR2 values.
 
 The SDK also exposes `PcrPolicy::trust_on_first_use` and
@@ -327,6 +338,27 @@ let client = Client::builder("https://secure.example.com", expected)?
 The default native context is bound to the normalized STEVE origin. Add a stable `application_context` when separate applications on the same origin need distinct session and TOFU trust bindings. Changing it selects a different trust record.
 
 The native client rotates sessions before server expiry, applies bounded request deadlines, disables redirects, and never automatically retries an application request.
+
+## Use Swift through UniFFI
+
+`steve-sdk-uniffi` generates Swift source, a C header and module map, and a
+native static library over `steve-sdk`. It exposes pinned profiles, caller-owned
+TOFU with optional additional PCR indices, X25519 and XWING-DRAFT10, attestation,
+session rotation, binary protected requests, typed errors, and the protected
+exchange receipt. Rust continues to own networking, Nitro verification,
+protocol state, cryptography, session keys, and Tokio execution.
+
+Consume the facade from a reviewed STEVE commit and follow its
+[generation, linking, and TOFU callback contract](https://git.distrust.co/public/steve/src/branch/main/crates/steve-sdk-uniffi/README.md){:target="_blank"}.
+The current facade does not provide an XCFramework, SwiftPM, or CocoaPods
+package. The application owns Apple packaging and must implement the synchronous,
+thread-safe TOFU callback with atomic durable storage, such as an appropriately
+protected Keychain record. Swift task cancellation does not prove that a remote
+operation stopped, so retain the SDK deadlines and no-retry semantics.
+
+Normal builds include only the production Nitro verifier. The non-default
+`synthetic-testing` feature exists solely for the Swift smoke test and must not
+be linked into a release application.
 
 ## See also
 
