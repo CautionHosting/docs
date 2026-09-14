@@ -120,7 +120,7 @@ resources {
 
 ### `network` — ports, traffic, and TLS
 
-The `network` block holds `ingress`/`egress` traffic rules and an optional `http` block for TLS termination. Repeat `ingress`/`egress` blocks to add more rules.
+The `network` block holds `ingress` rules, an `egress` on/off setting, and an optional `http` block for TLS termination. Repeat `ingress` blocks to add more rules.
 
 ```hcl
 network {
@@ -145,16 +145,37 @@ network {
 }
 ```
 
-#### `ingress` / `egress`
+#### `ingress`
 
 | Field | Description |
 |-------|-------------|
-| `cidr_ipv4` | **Required.** Source/destination CIDR, e.g. `0.0.0.0/0`. |
+| `cidr_ipv4` | **Required.** Source CIDR, e.g. `0.0.0.0/0`. |
 | `port` | A single port. Use instead of the range fields. |
 | `start_port` / `end_port` | An inclusive port range. Use instead of `port`. |
 | `ip_protocol` | Protocol, e.g. `tcp`. |
 
 Do not declare ports in the reserved `49500`-`49600` range (see [Reserved ports](#reserved-ports)).
+
+#### `egress`
+
+Egress currently supports only on/off access. Omit all `egress` blocks (or use
+`egress = []`) to disable the outbound network tunnel. To enable unrestricted
+outbound IPv4 access, use only:
+
+```hcl
+egress { cidr_ipv4 = "0.0.0.0/0" }
+```
+
+Enabled egress configures DNS through the parent host. Granular egress filtering
+is not implemented. Restricted CIDRs, any port or protocol fields, and unknown
+fields are rejected, even when another block allows all outbound access. Repeated
+valid allow-all blocks are accepted but have no additional effect.
+
+Previously accepted restrictive manifests now fail validation; those restrictions
+were never enforced. Remove egress to disable outbound access, or explicitly choose
+allow-all only if unrestricted access is intended. Running deployments are unchanged;
+server-side rejection requires the updated Platform API. This is validation, not
+an attested egress containment guarantee.
 
 #### `http`
 
