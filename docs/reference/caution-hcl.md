@@ -120,22 +120,39 @@ resources {
 
 ### `network` — ports, traffic, and TLS
 
-The `network` block holds `ingress`/`egress` traffic rules and an optional `http` block for TLS termination. Repeat `ingress`/`egress` blocks to add more rules.
+The `network` block holds IPv4 `ingress` and `egress` allowlists, optional
+`recovery_ingress` sources, and an optional `http` block. Repeat the rule blocks
+to allow additional source/destination, protocol, and port combinations.
 
 ```hcl
 network {
   ingress {
-    cidr_ipv4   = "0.0.0.0/0"
+    cidr_ipv4   = "198.51.100.0/24"
     port        = 8080
     ip_protocol = "tcp"
   }
   ingress {
-    cidr_ipv4  = "0.0.0.0/0"
+    cidr_ipv4  = "203.0.113.0/24"
     start_port = 40000
     end_port   = 40005
   }
   egress {
-    cidr_ipv4 = "0.0.0.0/0"
+    cidr_ipv4   = "192.0.2.8/32"
+    ip_protocol = "tcp"
+    port        = 443
+  }
+  egress {
+    cidr_ipv4   = "10.0.100.1/32"
+    ip_protocol = "udp"
+    port        = 53
+  }
+  egress {
+    cidr_ipv4   = "10.0.100.1/32"
+    ip_protocol = "tcp"
+    port        = 53
+  }
+  recovery_ingress {
+    cidr_ipv4 = "203.0.113.8/32"
   }
 
   http {
@@ -145,16 +162,92 @@ network {
 }
 ```
 
-#### `ingress` / `egress`
+The `192.0.2.*`, `198.51.100.*`, and `203.0.113.*` addresses are documentation
+ranges: replace them with your actual destinations and client sources.
+`10.0.100.1` is the platform's parent DNS relay.
+
+#### Rule fields and validation
 
 | Field | Description |
 |-------|-------------|
-| `cidr_ipv4` | **Required.** Source/destination CIDR, e.g. `0.0.0.0/0`. |
-| `port` | A single port. Use instead of the range fields. |
-| `start_port` / `end_port` | An inclusive port range. Use instead of `port`. |
-| `ip_protocol` | Protocol, e.g. `tcp`. |
+| `cidr_ipv4` | **Required.** Source CIDR for ingress, destination CIDR for egress. Host bits are normalized to the network address. |
+| `port` | A single port from `1` to `65535`. Use instead of the range fields. |
+| `start_port` / `end_port` | A complete, inclusive, ascending port range. Use instead of `port`. |
+| `ip_protocol` | Ingress: `"tcp"` or `"6"`. Egress also accepts `"udp"`/`"17"` and `"all"`/`"-1"`. |
 
-Do not declare ports in the reserved `49500`-`49600` range (see [Reserved ports](#reserved-ports)).
+Omitting `ip_protocol` means TCP when ports are present, or all protocols for
+an egress rule without ports. TCP/UDP rules require a port or range;
+all-protocol rules must not specify ports. UDP ingress is not supported.
+Unknown rule fields, explicit null attributes, mixed port forms, zero ports,
+IPv6 CIDRs, and unsupported protocols are rejected rather than ignored.
+
+Limits are **40 declared rules** across ingress, egress, and explicit recovery
+sources (before deduplication), **32 distinct ingress ports**, and **55 generated
+application/recovery security-group rules**. HTTP routing can expand a declaration
+into multiple security-group rules. Policies exceeding these limits are rejected,
+not truncated.
+
+#### `ingress`
+
+Raw TCP ports retain their own source CIDRs. Rules covering `http.port` instead
+set the allowed sources for the HTTP/HTTPS and STEVE application routes; that
+upstream port is not also exposed as a public raw listener. HTTP source checks
+use the connection's peer address, not forwarded headers. A reverse proxy's
+address is therefore the source seen by this check.
+
+Security groups and host filters enforce the same source/port restrictions;
+adding a more permissive security group does not bypass the host checks.
+Direct IPv6 application ingress is blocked. TCP 80 still serves the platform's
+public readiness and attestation endpoints: restricting application sources does
+not make those management endpoints private.
+
+Do not use TCP 22 or the reserved `49500`–`49600` range for application ingress.
+Ports 80 and 443 may only be private `http.port` upstreams, not raw listeners.
+Attested TLS needs a different upstream port because enclave Caddy owns 80/443.
+
+#### `egress`
+
+Omit all `egress` blocks (or use `egress = []`) to disable the guest's outbound
+tunnel. To allow all outbound IPv4 protocols and destinations, subject to the
+protected host/metadata exclusions below, explicitly choose:
+
+```hcl
+egress { cidr_ipv4 = "0.0.0.0/0" }
+```
+
+Restricted rules allow only their destination CIDRs, protocols, and ports, with
+stateful replies for allowed connections. IPv6 guest traffic, instance metadata,
+link-local credentials, and other parent-host services remain blocked even with
+broad egress. DHCP and explicitly permitted parent DNS are narrow exceptions.
+
+DNS is not implicitly allowed. To use the parent relay, permit `10.0.100.1:53`
+for UDP and TCP as shown above, or use rules that already cover those tuples.
+An explicitly permitted external DNS server is also possible. DNS permission
+is not a domain-name allowlist for application traffic.
+
+Source, helper, and EIF transfers use the API, builder, object storage, and parent
+host; they do not need guest S3/HTTPS exceptions. Parent-originated package and
+artifact operations are outside the guest egress policy.
+
+#### `recovery_ingress`
+
+Each block takes only `cidr_ipv4` and controls access to the Locksmith shard
+receiver when recovery is enabled. Omission inherits the HTTP application source
+CIDRs; `recovery_ingress = []` denies all sources. A recovery workload without
+HTTP must declare its recovery sources. These rules control connectivity, not
+shard authorization.
+
+#### Applying policy changes
+
+The CLI and API validate policies for new deployments. Policy installation must
+succeed before public proxies and enclave startup; tunnel restarts reapply the
+policy without removing its enforcement barrier. Existing deployments are not
+retroactively changed: redeploy to replace the host/enclave pair.
+
+Historical reproduction retains the original configuration's build behavior;
+accepting it for verification does not make it valid for a new deployment.
+Network enforcement is a host/infrastructure control, not an enclave-attested
+guarantee against a malicious parent host.
 
 #### `http`
 
@@ -213,7 +306,14 @@ http {
 }
 ```
 
-Attested TLS requires egress for certificate issuance and periodic external verification of the attested certificate fingerprint. See [Deployment configuration](deployment-configuration.md#attested-tls-compatibility-mode) for the complete security procedure.
+Attested TLS requires egress permitting DNS and certificate-authority connections;
+there are no implicit DNS or ACME exceptions. Its HTTP source policy must include
+`0.0.0.0/0`: restricted-source Attested TLS is currently rejected because
+challenge-only forwarding is not implemented. Use STEVE if restricted application
+sources are required rather than broadening access just to pass validation.
+Periodic external verification of the attested certificate fingerprint is also
+required. See [Deployment configuration](deployment-configuration.md#attested-tls-compatibility-mode)
+for the complete security procedure.
 
 For a gRPC application, set the upstream protocol to h2c (cleartext HTTP/2). Client connections still use TLS; only the enclave-local connection from Caddy to the application is cleartext:
 
@@ -286,7 +386,7 @@ caution {
 
 ## Reserved ports
 
-The reserved app-facing range is `49500`-`49600`. User apps must not declare ports in that range in `ingress`, `egress`, `http`, or application startup commands. Choose the port your app already uses, as long as it is outside the reserved range.
+The reserved app-facing range is `49500`-`49600`. User apps must not declare ports in that range in `ingress`, `http`, or application startup commands. These listener reservations do not restrict remote destination ports in `egress`. TCP 22 is also unavailable for application ingress; ports 80 and 443 have the [HTTP upstream restrictions](#ingress) described above.
 
 Current reserved/internal service ports:
 

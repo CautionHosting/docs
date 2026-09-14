@@ -28,7 +28,11 @@ Without `app_sources`, third parties cannot independently reproduce and verify y
 
 ## Network connectivity
 
-Caution supports three ways to expose your application to the network.
+Caution supports three ways to expose your application to the network. All use the
+same IPv4 [ingress and egress allowlists](caution-hcl.md#network-ports-traffic-and-tls).
+Ingress sources for `http.port` govern the application routes, not the public
+platform readiness and attestation endpoints. Omitted egress disables the guest
+outbound tunnel; restricted egress needs explicit permission for DNS when used.
 
 ### STEVE end-to-end encryption (recommended)
 
@@ -146,7 +150,14 @@ network {
 }
 ```
 
-The domain must resolve directly to the deployment, the application port must have an `ingress` rule, and outbound egress is required for certificate issuance. Do not place a CDN or other TLS-terminating proxy in front of the deployment.
+The domain must resolve directly to the deployment. The application port must have
+an `ingress` rule allowing `0.0.0.0/0`: restricted-source Attested TLS is currently
+unsupported. Use an upstream port other than 80 or 443, which enclave Caddy owns.
+Egress must permit DNS and certificate-authority connections; the platform does not
+add implicit exceptions. The example intentionally allows broad egress, so narrow
+it only after identifying those dependencies. Use STEVE if application source
+restrictions are required. Do not place a CDN or other TLS-terminating proxy in
+front of the deployment.
 
 #### gRPC services
 
@@ -216,7 +227,11 @@ network {
 
 Use the port your application listens on. Do not declare ports in Caution's reserved `49500`-`49600` range.
 
-Each port your app exposes needs an `ingress` rule. The port named in `http` is reverse-proxied through Caddy with TLS termination on port 443; any other `ingress` ports are exposed as raw TCP (useful for P2P or binary protocols).
+Each port your app exposes needs an `ingress` rule. The port named in `http` is a
+private upstream, reverse-proxied through Caddy with TLS termination on port 443;
+it is not also exposed as a public raw listener. Rules covering that port set the
+HTTP/HTTPS application source allowlist. Other `ingress` ports are exposed as raw
+TCP with their own source restrictions (useful for P2P or binary protocols).
 
 This establishes a connection from the enclave to the host without STEVE encryption. Traffic is still protected by TLS, but the encryption terminates outside the enclave rather than inside it.
 
