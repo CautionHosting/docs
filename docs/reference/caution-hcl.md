@@ -50,6 +50,7 @@ caution {
 enclave "main" {
   build     { }   # what to build
   resources { }   # cpu / memory
+  restart   { }   # host supervision after enclave termination
   network   { }   # ingress, egress, http
   debug     { }   # debug + ssh access
   unit "default" { }   # the command to run
@@ -117,6 +118,48 @@ resources {
 |-------|---------|-------------|
 | `cpu` | `2` | Number of vCPUs. |
 | `memory_mb` | `512` | Memory allocation in MB. |
+
+### `restart` — enclave restart policy
+
+```hcl
+restart {
+  policy        = "always"
+  delay_seconds = 0
+}
+```
+
+| Field | Default | Description |
+|-------|---------|-------------|
+| `policy` | `"on-failure"` | `"never"`, `"on-failure"`, or `"always"`. |
+| `delay_seconds` | `10` | Nonnegative integer seconds before relaunch, up to 4294967295. Zero adds no restart delay. Ignored for `"never"`. |
+
+Omitting the block, or either field, uses its default. Legacy Procfiles use the
+same defaults. Unknown fields, unknown policies, and fractional or negative delays
+are rejected.
+
+- `never`: do not automatically relaunch after termination, including launch failure.
+- `on-failure`: relaunch when the provider's supervised process fails. On Nitro,
+  this is the host launcher or enclave management process; an enclave crash or
+  selfnuke can appear as a successful management-process exit and will not
+  reliably trigger this policy.
+- `always`: relaunch after either successful or failed termination. Use this for
+  Keymaker and services that must return after enclave termination. It does not
+  cause periodic restarts or restart healthy enclaves after ordinary requests.
+
+Explicit service stop and Platform destroy operations suppress automatic relaunch.
+The host retains systemd's start-rate limits. Nitro also retains a two-second
+pre-start delay and enclave boot time, even with `delay_seconds = 0`.
+
+Nitro supervision tracks the actual enclave management PID. Host ingress proxies
+remain available across replacement, but requests during boot can fail; this
+setting does not queue or retry HTTP requests. Locksmith-backed applications must
+still recover their existing bundle and receive the required holder shares after
+replacement; restarting does not restore their secrets.
+
+The default preserves the previous `on-failure` setting, while correcting the
+process being supervised. Upgrade Platform and CLI support before deploying HCL
+that uses this block. Existing hosts require reprovisioning/replacement or an
+explicit host service update; editing HCL alone does not patch a running host.
 
 ### `network` — ports, traffic, and TLS
 
@@ -241,14 +284,25 @@ unit "default" {
 }
 ```
 
-Before deploying, generate a quorum, run `caution secret encrypt` to write encrypted `.caution/secrets/*.asc` files, and add the bundle and secrets to your `Containerfile`:
+Before deploying, obtain a bundle through the dashboard, managed CLI or your own
+Keymaker. Reuse an existing bundle rather than generating it again. For V1, provide an
+independently verified Keymaker policy and run `caution secret encrypt` to write
+`.caution/secrets/*.asc`. Include all three inputs in the final application image:
 
 ```dockerfile
 ADD .caution/quorum-bundle.json /etc/caution/bundle.json
+ADD .caution/keymaker-pcr-policy.json /etc/caution/keymaker-pcr-policy.json
 ADD .caution/secrets/ /etc/caution/secrets/
 ```
 
-After deploying, send shards with `caution secret send-shard` from the host-toolchain CLI build, which is the default `make install-cli` (also `make install-cli-host`). See [Key services](../concepts/key-services.md) for the full setup flow.
+Unversioned V0 bundles need [one-time import](../concepts/key-services.md#importing-v0-pgp-bundles).
+ImportedV0 requires `--allow-legacy` for encryption and release. Include the
+imported bundle and encrypted secrets in the image; no Keymaker policy is required
+by the CLI, image preflight or Locksmith runtime. Preserve existing ciphertext
+rather than generating a new quorum.
+
+After deploying, run `caution verify`, then collect enough distinct holder
+submissions with `caution secret send-shard` from the host-toolchain CLI build, which is the default `make install-cli` (also `make install-cli-host`). See [Key services](../concepts/key-services.md) for the three setup paths, policy provisioning, and PGP/passkey approval instructions.
 
 ### `debug` — console and SSH access
 

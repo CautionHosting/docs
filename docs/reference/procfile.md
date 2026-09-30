@@ -29,7 +29,7 @@ Use these fields to control how Caution locates container inputs, deploys, runs,
     The `binary` field extracts only the specified binary from your container. It does not include config files, shared libraries, or other filesystem contents in the EIF. Use `binary` only for fully self-contained static binaries. For most applications, use `run`, which includes the full container filesystem in the EIF.
 
 !!! warning "No `build` field or custom build command"
-    The legacy `build` Procfile field is no longer available. Caution builds the application container with `docker build -f <containerfile> .` from the repository root. It does not run a custom pre-build command or pass extra `--build-arg` values. Put required public build-time configuration in the Containerfile or in committed files copied into the image. Do not bake secrets into the image; use [Locksmith](../concepts/key-services.md) for secret values.
+    Procfile does not support a `build` field. Caution builds the application container with `docker build -f <containerfile> .` from the repository root. It does not run a custom pre-build command or pass extra `--build-arg` values. Put required public build-time configuration in the Containerfile or in committed files copied into the image. Do not bake secrets into the image; use [Locksmith](../concepts/key-services.md) for secret values.
 
 <div class="procfile-build-config-table" markdown>
 
@@ -156,14 +156,22 @@ domain: secrets.example.com
 app_sources: https://codeberg.org/example/secret-app
 ```
 
-Before deploying, generate a quorum, run `caution secret encrypt` to write
-encrypted `.caution/secrets/*.asc` files, and add the bundle and secrets to
-your `Containerfile`:
+Before deploying, obtain a bundle through the dashboard, managed CLI or your own
+Keymaker. Reuse an existing bundle rather than generating it again. For V1, provide an
+independently verified Keymaker policy and run `caution secret encrypt` to write
+`.caution/secrets/*.asc`. Include all three inputs in the final application image:
 
 ```dockerfile
 ADD .caution/quorum-bundle.json /etc/caution/bundle.json
+ADD .caution/keymaker-pcr-policy.json /etc/caution/keymaker-pcr-policy.json
 ADD .caution/secrets/ /etc/caution/secrets/
 ```
+
+Unversioned V0 bundles need [one-time import](../concepts/key-services.md#importing-v0-pgp-bundles).
+ImportedV0 requires `--allow-legacy` for encryption and release. Include the
+imported bundle and encrypted secrets in the image; no Keymaker policy is required
+by the CLI, image preflight or Locksmith runtime. Preserve existing ciphertext
+rather than generating a new quorum.
 
 !!! warning "Do not combine `binary:` with Locksmith"
     `binary:` extracts only the named binary and drops the rest of the
@@ -171,7 +179,8 @@ ADD .caution/secrets/ /etc/caution/secrets/
     and `locksmithd` panics at boot with `has bundle: No such file or
     directory`. Use `run:` (full filesystem) when `locksmith: true`.
 
-After deploying, send shards with `caution secret send-shard` from the
+After deploying, run `caution verify`, then collect enough distinct holder
+submissions with `caution secret send-shard` from the
 host-toolchain CLI build, which is the default `make install-cli` (also
 `make install-cli-host`). See
 [Key services](../concepts/key-services.md) for the full setup flow, why this
