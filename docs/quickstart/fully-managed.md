@@ -98,7 +98,7 @@ From your application directory, run the following command to create a `caution.
 caution init
 ```
 
-`caution.hcl` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `caution.hcl` is already included. If you're deploying your own application, you'll need to create one. See the [caution.hcl reference](../reference/caution-hcl.md).
+`caution.hcl` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `caution.hcl` is already included. `caution init` generates a template if none exists; customize it for your application. See the [caution.hcl reference](../reference/caution-hcl.md).
 
 Commit the generated `caution.hcl` and `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
@@ -158,7 +158,7 @@ network {
 
 Choose a protected mode before sending sensitive traffic:
 
-- **[STEVE (recommended)](../reference/deployment-configuration.md#steve-end-to-end-encryption-recommended):** add `e2e_encryption { mode = "steve" }` inside `http` and integrate a [STEVE client](../guides/use-steve-clients.md). Keep plaintext fallback disabled. Ordinary application requests without STEVE are rejected.
+- **[STEVE (recommended)](../reference/deployment-configuration.md#steve-end-to-end-encryption-recommended):** add `e2e_encryption { mode = "steve" }` inside `http` and integrate a [STEVE client](../guides/use-steve-clients.md). Keep plaintext fallback disabled. Requests without STEVE are rejected except for the [documented bootstrap/public endpoints](../reference/deployment-configuration.md#plaintext-fallback).
 - **[Attested TLS](../reference/deployment-configuration.md#attested-tls-compatibility-mode):** use `e2e_encryption { mode = "tls" }` for ordinary HTTPS clients. Follow its DNS/egress requirements and periodically verify the live attested certificate binding; ordinary HTTPS clients do not verify Nitro evidence themselves.
 
 Configure [domain DNS](../guides/set-up-a-custom-domain.md) after deployment. Other ingress ports remain raw interfaces and are not protected by the selected HTTP mode.
