@@ -133,9 +133,41 @@ enclave "main" {
 }
 ```
 
+## Choose HTTP protection before deploying
+
+The generated template leaves `http` commented out: its ingress port is raw TCP, with no platform-provided TLS. Existing demo configurations may select a different mode; check their `http` and `e2e_encryption` blocks.
+
+For a basic HTTPS demo, add this `network` block inside your existing `enclave` block, replacing any existing `network` block. Use your application's listening port and your own domain:
+
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 8080
+  }
+  http {
+    domain = "app.example.com"
+    port   = 8080
+    # Host TLS termination: e2e_encryption is intentionally omitted.
+  }
+}
+```
+
+!!! warning "This example selects host TLS, not end-to-end encryption"
+    TLS terminates on the host, which can read application requests and responses. Do not use this mode for traffic that must remain confidential from the host. Deployment verification does not change this transport boundary.
+
+Choose a protected mode before sending sensitive traffic:
+
+- **[STEVE (recommended)](../reference/deployment-configuration.md#steve-end-to-end-encryption-recommended):** add `e2e_encryption { mode = "steve" }` inside `http` and integrate a [STEVE client](../guides/use-steve-clients.md). Keep plaintext fallback disabled. Ordinary application requests without STEVE are rejected.
+- **[Attested TLS](../reference/deployment-configuration.md#attested-tls-compatibility-mode):** use `e2e_encryption { mode = "tls" }` for ordinary HTTPS clients. Follow its DNS/egress requirements and periodically verify the live attested certificate binding; ordinary HTTPS clients do not verify Nitro evidence themselves.
+
+Configure [domain DNS](../guides/set-up-a-custom-domain.md) after deployment. Other ingress ports remain raw interfaces and are not protected by the selected HTTP mode.
+
 ## Add environment variables
 
-If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and reference secrets with `env::vault` in your `caution.hcl`.
+For public runtime values, use string literals in `unit.env` in `caution.hcl`; no key service or quorum setup is needed. See [Public environment variables](../concepts/key-services.md#non-encrypted-environment-variables) for an example and how runtime settings differ from build-time inputs.
+
+For secrets, follow [Key services](../concepts/key-services.md) before deploying: create a quorum bundle, encrypt the values, package the bundle and ciphertext, and reference them with `env::vault`.
 
 Skip this step if your application does not need environment variables.
 

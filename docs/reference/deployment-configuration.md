@@ -218,7 +218,7 @@ Use the port your application listens on. Do not declare ports in Caution's rese
 
 Each port your app exposes needs an `ingress` rule. The port named in `http` is reverse-proxied through Caddy with TLS termination on port 443; any other `ingress` ports are exposed as raw TCP (useful for P2P or binary protocols).
 
-This establishes a connection from the enclave to the host without STEVE encryption. Traffic is still protected by TLS, but the encryption terminates outside the enclave rather than inside it.
+This example intentionally omits `e2e_encryption`, selecting host TLS termination. HTTPS protects the client-to-host connection, but the host can read application requests and responses. Other raw ingress ports have no platform-provided TLS. Deployment verification alone does not make these connections end-to-end encrypted.
 
 Use this only when e2e encryption is not feasible for your use case.
 

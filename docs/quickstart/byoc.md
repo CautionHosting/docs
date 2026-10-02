@@ -241,9 +241,15 @@ Each normal `caution init --byoc` setup generates a new deployment ID and a dedi
 
 ## Add environment variables
 
-If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and reference secrets with `env::vault` in your `caution.hcl`.
+For public runtime values, use string literals in `unit.env` in `caution.hcl`; no key service or quorum setup is needed. See [Public environment variables](../concepts/key-services.md#non-encrypted-environment-variables) for an example and how runtime settings differ from build-time inputs.
+
+For secrets, follow [Key services](../concepts/key-services.md) before deploying: create a quorum bundle, encrypt the values, package the bundle and ciphertext, and reference them with `env::vault`.
 
 Skip this step if your application does not need environment variables.
+
+## Choose HTTP protection
+
+The same [HTTP protection choices](fully-managed.md#choose-http-protection-before-deploying) apply to BYOC: the generated template starts with raw TCP ingress, an `http` block without `e2e_encryption` terminates TLS on the host, and STEVE or Attested TLS must be explicitly selected for protection from the host. Check the mode before sending sensitive traffic.
 
 ## Deploy the application
 

@@ -79,7 +79,9 @@ unit "default" {
 |-------|-------------|
 | `command` | **Required.** Absolute path to the binary to execute. The full container filesystem is included in the EIF. |
 | `args` | List of arguments passed to `command`. |
-| `env` | Map of environment variables. Values must be string literals or function calls (see [Secrets](#secrets)). |
+| `env` | Map of runtime environment variables. Use string literals for public values or `env::vault(...)` for [secrets](#secrets). |
+
+**Recommended:** configure public runtime values here, alongside the command. String literals do not enable Locksmith and are not Docker build arguments. `/etc/environment` in the final image is an alternative for image-level runtime defaults, not an additional required step. See [Public environment variables](../concepts/key-services.md#non-encrypted-environment-variables) for the distinction from build-time configuration.
 
 ### `build` — container input
 
@@ -141,6 +143,7 @@ network {
   http {
     domain = "api.example.com"
     port   = 8080
+    # Host TLS termination: e2e_encryption is intentionally omitted.
   }
 }
 ```
@@ -158,7 +161,7 @@ Do not declare ports in the reserved `49500`-`49600` range (see [Reserved ports]
 
 #### `http`
 
-The `http` block fronts one port with TLS on port 443. By default TLS terminates on the host; with [Attested TLS](deployment-configuration.md#attested-tls-compatibility-mode), it terminates inside the enclave.
+The `http` block fronts one port with TLS on port 443. **Omitting `e2e_encryption` selects host TLS termination:** the host can read application requests and responses. HTTPS alone does not protect them from the host. Choose `mode = "steve"` for client-integrated application-layer encryption, or `mode = "tls"` for [Attested TLS](deployment-configuration.md#attested-tls-compatibility-mode) with enclave TLS termination and periodic external certificate-binding verification.
 
 | Field | Description |
 |-------|-------------|

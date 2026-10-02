@@ -57,7 +57,7 @@ flowchart TB
 
 Use Locksmith for values that must remain secret, such as database URLs, API keys, and signing keys. The Caution CLI encrypts these values from a local `.env` file into `.asc` files, which are committed with the app and decrypted inside the enclave after the quorum is met. See [Add encrypted secrets](#2-add-encrypted-secrets) for the setup flow.
 
-For public or non-sensitive configuration, such as ports, feature flags, or public URLs, use `/etc/environment` in your container image instead. Public environment variables do not require Keymaker, a quorum bundle, Locksmith, or shard submission. Because Caution does not pass Docker build arguments, public build-time values must also be expressed in the Containerfile or files copied into the image. See [Non-encrypted environment variables](#non-encrypted-environment-variables) for the Dockerfile example.
+For public runtime configuration, such as ports, feature flags, or public URLs, use string literals in the `unit "default"` block's `env` map in `caution.hcl`. These values do not require Keymaker, a quorum bundle, Locksmith, or shard submission. See [Non-encrypted environment variables](#non-encrypted-environment-variables) for the recommended configuration and the distinction from image-level and build-time values.
 
 ## Components
 
@@ -392,7 +392,21 @@ Once enough shards are received, locksmithd reconstructs the secret, starts keyf
 
 ## Non-encrypted environment variables
 
-For configuration values that don't need encryption (ports, feature flags, public URLs), place them in `/etc/environment` in your container image. These are loaded into the enclave environment automatically, without requiring locksmith. This is also where values that older workflows might have supplied with Docker build arguments should be baked into the image.
+**Recommended: put public runtime values in `unit.env` in `caution.hcl`.** Keep application configuration alongside its startup command:
+
+```hcl
+unit "default" {
+  command = "/app/myapp"
+  env = {
+    APP_PORT  = "3000"
+    LOG_LEVEL = "info"
+  }
+}
+```
+
+String literals are exported when the application starts and do not enable Locksmith. Use `env::vault("NAME")` for secrets instead; never put plaintext secrets in HCL or the container image. See the [`unit` reference](../reference/caution-hcl.md#unit-the-command-to-run).
+
+`/etc/environment` in the final container image remains an alternative for image-level runtime defaults. It is loaded by the enclave startup path; it is not necessary when you use `unit.env`. Prefer one place for each public value rather than duplicating it in both:
 
 ```dockerfile
 RUN echo "APP_PORT=3000" >> /etc/environment
@@ -414,6 +428,10 @@ COPY --from=build /tmp/environment /etc/environment
 COPY --from=build /myapp /app/myapp
 ENTRYPOINT ["/app/myapp"]
 ```
+
+### Build-time values are different
+
+Neither `unit.env` nor writing `/etc/environment` supplies values to container build steps. If a compiler or asset build needs public configuration, declare it in the Containerfile (for example with a default `ARG` or an `ENV` used by the build step) or a checked-in input file. Caution does not pass extra Docker build arguments. See [Container build inputs](../reference/deployment-configuration.md#container-build-inputs).
 
 ## Security model
 
