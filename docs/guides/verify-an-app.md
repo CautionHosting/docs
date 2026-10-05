@@ -178,6 +178,28 @@ Use the failure message to choose the next step:
 | PCR mismatch | Treat the app as unverified. Confirm the source commit, build inputs, and deployment are the ones you intended; then retry with `--no-cache`. |
 | Attestation endpoint unreachable | Check the exact endpoint URL from deployment output or app operator instructions. |
 
+## Verify Caution key services
+
+[Encrypted secrets](add-encrypted-secrets.md) rely on two Caution services: Keymaker,
+which generates quorum bundles, and the key service, which handles passkey holders.
+Verify them the same way as an app:
+
+```sh
+caution verify --service keymaker
+caution verify --service key-service
+```
+
+The CLI discovers each service from Platform, shows its source, reproduces PCR0/1/2
+and checks fresh attestation before asking to save trust. For another Platform, set
+`CAUTION_BACKEND_URL` or `--url`. Trust is saved per Platform and reused by the
+`caution secret` commands. Rerun the command to approve a service upgrade; trust is
+never updated silently.
+
+The public `/components` page on Platform shows each service's URL, readiness,
+attestation and policy checks, also as JSON under `services` in
+`/.well-known/caution/build-inputs`. The repository and commit shown there are
+reported by the service. Only the CLI's reproduction establishes trust.
+
 ## Verification and encryption
 
 Verification proves what code is running. If the app also needs to keep request and response data hidden from the host system, use STEVE for application-layer end-to-end encryption. Attested TLS is a compatibility mode that terminates ordinary TLS inside the enclave, but requires periodic external verification of the live certificate binding.

@@ -241,7 +241,7 @@ Each normal `caution init --byoc` setup generates a new deployment ID and a dedi
 
 ## Add environment variables
 
-See [Key services](../concepts/key-services.md) for public environment variables and encrypted secrets. For secrets, create a quorum bundle through the dashboard or CLI with PGP or passkey holders, encrypt values from `.env`, and reference them with `env::vault` in `caution.hcl`. The manual setup path covers running your own Keymaker with PGP holders.
+See [Add encrypted secrets](../guides/add-encrypted-secrets.md) for secrets and public environment variables. Create a quorum bundle in the dashboard or CLI with PGP or passkey holders, encrypt values from `.env`, and reference them with `env::vault` in `caution.hcl`.
 
 Skip this step if your application does not need environment variables.
 

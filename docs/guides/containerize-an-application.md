@@ -61,7 +61,7 @@ ENV LOG_LEVEL=info
 COPY config/production.toml /etc/myapp/config.toml
 ```
 
-Do not bake secrets into the image. Use [Locksmith](../concepts/key-services.md) for secret values that must only be decrypted inside the enclave.
+Do not bake secrets into the image. Use [encrypted secrets](add-encrypted-secrets.md) for secret values that must only be decrypted inside the enclave.
 
 ## Making your application reproducible
 

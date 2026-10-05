@@ -284,10 +284,9 @@ unit "default" {
 }
 ```
 
-Before deploying, obtain a bundle through the dashboard, managed CLI or your own
-Keymaker. Reuse an existing bundle rather than generating it again. For V1, provide an
-independently verified Keymaker policy and run `caution secret encrypt` to write
-`.caution/secrets/*.asc`. Include all three inputs in the final application image:
+Before deploying, create or reuse a quorum bundle, run `caution secret encrypt`, and
+add the bundle, the Keymaker policy saved by the CLI and the encrypted values to the
+final application image:
 
 ```dockerfile
 ADD .caution/quorum-bundle.json /etc/caution/bundle.json
@@ -295,14 +294,12 @@ ADD .caution/keymaker-pcr-policy.json /etc/caution/keymaker-pcr-policy.json
 ADD .caution/secrets/ /etc/caution/secrets/
 ```
 
-Unversioned V0 bundles need [one-time import](../concepts/key-services.md#importing-v0-pgp-bundles).
-ImportedV0 requires `--allow-legacy` for encryption and release. Include the
-imported bundle and encrypted secrets in the image; no Keymaker policy is required
-by the CLI, image preflight or Locksmith runtime. Preserve existing ciphertext
-rather than generating a new quorum.
+V0 bundles need a [one-time import](../guides/add-encrypted-secrets.md#import-a-v0-bundle)
+and are packaged without a Keymaker policy.
 
-After deploying, run `caution verify`, then collect enough distinct holder
-submissions with `caution secret send-shard` from the host-toolchain CLI build, which is the default `make install-cli` (also `make install-cli-host`). See [Key services](../concepts/key-services.md) for the three setup paths, policy provisioning, and PGP/passkey approval instructions.
+After deploying, run `caution verify`, then have enough holders release their shares
+with `caution secret send-shard`. See [Add encrypted secrets](../guides/add-encrypted-secrets.md)
+for the full flow.
 
 ### `debug` — console and SSH access
 
