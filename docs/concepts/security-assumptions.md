@@ -54,7 +54,7 @@ Caution reduces trust in operators and deployment systems, but it does not remov
 |--------------|-----|
 | Malicious or vulnerable source code | Verification proves that reviewed code and the running enclave match. It does not prove that the code is safe, bug-free, or appropriate for a use case. |
 | Compromised source repositories, dependencies, or build inputs | If a verifier reviews and reproduces compromised inputs, Caution can prove those inputs produced the running enclave, but it cannot determine that the inputs are trustworthy. |
-| A compromised verifier machine | If the machine running `caution verify` is compromised, its output can be tampered with. |
+| A compromised verifier machine | If the machine running `caution verify` is compromised, its output can be tampered with. See [Verifier environment](#verifier-environment). |
 | Debug-mode deployments | AWS Nitro Enclaves zero out PCR values in debug mode, so production verification is not meaningful while debug mode is enabled. |
 | Plaintext exposure when end-to-end encryption is disabled, legacy plaintext fallback is enabled, or data uses a separate raw ingress port | Standard TLS or a raw protocol may expose plaintext outside the enclave. Use STEVE clients and keep plaintext fallback disabled when data must be hidden from the host. |
 | Missing or unavailable source code | Without source access or known expected PCRs, a verifier cannot independently reproduce the build. |
@@ -69,8 +69,24 @@ For the strongest guarantees:
 - Keep production deployments outside debug mode.
 - Make the application build reproducible, not just the Caution platform components.
 - Use an active, correctly configured STEVE v2 client when application data must remain hidden from the host or infrastructure operator, keep plaintext fallback disabled, and do not send sensitive plaintext over additional raw ingress ports.
-- Verify from a machine and network environment you trust.
+- Verify from a machine and network environment you trust. See [Verifier environment](#verifier-environment).
 - Review the reproduced source and build artifacts before deciding whether to trust what the app does.
+
+## Verifier environment
+
+`caution verify` rebuilds the enclave image and compares measurements on your machine. That machine, and the machine that built your `caution` binary, are part of what you trust: if either is compromised, a verification result can be forged.
+
+The CLI checks both environments. `[BUILD]` findings describe the machine that compiled the CLI; `[RUN]` findings describe the machine you are using now.
+
+| Finding | Why it matters |
+|---------|----------------|
+| Package manager found (`brew`, `apt-get`, `npm`, ...) | Software on the machine can change outside your review. |
+| Untrusted OS | The machine is not running [StageX](https://stagex.tools){:target="_blank"}. macOS and most Linux distributions report this. |
+| `LD_PRELOAD` is set | Code is injected into every process, including `caution`. |
+
+The first time a CLI build sees a set of findings, it explains the risk and asks you to acknowledge it. It asks again after you install a different build or when the findings change. After a successful `caution verify`, the CLI prints a one-line reminder. Run `caution environment` to see the full report at any time. In CI, set `CAUTION_ACCEPT_ENV_RISK=1` to acknowledge without a prompt.
+
+For verification you rely on, use a StageX-built CLI (`make install-cli-stagex`) on a dedicated, minimal machine or VM with no package managers and no `LD_PRELOAD`. Findings are expected on development machines; treat verification results from them as convenience checks, not evidence.
 
 ## Cloud provider and hardware trust
 
