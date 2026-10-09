@@ -47,6 +47,7 @@ nav = [
 { "Configuration" = "reference/deployment-configuration.md" },
 { "caution.hcl" = "reference/caution-hcl.md" },
 { "Procfile (legacy)" = "reference/procfile.md" },
+{ "S3 prebuilt components (operators)" = "reference/s3-prebuilt-components.md" },
 { "Deployment models" = [
 "reference/deployment-models/index.md",
 { "Fully managed" = "reference/fully-managed.md" },
