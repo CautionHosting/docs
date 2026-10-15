@@ -12,7 +12,7 @@ Make sure:
 
 - Your app is deployed.
 - You can redeploy after enabling the `debug` block or adding `ssh_keys`.
-- You know the public IP address of the EC2 instance running the enclave.
+- You know the public IP address of the EC2 instance running the enclave. `caution apps get -d <deployment>` shows it for each deployment.
 - SSH access is to the **host** EC2 instance, not the enclave itself.
 
 !!! tip "Using an AI coding agent?"

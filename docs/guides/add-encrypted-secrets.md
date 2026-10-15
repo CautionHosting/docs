@@ -194,8 +194,9 @@ the release details in the CLI and on the approval page before approving.
 
 ## Update values and restart
 
-- **Change a value**: re-encrypt it with the existing bundle, redeploy, run
-  `caution verify` and release shares again.
+- **Change a value**: re-encrypt it with the existing bundle and push. Run
+  `caution verify -d` and release shares with `send-shard -d` to the new deployment
+  before switching it live. See [Deploy and roll back updates](deploy-updates.md).
 - **Restart or redeploy**: the new enclave starts locked. Holders release their shares
   again; no new bundle is needed.
 - **Change holders**: create a new bundle and rotate the secret values. Editing a

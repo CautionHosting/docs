@@ -75,6 +75,14 @@ caution verify
 
 The CLI infers the attestation endpoint from local Caution deployment state. It reads the app commit from the fresh response's unsigned manifest metadata, stages that commit from the local repository, reproduces the build, and verifies the resulting PCR values. If the manifest has no app commit, it stages local `HEAD`.
 
+To verify one deployment of the app, such as a candidate before you switch to it, name it:
+
+```bash
+caution verify -d 7f3a91c2
+```
+
+Its trust is saved to `.caution/deployments/<deployment-id>/trusted_hashes.json`. While several deployments run, `caution verify` without `-d` refuses. See [Deploy and roll back updates](deploy-updates.md).
+
 Current deployments also pin the Platform framework archive to an exact commit in the response manifest. Source-backed verification uses that deployed pin. A manifestless local build such as `caution apps build` instead queries the configured Platform API's public `/.well-known/caution/build-inputs` endpoint, pins the advertised Platform commit, and includes it in the local build cache identity. That endpoint reports operator-advertised current inputs; it is not app-specific or attested. For a deployed app, rely on the manifest-backed PCR verification result rather than the endpoint alone.
 
 ## Verify a remote app
@@ -94,6 +102,7 @@ Choose the mode that matches the source access you have.
 | Situation | Command |
 |-----------|---------|
 | You have the app repository checked out locally | `caution verify` |
+| You want one deployment of the app, such as a candidate | `caution verify -d <deployment>` |
 | You have the app repository and an explicit endpoint | `caution verify --attestation-url http://<host>/attestation` |
 | You have a Git URL instead of a local checkout | `caution verify --app-source-url git@codeberg.org:org/app.git` |
 | You have an exact source archive | `caution verify --from-tarball source.tar.gz` |

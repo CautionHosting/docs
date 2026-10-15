@@ -149,6 +149,8 @@ git push caution main
 
 Caution builds a reproducible enclave image with the standard Docker build and deploys it into the enclave.
 
+The first push goes live. Later pushes run beside it until you switch to them: see [Deploy and roll back updates](../guides/deploy-updates.md).
+
 Deployment output includes a stable `DNS target` for the app. If you configured
 a custom domain in `caution.hcl`, create a CNAME from that subdomain to the DNS
 target rather than an A record to the current IP. See [Set up a custom
@@ -169,6 +171,12 @@ Successful verification saves the verified PCR values to `.caution/trusted_hashe
 Your application is now running in a verified enclave. Here's what to explore next:
 
 <div class="grid cards" markdown>
+
+- :lucide-refresh-cw: **Deploy and roll back updates**
+
+    ---
+
+    Ship a [new version](../guides/deploy-updates.md) beside the live one, then switch.
 
 - :lucide-settings-2: **Deployment configuration**
 

@@ -10,6 +10,8 @@ Application containers are built with standard Docker, `docker build -f <contain
 
 For custom domains, configure the subdomain in `caution.hcl`, then create a customer-owned CNAME pointing to the stable `DNS target` shown after deployment. Do not create an A record to the current Elastic IP. Caution manages the target's A record across IP changes but never creates or removes the customer CNAME. Normal destruction withdraws managed DNS and drains its 60-second TTL before releasing the IP; `--force-delete` may leave provider resources for operator reconciliation after DNS is safe.
 
+Each push after an app's first creates a candidate deployment on its own instance beside the live one. Verify it with `caution verify -d <deployment>`, release secrets with `caution secret send-shard -d <deployment>`, then make it live with `caution apps switch -d <deployment>`, which moves the app's stable IP and needs a passkey. Rolling back is a switch to the previous deployment; `caution apps destroy -d <deployment>` removes a non-live one.
+
 Current deployments pin the Platform framework archive in the response manifest. Manifestless local builds resolve the current Platform commit from `/.well-known/caution/build-inputs`; this public endpoint is operator-advertised state, not app-specific attested evidence. Current STEVE clients bound protocol response sizes and do not automatically retry ambiguous protected requests; callers must apply their own idempotency policy.
 
 ## Start here
@@ -22,6 +24,7 @@ Current deployments pin the Platform framework archive in the response manifest.
 ## How-to guides
 
 - Verify an app: https://docs.caution.co/guides/verify-an-app/
+- Deploy and roll back updates: https://docs.caution.co/guides/deploy-updates/
 - Add encrypted secrets: https://docs.caution.co/guides/add-encrypted-secrets/
 - Use STEVE clients: https://docs.caution.co/guides/use-steve-clients/
 - Containerize an app: https://docs.caution.co/guides/containerize-an-application/

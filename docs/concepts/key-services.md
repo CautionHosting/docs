@@ -147,7 +147,7 @@ Three separate PCR policies are involved. They are not interchangeable.
 | Policy | Approves | Where it lives |
 | --- | --- | --- |
 | Keymaker policy | The image allowed to generate bundles | `.caution/keymaker-pcr-policy.json`, packaged in your image |
-| Application measurements | The image allowed to receive shares | `.caution/trusted_hashes.json`, written by `caution verify` |
+| Application measurements | The image allowed to receive shares | `.caution/trusted_hashes.json`, written by `caution verify` (`.caution/deployments/<id>/` with `-d`) |
 | Key service policy | The image allowed to handle passkey releases | Saved by `caution verify --service key-service` |
 
 Establish each one from a verified build, never by copying values from the
@@ -158,7 +158,9 @@ endpoint being checked.
 - **Create a bundle once** and reuse it. A new bundle is a new key.
 - **Update a value** by re-encrypting it with the same bundle and redeploying.
 - **Every new enclave starts locked.** After a deploy or restart, holders release
-  their shares again. This needs neither Keymaker nor a new bundle.
+  their shares again: to a new deployment with `send-shard -d`, before
+  [switching](../guides/deploy-updates.md) it live. This needs neither Keymaker nor
+  a new bundle.
 - **Keep the bundle, its Keymaker policy and holder credentials.** If fewer than the
   threshold of holders can still approve, the encrypted values cannot be recovered.
 

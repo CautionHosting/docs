@@ -227,8 +227,8 @@ Use this only when e2e encryption is not feasible for your use case.
 The `domain` value configures HTTP and TLS routing, but it does not create a
 record in your DNS provider. After deployment, point a customer-owned CNAME at
 the stable `DNS target` shown by the CLI or dashboard. Do not point an A record
-directly at the current Elastic IP: the IP can change on redeployment while the
-managed target remains stable. See [Set up a custom domain](../guides/set-up-a-custom-domain.md)
+directly at the current Elastic IP: the IP can change during the app's lifecycle
+while the managed target remains stable. See [Set up a custom domain](../guides/set-up-a-custom-domain.md)
 for the complete DNS and lifecycle behavior.
 
 ## Reproducibility requirements

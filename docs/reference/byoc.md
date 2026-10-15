@@ -39,7 +39,7 @@ In bring your own compute, Caution runs the standard Docker application build an
 
 - Standard Docker application builds
 - Enclave lifecycle management
-- Deployment orchestration in your AWS account, including uploading EIFs to your S3 bucket, launch templates, and Elastic IP assignment
+- Deployment orchestration in your AWS account, including uploading EIFs to your S3 bucket, one EC2 instance per deployment, and moving the Elastic IP on each [switch](../guides/deploy-updates.md)
 - A stable Caution-managed DNS target that follows the app's current Elastic IP
 
 </div>
@@ -68,8 +68,8 @@ flowchart TB
     subgraph Aws["Your AWS account"]
         Iam["Scoped IAM user<br/>tag-limited permissions"]
         Env["Provisioned AWS environment<br/>VPC, S3, roles, launch template, ASG"]
-        Eip["Elastic IP<br/>assigned during deploy"]
-        Ec2["EC2 parent instance<br/>launched by ASG"]
+        Eip["Elastic IP<br/>held by the live deployment"]
+        Ec2["EC2 parent instance<br/>one per deployment"]
         Enclave["AWS Nitro Enclave<br/>application runtime"]
     end
 

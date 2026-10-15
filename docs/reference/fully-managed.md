@@ -28,6 +28,7 @@ Fully managed means Caution manages the enclave lifecycle and underlying infrast
 - Infrastructure and billing
 - Standard Docker application builds
 - Enclave lifecycle management
+- [Candidate deployments, switches and rollback](../guides/deploy-updates.md)
 - Network routing and public ingress
 - A stable managed DNS target that follows the app's current Elastic IP
 

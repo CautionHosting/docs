@@ -116,10 +116,11 @@ expire.
 
 !!! warning "Avoid repeated redeploys while HTTPS is failing"
     TLS certificate issuance is subject to certificate-authority rate limits.
-    A redeploy can request another certificate for the same hostname. Let's
+    Each switch to a deployment that has never been live requests another
+    certificate for the same hostname. Let's
     Encrypt currently permits five certificates for the same exact set of
     hostnames in seven days, refilling one every 34 hours. If DNS resolves but
-    HTTPS certificate setup fails, stop redeploying, check the
+    HTTPS certificate setup fails, stop redeploying and switching, check the
     [host Caddy logs](../reference/debug-enclave/running.md#inspect-enclave-startup)
     if debug access is already enabled, and wait until the reported retry time.
     Revoking old certificates does not reset the limit. See
@@ -127,9 +128,9 @@ expire.
 
 ## Redeployment, suspension, and destruction
 
-- **Redeploy:** The same app ID keeps the same `DNS target`. If redeployment
-  allocates a different Elastic IP, Caution updates the managed A record after
-  the new deployment is ready. Your CNAME does not change.
+- **Push and switch:** A push runs the new deployment beside the live one, and a
+  [switch](deploy-updates.md) moves the app's Elastic IP to it. The IP,
+  `DNS target` and your CNAME do not change.
 - **Suspend and resume:** Suspension retains the app's Elastic IP. Resumption
   normally reattaches it. If recovery produces a different IP, Caution checks
   readiness before publishing the change.

@@ -255,6 +255,8 @@ git push caution main
 
 Caution builds a reproducible enclave image with the standard Docker build and deploys it into the AWS environment you provisioned.
 
+The first push goes live. Later pushes run beside it until you switch to them: see [Deploy and roll back updates](../guides/deploy-updates.md).
+
 Deployment output includes a stable Caution-managed `DNS target`. If you
 configured a custom domain in `caution.hcl`, create a CNAME from that subdomain
 to the DNS target rather than an A record to the Elastic IP in your AWS account.
@@ -305,6 +307,12 @@ Your application is now running in a verified enclave in your own AWS account. H
     ---
 
     Run Caution enclaves in [your own AWS account](../reference/byoc.md).
+
+- :lucide-refresh-cw: **Deploy and roll back updates**
+
+    ---
+
+    Ship a [new version](../guides/deploy-updates.md) beside the live one, then switch.
 
 - :lucide-rocket: **Deployment configuration**
 
