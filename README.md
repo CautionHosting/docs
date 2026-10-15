@@ -1,3 +1,5 @@
+This repository may be mirrored on other Git forges. The [canonical repository](https://git.caution.co/public/docs) is hosted on git.caution.co. Please open issues and pull requests there.
+
 # Caution Documentation
 
 Documentation for [Caution](https://codeberg.org/caution), the verifiable confidential compute platform.
