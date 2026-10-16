@@ -18,12 +18,8 @@ Open http://localhost:5000. The server runs in your terminal, with local documen
 - `zensical.toml` — Site configuration and navigation. Add new pages to the navigation here.
 - `overrides/` — Custom theme templates.
 
-Run `make build-prod` to check that the site builds before submitting changes.
-
 ## Commands
 
-| Command | Description |
-| --- | --- |
-| `make dev` | Build and start the local development server |
-| `make down` | Stop the running development server from another terminal |
-| `make build-prod` | Build the site and package it in the production image |
+- `make dev` — Build and start the local development server.
+- `make down` — Stop the running development server from another terminal.
+- `make build-prod` — Build the site and package it in the production image.
