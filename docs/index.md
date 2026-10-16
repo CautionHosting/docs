@@ -14,7 +14,7 @@ Caution provides stronger software integrity and confidentiality assurances than
 
 - [x] **End-to-end encryption**: Requests protected by an active, correctly configured STEVE v2 client remain encrypted all the way into the enclave and are not exposed to untrusted infrastructure operators.
 
-Caution is fully open source, so teams can inspect, verify, and self-host the platform themselves. If you prefer to run the platform independently, see the [source code](https://codeberg.org/caution){:target="_blank"}.
+Caution is fully open source, so teams can inspect, verify, and self-host the platform themselves. If you prefer to run the platform independently, see the [source code](https://git.caution.co/public){:target="_blank"}.
 
 [Get started](./quickstart/), or learn more about Caution:
 

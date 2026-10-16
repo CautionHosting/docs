@@ -1,6 +1,6 @@
 # Caution Documentation
 
-Documentation for [Caution](https://codeberg.org/caution), the verifiable confidential compute platform.
+Documentation for [Caution](https://git.caution.co/public), the verifiable confidential compute platform.
 
 ## Development
 

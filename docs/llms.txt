@@ -48,7 +48,7 @@ Current deployments pin the Platform framework archive in the response manifest.
 
 ## Source
 
-- Caution source code: https://codeberg.org/caution
+- Caution source code: https://git.caution.co/public
 
 ## Related sites
 

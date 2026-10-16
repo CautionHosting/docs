@@ -24,7 +24,7 @@ Before you begin, ensure you have the following:
 |------------------|---------|
 | Access code | Request access at [info@caution.co](mailto:info@caution.co) |
 | Passkey | Browser or platform passkey, password manager passkey, or security key or smart card (YubiKey, NitroKey, or LibremKey) |
-| CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
+| CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://git.caution.co/public/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/){:target="_blank"}) |
 | Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} ([install](https://www.docker.com/){:target="_blank"}) |
 | Containerized app | Your application must be [containerized](../guides/containerize-an-application.md) |
@@ -36,7 +36,7 @@ Before you begin, ensure you have the following:
 Clone the platform repository and run the automatic installer:
 
 ```bash
-git clone https://codeberg.org/caution/platform
+git clone https://git.caution.co/public/platform
 cd platform
 make install-cli
 ```
@@ -44,7 +44,7 @@ make install-cli
 On every supported platform (Linux/x86_64 and macOS/arm64) this builds the CLI
 with your local host toolchain, after a one-time acknowledgement that the build
 is not reproducibility-verified. To build the reproducible StageX CLI instead,
-run `make install-cli-stagex` (Linux/x86_64 only). See the [CLI README](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}
+run `make install-cli-stagex` (Linux/x86_64 only). See the [CLI README](https://git.caution.co/public/platform/src/branch/main/src/cli/README.md){:target="_blank"}
 for explicit build targets and verification options.
 
 ## Create an account
@@ -83,10 +83,10 @@ Add an SSH key so you can authenticate your Caution deployments:
 
 ## Select an application
 
-Deploy your own [containerized application](../guides/containerize-an-application.md), or start with one of the [Caution demo apps](https://codeberg.org/caution){:target="_blank"}. For this guide, use hello-world-enclave:
+Deploy your own [containerized application](../guides/containerize-an-application.md), or start with one of the [Caution demo apps](https://git.caution.co/public){:target="_blank"}. For this guide, use hello-world-enclave:
 
 ```bash
-git clone https://codeberg.org/caution/demo-hello-world-enclave.git
+git clone https://git.caution.co/public/demo-hello-world-enclave.git
 cd demo-hello-world-enclave
 ```
 
@@ -125,7 +125,7 @@ For source verification, add your repository URL:
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/myorg/myapp"]
+    app_sources = ["https://git.example.com/myorg/myapp"]
   }
   unit "default" {
     command = "/app/server"

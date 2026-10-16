@@ -24,7 +24,7 @@ Before you begin, ensure you have the following:
 |------------------|---------|
 | Access code | Request access at [info@caution.co](mailto:info@caution.co) |
 | Passkey | Browser or platform passkey, password manager passkey, or security key or smart card (YubiKey, NitroKey, or LibremKey) |
-| CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
+| CLI | Supported today on Linux (x86_64) or macOS (arm64) ([install](https://git.caution.co/public/platform/src/branch/main/src/cli/README.md){:target="_blank"}) |
 | Git | For cloning and pushing repositories ([install](https://git-scm.com/){:target="_blank"}) |
 | Docker | With [containerd image store enabled](https://docs.docker.com/engine/storage/containerd/){:target="_blank"} ([install](https://www.docker.com/){:target="_blank"}) |
 | Containerized app | Your application must be [containerized](../guides/containerize-an-application.md) |
@@ -32,14 +32,14 @@ Before you begin, ensure you have the following:
 
 </div>
 
-AWS credentials should use a least-privilege IAM role when possible. Admin credentials can be used as an alternative. See [bring-your-own-cloud-setup](https://codeberg.org/caution/bring-your-own-cloud-setup) for guidance.
+AWS credentials should use a least-privilege IAM role when possible. Admin credentials can be used as an alternative. See [bring-your-own-compute-setup](https://git.caution.co/public/bring-your-own-compute-setup) for guidance.
 
 ## Install the CLI
 
 Clone the platform repository and run the automatic installer:
 
 ```bash
-git clone https://codeberg.org/caution/platform
+git clone https://git.caution.co/public/platform
 cd platform
 make install-cli
 ```
@@ -47,7 +47,7 @@ make install-cli
 On every supported platform (Linux/x86_64 and macOS/arm64) this builds the CLI
 with your local host toolchain, after a one-time acknowledgement that the build
 is not reproducibility-verified. To build the reproducible StageX CLI instead,
-run `make install-cli-stagex` (Linux/x86_64 only). See the [CLI README](https://codeberg.org/caution/platform/src/branch/main/src/cli/README.md){:target="_blank"}
+run `make install-cli-stagex` (Linux/x86_64 only). See the [CLI README](https://git.caution.co/public/platform/src/branch/main/src/cli/README.md){:target="_blank"}
 for explicit build targets and verification options.
 
 ## Create an account
@@ -86,10 +86,10 @@ Add an SSH key so you can authenticate your Caution deployments:
 
 ## Select an application
 
-Deploy your own [containerized application](../guides/containerize-an-application.md), or start with one of the [Caution demo apps](https://codeberg.org/caution){:target="_blank"}. For this guide, use hello-world-enclave:
+Deploy your own [containerized application](../guides/containerize-an-application.md), or start with one of the [Caution demo apps](https://git.caution.co/public){:target="_blank"}. For this guide, use hello-world-enclave:
 
 ```bash
-git clone https://codeberg.org/caution/demo-hello-world-enclave.git
+git clone https://git.caution.co/public/demo-hello-world-enclave.git
 cd demo-hello-world-enclave
 ```
 
@@ -119,7 +119,7 @@ sequenceDiagram
         Aws->>Aws: Create tagged resources, EC2 role,<br/>builder role, and scoped IAM user
         Local->>Caution: Create app and register scoped credentials automatically
     else Manual setup
-        Local->>Aws: Run bring-your-own-cloud-setup<br/>using AWS credentials
+        Local->>Aws: Run bring-your-own-compute-setup<br/>using AWS credentials
         Aws->>Aws: Create tagged resources, EC2 role,<br/>builder role, and scoped IAM user
         Local->>Local: Write encrypted credentials.json.gpg
         Local->>Caution: From app directory, run<br/>caution init --byoc --config …
@@ -192,8 +192,8 @@ Use this path if you want more control over the AWS infrastructure setup before 
 From a working directory, run:
 
 ```bash
-git clone https://codeberg.org/caution/bring-your-own-cloud-setup.git
-cd bring-your-own-cloud-setup
+git clone https://git.caution.co/public/bring-your-own-compute-setup.git
+cd bring-your-own-compute-setup
 
 cp .env.example .env
 # Edit .env with your AWS credentials
@@ -292,7 +292,7 @@ If setup used temporary role or SSO credentials, resolve and export them again u
 
 Run teardown from your application directory (or ensure local BYOC state exists in `~/.caution/<app>/bring-your-own-compute.json`). Deployments created by older CLI versions may use the legacy `bring-your-own-cloud.json` filename, which the current CLI also recognizes.
 
-If you need manual cleanup details, see the cleanup instructions in the [BYOC repo](https://codeberg.org/caution/bring-your-own-cloud-setup){:target="_blank"}.
+If you need manual cleanup details, see the cleanup instructions in the [BYOC repo](https://git.caution.co/public/bring-your-own-compute-setup){:target="_blank"}.
 
 ## Next steps
 

@@ -66,7 +66,7 @@ For public or non-sensitive configuration, such as ports, feature flags, or publ
 Keymaker is the setup-time component. It generates the initial quorum: a master secret split into shards, each encrypted to a shard-holder's OpenPGP key. Deploy it from the Locksmith repository before generating a quorum:
 
 ```bash
-git clone https://codeberg.org/caution/locksmith
+git clone https://git.caution.co/public/locksmith
 cd locksmith
 caution init
 git push caution main

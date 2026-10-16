@@ -16,7 +16,7 @@ The `Procfile` is a simple key-value configuration file that tells Caution how t
 ```yaml
 run: /app/server
 domain: your-domain.xyz
-app_sources: https://codeberg.org/myorg/myapp
+app_sources: https://git.example.com/myorg/myapp
 ```
 
 ## Fields
@@ -109,7 +109,7 @@ Use these examples as starting points. Port `3000` is only a placeholder; adjust
 ```yaml
 run: /app/server
 domain: api.example.com
-app_sources: https://codeberg.org/example/api
+app_sources: https://git.example.com/example/api
 ```
 
 ### With a custom Containerfile
@@ -139,7 +139,7 @@ run: /app/server --port 3000
 domain: secure.example.com
 e2e: true
 ports: 3000
-app_sources: https://codeberg.org/example/secure-app
+app_sources: https://git.example.com/example/secure-app
 ```
 
 Since only one port is specified, it is automatically used as the `http_port`.
@@ -153,7 +153,7 @@ run: /app/server --port 3000
 locksmith: true
 ports: 3000
 domain: secrets.example.com
-app_sources: https://codeberg.org/example/secret-app
+app_sources: https://git.example.com/example/secret-app
 ```
 
 Before deploying, generate a quorum, run `caution secret encrypt` to write

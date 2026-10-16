@@ -6,7 +6,7 @@ icon: lucide/bot
 
 <p class="docs-home-intro">Give your AI coding agent the skills it needs to write a <code>caution.hcl</code>, build reproducible images, and debug enclave deployments.</p>
 
-Caution publishes a set of [agent skills](https://codeberg.org/caution/agentic-skills){:target="_blank"} for [Claude Code](https://claude.com/claude-code){:target="_blank"} and [Codex](https://openai.com/codex){:target="_blank"}. Once installed, your agent knows how to package and debug an app for Caution and StageX without you having to paste in the docs.
+Caution publishes a set of [agent skills](https://git.caution.co/public/agentic-skills){:target="_blank"} for [Claude Code](https://claude.com/claude-code){:target="_blank"} and [Codex](https://openai.com/codex){:target="_blank"}. Once installed, your agent knows how to package and debug an app for Caution and StageX without you having to paste in the docs.
 
 Each skill is a `SKILL.md` — the format originated by Anthropic for Claude Code and now also read natively by Codex. Because the content is plain Markdown, it works with any agent: drop it into an `AGENTS.md`, `CLAUDE.md`, or your tool's equivalent if it doesn't support `SKILL.md` directly.
 
@@ -35,7 +35,7 @@ Reproducible, verifiable container images with [StageX](https://stagex.tools){:t
 ```bash
 for skill in caution-platform stagex-reproducible-builds; do
   mkdir -p ~/.claude/skills/$skill
-  curl -sL https://codeberg.org/caution/agentic-skills/raw/branch/main/$skill/SKILL.md \
+  curl -sL https://git.caution.co/public/agentic-skills/raw/branch/main/$skill/SKILL.md \
     -o ~/.claude/skills/$skill/SKILL.md
 done
 ```
@@ -45,7 +45,7 @@ done
 Clone the repo, then copy the skill folders into `~/.codex/skills` so Codex can discover both `SKILL.md` and `agents/openai.yaml`:
 
 ```bash
-git clone https://codeberg.org/caution/agentic-skills.git
+git clone https://git.caution.co/public/agentic-skills.git
 cd agentic-skills
 
 for skill in caution-platform stagex-reproducible-builds; do

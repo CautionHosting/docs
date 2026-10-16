@@ -4,9 +4,9 @@ site_name = "Caution Documentation"
 site_description = "Documentation for deploying, verifying, and managing confidential workloads with Caution."
 site_author = "Ksenia Lesko"
 site_url = "https://docs.caution.co/"
-repo_url = "https://codeberg.org/caution"
+repo_url = "https://git.caution.co/public"
 repo_name = "caution"
-edit_uri = "https://codeberg.org/caution/docs/src/branch/main/docs/"
+edit_uri = "https://git.caution.co/public/docs/src/branch/main/docs/"
 copyright = """
 Copyright &copy; 2026 Caution SEZC
 """
@@ -297,7 +297,7 @@ toggle.name = "Switch to light mode"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/git-alt"
-link = "https://codeberg.org/caution"
+link = "https://git.caution.co/public"
 
 [[project.extra.social]]
 icon = "fontawesome/brands/mastodon"

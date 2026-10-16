@@ -24,7 +24,7 @@ Browser attestation does not authenticate the sibling response manifest, reprodu
 
 You need:
 
-- The [Caution CLI](https://codeberg.org/caution/platform/src/branch/main/src/cli){:target="_blank"} and [Docker](https://www.docker.com/){:target="_blank"} installed
+- The [Caution CLI](https://git.caution.co/public/platform/src/branch/main/src/cli){:target="_blank"} and [Docker](https://www.docker.com/){:target="_blank"} installed
 - A deployed Caution app running outside debug mode
 - The app's attestation endpoint, or a local Caution deployment state in the app directory
 - Access to the source used to build the app, unless you are verifying against a known PCR file
@@ -42,7 +42,7 @@ If you operate the app and want third parties to verify it from the remote manif
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/example/myapp"]
+    app_sources = ["https://git.example.com/example/myapp"]
   }
   network {
     ingress {
@@ -95,7 +95,7 @@ Choose the mode that matches the source access you have.
 |-----------|---------|
 | You have the app repository checked out locally | `caution verify` |
 | You have the app repository and an explicit endpoint | `caution verify --attestation-url http://<host>/attestation` |
-| You have a Git URL instead of a local checkout | `caution verify --app-source-url git@codeberg.org:org/app.git` |
+| You have a Git URL instead of a local checkout | `caution verify --app-source-url git@git.example.com:org/app.git` |
 | You have an exact source archive | `caution verify --from-tarball source.tar.gz` |
 | You already have expected PCR values | `caution verify --pcrs pcrs.txt` |
 | You want to force a fresh local rebuild | `caution verify --no-cache` |

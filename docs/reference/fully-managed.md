@@ -62,7 +62,7 @@ enclave "main" {
 # Example with source verification enabled
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/myorg/myapp"]
+    app_sources = ["https://git.example.com/myorg/myapp"]
   }
   unit "default" {
     command = "/app/server"

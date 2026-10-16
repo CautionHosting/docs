@@ -18,7 +18,7 @@ When both `caution.hcl` and a [`Procfile`](procfile.md) are present, Caution use
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/myorg/myapp"]
+    app_sources = ["https://git.example.com/myorg/myapp"]
   }
 
   network {
@@ -92,7 +92,7 @@ unit "default" {
 ```hcl
 build {
   containerfile = "deploy/Containerfile"
-  app_sources   = ["https://codeberg.org/myorg/myapp"]
+  app_sources   = ["https://git.example.com/myorg/myapp"]
   cache         = true
 }
 ```
@@ -308,7 +308,7 @@ Use these examples as starting points. Adjust commands, ports, and domains to ma
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/example/api"]
+    app_sources = ["https://git.example.com/example/api"]
   }
   network {
     ingress {
@@ -373,7 +373,7 @@ Port 8232 (RPC) is reverse-proxied through Caddy with TLS on port 443. Port 8233
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/example/secure-app"]
+    app_sources = ["https://git.example.com/example/secure-app"]
   }
   network {
     ingress {
@@ -402,7 +402,7 @@ enclave "main" {
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/example/secret-app"]
+    app_sources = ["https://git.example.com/example/secret-app"]
   }
   network {
     ingress {

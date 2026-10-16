@@ -160,7 +160,7 @@ docker run --rm \
 
 ### Cleanup
 
-To remove all resources created by the setup, see the cleanup instructions in the [BYOC repo](https://codeberg.org/caution/bring-your-own-cloud-setup){:target="_blank"}.
+To remove all resources created by the setup, see the cleanup instructions in the [BYOC repo](https://git.caution.co/public/bring-your-own-compute-setup){:target="_blank"}.
 
 ## See also
 

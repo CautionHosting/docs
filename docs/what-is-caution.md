@@ -106,7 +106,7 @@ Caution is designed to turn confidential compute into verifiable compute by addi
 
 This lets verifiers evaluate the source and build process behind a running enclave, not only the binary measurements reported by hardware attestation.
 
-Caution is [fully open source](https://codeberg.org/caution){:target="_blank"}, so teams can inspect the platform, understand the verification path, and self-host it if they want to operate deployments independently.
+Caution is [fully open source](https://git.caution.co/public){:target="_blank"}, so teams can inspect the platform, understand the verification path, and self-host it if they want to operate deployments independently.
 
 Caution turns verification into a developer workflow. Teams deploy with familiar Git-based workflows, expose attestation endpoints, and let verifiers reproduce enclave images locally.
 

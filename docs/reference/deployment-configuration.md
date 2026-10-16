@@ -13,7 +13,7 @@ To enable third-party verification and reproducibility of your deployment, you m
 ```hcl
 enclave "main" {
   build {
-    app_sources = ["https://codeberg.org/myorg/myapp"]
+    app_sources = ["https://git.example.com/myorg/myapp"]
   }
 }
 ```
@@ -195,7 +195,7 @@ In the raw-IP flow, DNS must contain that IP. The CLI then makes a hostname-vali
 
 The certificate publisher checks for changes every 60 seconds, so remain fail-closed during a renewal mismatch and retry after the next update. Do not use `--pcrs` for this check: it intentionally verifies only PCRs and persists no TLS binding.
 
-For continuous enforcement, [Caution Canary](https://codeberg.org/caution/canary){:target="_blank"} supports an Attested TLS profile configured with `--e2e-mode tls`. It enforces expected PCRs and compares the authenticated fingerprint with the leaf certificate observed on the same TLS connection carrying the `/attestation` response.
+For continuous enforcement, [Caution Canary](https://git.caution.co/public/canary){:target="_blank"} supports an Attested TLS profile configured with `--e2e-mode tls`. It enforces expected PCRs and compares the authenticated fingerprint with the leaf certificate observed on the same TLS connection carrying the `/attestation` response.
 
 ### Direct port exposure
 

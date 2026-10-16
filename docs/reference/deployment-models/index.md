@@ -10,7 +10,7 @@ icon: lucide/layers-3
 
 Caution runs on AWS Nitro Enclaves and supports multiple deployment options depending on how much infrastructure ownership and operational control you want.
 
-Use [fully managed](../fully-managed.md) for the fastest path to production on Caution-managed infrastructure, or [bring your own compute](../byoc.md) when workloads and data must stay in your AWS account. If you want to operate the platform yourself, self-host using the [Caution source code on Codeberg](https://codeberg.org/caution){:target="_blank"}.
+Use [fully managed](../fully-managed.md) for the fastest path to production on Caution-managed infrastructure, or [bring your own compute](../byoc.md) when workloads and data must stay in your AWS account. If you want to operate the platform yourself, self-host using the [Caution source code](https://git.caution.co/public){:target="_blank"}.
 
 | Model | Hosted in | Caution manages | You manage |
 |-------|-----------|-----------------|------------|
@@ -40,7 +40,7 @@ Caution is fully open source, and you can self-host the platform if you want to 
 
 - Start here if you need full platform control or want to run the system yourself.
 - Self-hosting is not part of the guided quickstart flow today.
-- See the [Caution source code on Codeberg](https://codeberg.org/caution){:target="_blank"} to explore the platform.
+- See the [Caution source code](https://git.caution.co/public){:target="_blank"} to explore the platform.
 
 ## Which should you choose?
 
