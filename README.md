@@ -1,28 +1,29 @@
 # Caution Documentation
 
-Documentation for [Caution](https://git.caution.co/public), the verifiable confidential compute platform.
+Source for [Caution’s documentation](https://docs.caution.co), built with [Zensical](https://zensical.org). Caution is a verifiable confidential compute platform.
 
-## Development
+## Local development
 
-### Prerequisites
-
-- Docker
-
-### Local development
+Requires Docker and Make. Run from the repository root:
 
 ```bash
-# Start the development server
 make dev
 ```
 
-The site will be available at `http://localhost:5000`. Changes to `docs/`, `overrides/`, and `zensical.toml` are mounted as volumes and will be reflected automatically.
+Open http://localhost:5000. The server runs in your terminal, with local documentation, theme overrides, and configuration mounted into the container for live preview.
 
-### Other commands
+## Editing
 
-```bash
-# Stop the development server
-make down
+- `docs/` — Markdown pages, images, and custom CSS and JavaScript.
+- `zensical.toml` — Site configuration and navigation. Add new pages to the navigation here.
+- `overrides/` — Custom theme templates.
 
-# Rebuild the Docker image and remove old artifacts
-make clean
-```
+Run `make build-prod` to check that the site builds before submitting changes.
+
+## Commands
+
+| Command | Description |
+| --- | --- |
+| `make dev` | Build and start the local development server |
+| `make down` | Stop the running development server from another terminal |
+| `make build-prod` | Build the site and package it in the production image |
