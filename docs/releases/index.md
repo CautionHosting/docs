@@ -1,7 +1,5 @@
 # Releases
 
-Platform changes and upgrade requirements. Entries marked **Upcoming** describe
-merged development, not changes already available in production.
+Platform changes and upgrade requirements.
 
-- [Blue-green deployments and quorum recovery](platform-ef44178e.md) — **Upcoming**,
-  covering `d0f3ca9` → `1fad4127`.
+- [2026-10-20](platform-ef44178e.md)

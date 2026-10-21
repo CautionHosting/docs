@@ -55,7 +55,7 @@ nav = [
 ]},
 { "Releases" = [
 "releases/index.md",
-{ "Upcoming platform update" = "releases/platform-ef44178e.md" },
+{ "2026-10-20" = "releases/platform-ef44178e.md" },
 ]},
 ]
 

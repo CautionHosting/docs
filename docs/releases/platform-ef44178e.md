@@ -1,9 +1,8 @@
-# Blue-green deployments and quorum recovery
+# 2026-10-20
 
-**Status: Upcoming.** These notes cover merged development changes from
+These notes cover changes from
 [`d0f3ca9`](https://git.caution.co/public/platform/commit/d0f3ca9ba594705324caccc69a57f31c115041fa)
-through [`1fad4127`](https://git.caution.co/public/platform/commit/1fad41270748eff75de9027b6469b5c4135b7acf),
-not a production rollout announcement.
+through [`1fad4127`](https://git.caution.co/public/platform/commit/1fad41270748eff75de9027b6469b5c4135b7acf).
 
 ## Features and improvements
 
