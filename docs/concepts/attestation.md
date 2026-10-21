@@ -87,7 +87,7 @@ Most solutions today are based on a single confidential compute technology. Usin
 
 ### Multi-hardware trust solution
 
-To address the risk of rooting trust in a single hardware vendor, along with inherited risks across software, firmware, hardware supply chains, and operational practices, the team behind Caution designed [EnclaveOS](https://git.distrust.co/public/enclaveos){:target="_blank"}. Caution currently supports AWS Nitro Enclaves, and a new version of EnclaveOS with multi-hardware support is in active development. You can learn more in [this blog post](https://distrust.co/blog/enclaveos.html){:target="_blank"}.
+To address the risk of rooting trust in a single hardware vendor, along with inherited risks across software, firmware, hardware supply chains, and operational practices, the team behind Caution designed [EnclaveOS](https://git.caution.co/public/enclaveos){:target="_blank"}. Caution currently supports AWS Nitro Enclaves, and a new version of EnclaveOS with multi-hardware support is in active development. You can learn more in [this blog post](https://distrust.co/blog/enclaveos.html){:target="_blank"}.
 
 This OS is designed to leverage multiple attestation technologies for a single workload, requiring all of them to agree on the workload state before its integrity is considered intact. This hardware-level distribution of trust is unique to Caution and EnclaveOS at the time of writing.
 

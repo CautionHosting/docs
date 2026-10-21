@@ -204,7 +204,7 @@ accepted, unexpired session; an expiry-triggered request does not fall back to
 it. Client methods reject with `SteveError`, which exposes machine-readable
 `code` and `stage`, a diagnostic `message`, and optional `httpStatus`. Handle
 unknown future codes, do not parse `message`, and see the
-[browser SDK API reference](https://git.distrust.co/public/steve/src/branch/main/steve-js-sdk/README.md#client-api){:target="_blank"}
+[browser SDK API reference](https://git.caution.co/public/steve/src/branch/main/steve-js-sdk/README.md#user-content-client-api){:target="_blank"}
 for the stable codes.
 
 ## Use the STEVE CLI
@@ -287,7 +287,7 @@ When consuming the SDK from Git, pin a reviewed STEVE commit rather than a float
 hex = "0.4"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-steve-sdk = { git = "https://git.distrust.co/public/steve", rev = "<reviewed-steve-commit>" }
+steve-sdk = { git = "https://git.caution.co/public/steve", rev = "<reviewed-steve-commit>" }
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 ```
 
@@ -373,7 +373,7 @@ exchange receipt. Rust continues to own networking, Nitro verification,
 protocol state, cryptography, session keys, and Tokio execution.
 
 Consume the facade from a reviewed STEVE commit and follow its
-[generation, linking, and TOFU callback contract](https://git.distrust.co/public/steve/src/branch/main/crates/steve-sdk-uniffi/README.md){:target="_blank"}.
+[generation, linking, and TOFU callback contract](https://git.caution.co/public/steve/src/branch/main/crates/steve-sdk-uniffi/README.md){:target="_blank"}.
 The current facade does not provide an XCFramework, SwiftPM, or CocoaPods
 package. The application owns Apple packaging and must implement the synchronous,
 thread-safe TOFU callback with atomic durable storage, such as an appropriately
@@ -389,4 +389,4 @@ be linked into a release application.
 - [End-to-end encryption](../concepts/encryption.md)
 - [Deployment configuration](../reference/deployment-configuration.md#steve-end-to-end-encryption-recommended)
 - [Verify an app](verify-an-app.md)
-- [STEVE source and protocol](https://git.distrust.co/public/steve){:target="_blank"}
+- [STEVE source and protocol](https://git.caution.co/public/steve){:target="_blank"}

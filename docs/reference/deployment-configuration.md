@@ -39,7 +39,7 @@ outbound tunnel; restricted egress needs explicit permission for DNS when used.
 
 ### STEVE end-to-end encryption (recommended)
 
-For full security, enable end-to-end encryption using [STEVE (Secure Transport Encryption via Enclave)](https://git.distrust.co/public/steve){:target="_blank"}. Add an `e2e_encryption` block inside `http`:
+For full security, enable end-to-end encryption using [STEVE (Secure Transport Encryption via Enclave)](https://git.caution.co/public/steve){:target="_blank"}. Add an `e2e_encryption` block inside `http`:
 
 ```hcl
 network {
