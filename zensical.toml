@@ -53,6 +53,10 @@ nav = [
 { "Bring your own compute" = "reference/byoc.md" },
 ]},
 ]},
+{ "Releases" = [
+"releases/index.md",
+{ "Upcoming platform update" = "releases/platform-ef44178e.md" },
+]},
 ]
 
 
