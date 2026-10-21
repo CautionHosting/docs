@@ -64,18 +64,18 @@ const configureMermaid = () => {
 };
 
 const prepareMermaidNodes = () => {
-  for (const code of document.querySelectorAll("pre code.language-mermaid")) {
-    const pre = code.closest("pre");
-    if (!pre || pre.dataset.mermaidPrepared === "true") continue;
-
-    const source = code.textContent || "";
+  // Replace code blocks so the theme cannot display or add copy controls to them.
+  for (const pre of document.querySelectorAll(
+    "pre.mermaid, pre:has(code.language-mermaid)"
+  )) {
+    const code = pre.querySelector("code");
+    const source = code?.textContent || pre.textContent || "";
     const output = document.createElement("div");
     output.className = "mermaid";
     output.textContent = source;
     output.dataset.mermaidSource = source;
 
-    pre.insertAdjacentElement("afterend", output);
-    pre.dataset.mermaidPrepared = "true";
+    pre.replaceWith(output);
   }
 
   for (const node of document.querySelectorAll(".mermaid")) {
@@ -119,11 +119,6 @@ const renderMermaid = async () => {
 
   for (const node of nodes) {
     node.dataset.mermaidRendered = "true";
-
-    const pre = node.previousElementSibling;
-    if (pre?.dataset.mermaidPrepared === "true") {
-      pre.hidden = true;
-    }
   }
 };
 

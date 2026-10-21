@@ -85,6 +85,16 @@
   transform-origin: center;
 }
 
+/* Keep diagram source out of view while Mermaid loads or re-renders. */
+.md-typeset pre.mermaid,
+.md-typeset pre:has(code.language-mermaid) {
+  display: none;
+}
+
+.md-typeset .mermaid:not([data-mermaid-rendered="true"]) {
+  visibility: hidden;
+}
+
 .md-typeset .mermaid {
   margin: 1.25rem 0;
   overflow-x: auto;
