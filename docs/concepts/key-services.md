@@ -27,25 +27,16 @@ The bundle contains only public keys and encrypted shares, so it is safe to comm
 Keymaker never sees your secret values.
 
 <pre><code class="language-mermaid">flowchart TB
-    UI["Dashboard or CLI"] --&gt; Platform["Platform"]
-    PGP["External PGP public keys"] --&gt; Platform
-    Platform --&gt;|"Passkey holders only"| Certificates["Certificate service"]
-    Certificates --&gt;|"Certified public keys and proof"| Platform
-    Platform --&gt; Hosted["Hosted Keymaker"]
-    Manual["CLI and PGP public keys"] --&gt; Own["Self-hosted Keymaker"]
-    Hosted --&gt; Bundle["Proofed quorum bundle"]
-    Own --&gt; Bundle
-    Bundle --&gt; Encrypt["Local CLI encrypts application values"]
-    Encrypt --&gt; Image["App image: bundle, policy, ciphertext"]
-    Image --&gt; App["Application enclave: Locksmith"]
-    PGPHolder["PGP holder: private key or smartcard"] --&gt;|"Verified destination; signed share"| App
-    Passkey["Passkey holder approval"] --&gt; Recryptor["Recryptor"]
-    Recryptor --&gt;|"Verified destination; re-encrypted share"| App
-    subgraph Custody["Caution key service enclave"]
-        Certificates
-        Recryptor
-    end
-    App --&gt;|"Quorum reached"| Run["Decrypt secrets and start application"]
+    Keymaker["Keymaker creates a quorum bundle"]
+    Encrypt["You encrypt secrets locally"]
+    Enclave["Application enclave waits for shares"]
+    Holders["Holders verify the enclave"]
+    Run["Decrypt secrets and start application"]
+
+    Keymaker --&gt;|"Bundle"| Encrypt
+    Encrypt --&gt;|"Deploy bundle, policy and ciphertext"| Enclave
+    Holders --&gt;|"Release shares"| Enclave
+    Enclave --&gt;|"Quorum reached"| Run
 </code></pre>
 
 Public configuration such as ports or feature flags needs none of this. See
@@ -108,6 +99,42 @@ Used only for passkey holders. Caution runs two parts in one enclave:
   re-encrypts it to the enclave. Each approval releases one share, once.
 
 Derived private keys never leave the key service.
+
+<pre><code class="language-mermaid">flowchart TB
+    subgraph Setup["Quorum setup"]
+        direction LR
+        Platform["Dashboard or CLI&lt;br/&gt;via Platform"]
+        Keymaker["Hosted Keymaker"]
+        Bundle["Quorum bundle&lt;br/&gt;encrypted shares + public keys"]
+
+        Platform --&gt; Keymaker
+        Keymaker --&gt; Bundle
+    end
+
+    subgraph Managed["Managed key service enclave"]
+        direction LR
+        Certificates["Certificate service&lt;br/&gt;derive holder keys"]
+        Recryptor["Recryptor&lt;br/&gt;check approval + attestation"]
+    end
+
+    subgraph Enclave["Application enclave"]
+        direction LR
+        Locksmithd["locksmithd"]
+        Secrets["Decrypt secrets"]
+        App["Application process"]
+
+        Locksmithd --&gt;|quorum reached| Secrets
+        Secrets --&gt; App
+    end
+
+    Platform --&gt;|passkey holders| Certificates
+    Certificates --&gt;|public certificates + proof| Platform
+    Holder["Holder passkey approval"] --&gt; Recryptor
+    Bundle --&gt;|encrypted holder share| Recryptor
+    Locksmithd --&gt;|attestation + ephemeral key| Recryptor
+    Recryptor --&gt;|share encrypted to app enclave| Locksmithd
+    PGP["External PGP holder&lt;br/&gt;(optional)"] --&gt;|signed, encrypted share| Locksmithd
+</code></pre>
 
 ### Locksmith
 
