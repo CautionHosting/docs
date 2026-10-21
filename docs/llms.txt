@@ -50,6 +50,10 @@ Current deployments pin the Platform framework archive in the response manifest.
 - Fully managed: https://docs.caution.co/reference/fully-managed/
 - Bring your own compute: https://docs.caution.co/reference/byoc/
 
+## Releases
+
+- Platform release notes and upgrade requirements: https://docs.caution.co/releases/
+
 ## Source
 
 - Caution source code: https://git.caution.co/public
