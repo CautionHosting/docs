@@ -54,7 +54,9 @@ e2e_encryption {
 }
 ```
 
-This forwards ordinary application requests without STEVE's application-layer encryption. Use it only for a bounded migration, then remove the option and redeploy. It does not change E2P behavior.
+This forwards ordinary application requests without STEVE's application-layer encryption. Use it only for a bounded migration, then remove the option, redeploy and activate
+the new deployment. Retained deployments keep their original routing policy. It
+does not change E2P behavior.
 
 Deploy the application after changing the configuration:
 
@@ -64,11 +66,15 @@ git push caution main
 
 ## Establish trusted PCRs
 
-Verify the deployed application from its repository:
+For an app on the `deployments` lifecycle, verify the selected deployment from its
+repository before switching live traffic:
 
 ```bash
-caution verify
+caution verify -d <deployment>
 ```
+
+Use bare `caution verify` for a legacy app or an app with only one running deployment.
+It refuses to choose when multiple deployments are running.
 
 For a remote application, provide its attestation endpoint:
 
@@ -76,7 +82,16 @@ For a remote application, provide its attestation endpoint:
 caution verify --attestation-url https://secure.example.com/attestation
 ```
 
-A successful verification writes the independently reproduced PCR0, PCR1, and PCR2 values to `.caution/trusted_hashes.json`. Existing trusted state is backed up before replacement.
+Successful deployment-targeted verification writes the independently reproduced
+PCR0, PCR1, and PCR2 values to
+`.caution/deployments/<deployment-id>/trusted_hashes.json`. Bare verification and
+explicit endpoint verification use `.caution/trusted_hashes.json`. Existing trusted
+state is backed up before replacement.
+
+Before a PCR-changing cutover, distribute an updated client PCR policy through an
+authenticated channel. Release any required secrets, test the candidate with STEVE,
+then [switch live](deploy-updates.md). Retain the previous deployment's approved PCR
+profile if rollback must remain available to pinned clients.
 
 The file establishes which workload a pinned client accepts. Review and distribute it through an authenticated channel. Do not bootstrap expected PCRs from the same untrusted endpoint response without reproducing and verifying the deployment.
 
@@ -200,19 +215,25 @@ From a reviewed STEVE checkout containing `steve-cli`, build it with:
 cargo build --release -p steve-cli
 ```
 
-Make a GET request with a pinned Caution trusted-state file:
+Make a GET request with the selected deployment's Caution trusted-state file.
+Replace `<deployment-id>` with the canonical ID in the path printed by
+`caution verify -d`. If you used bare or explicit-endpoint verification instead,
+use its `.caution/trusted_hashes.json` path:
 
 ```bash
 ./target/release/steve-cli \
-  --pcrs /path/to/.caution/trusted_hashes.json \
+  --pcrs "/path/to/.caution/deployments/<deployment-id>/trusted_hashes.json" \
   https://secure.example.com/api/secret
 ```
 
-With no trust option, the CLI reads `.caution/trusted_hashes.json` from the current directory. A request without a body uses GET. `--data` or `--json` uses POST:
+With no trust option, the CLI reads `.caution/trusted_hashes.json` from the current
+directory; it does not discover deployment-specific files. After `caution verify -d`,
+pass the selected file explicitly rather than accidentally using another deployment's
+checkout-level trust. A request without a body uses GET. `--data` or `--json` uses POST:
 
 ```bash
 ./target/release/steve-cli \
-  --pcrs /path/to/.caution/trusted_hashes.json \
+  --pcrs "/path/to/.caution/deployments/<deployment-id>/trusted_hashes.json" \
   --json '{"action":"status"}' \
   https://secure.example.com/api/command
 ```
@@ -270,7 +291,10 @@ steve-sdk = { git = "https://git.distrust.co/public/steve", rev = "<reviewed-ste
 tokio = { version = "1", features = ["macros", "rt-multi-thread"] }
 ```
 
-Load the Caution trusted-state file, establish an attested session, and send a protected request:
+Load the selected deployment's Caution trusted-state file, establish an attested
+session, and send a protected request. Replace `<deployment-id>` with the canonical
+ID from verification, or use `.caution/trusted_hashes.json` only when that is the
+file produced by the verification you intend to trust:
 
 ```rust
 use serde::Deserialize;
@@ -294,7 +318,7 @@ fn load_pcrs(path: &str) -> Result<ExpectedPcrs, Box<dyn std::error::Error>> {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let expected = load_pcrs(".caution/trusted_hashes.json")?;
+    let expected = load_pcrs(".caution/deployments/<deployment-id>/trusted_hashes.json")?;
     let client = Client::new("https://secure.example.com", expected).await?;
     let attestation = client.verify_attestation().await?;
     eprintln!("PCR trust: {:?}", attestation.pcr_trust);

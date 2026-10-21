@@ -12,7 +12,7 @@ Make sure:
 
 - Your app is deployed.
 - You can redeploy after enabling the `debug` block or adding `ssh_keys`.
-- You know the public IP address of the EC2 instance running the enclave.
+- You know the public IP address of the EC2 instance running the enclave. `caution apps get -d <deployment>` shows it for each deployment.
 - SSH access is to the **host** EC2 instance, not the enclave itself.
 
 !!! tip "Using an AI coding agent?"
@@ -42,7 +42,10 @@ enclave "main" {
 
 Debug mode passes `--debug-mode` to `nitro-cli run-enclave`, which allows you to read the enclave's console output. The tradeoff is that AWS zeros out all PCR values in debug mode, so `caution verify` will refuse to attest the enclave. **Do not use debug mode in production.**
 
-Redeploy after changing the `debug` block.
+Redeploy after changing the `debug` block. On the `deployments` lifecycle, a debug
+candidate does not alter an existing live deployment. If nothing is live, however,
+successful startup can activate the debug deployment automatically. Use a separate
+test app or otherwise isolate it from production traffic.
 
 ### Add SSH access to the host
 
@@ -67,7 +70,11 @@ ssh_keys = [
 Adding `ssh_keys` automatically opens port 22 in the instance's security group.
 
 !!! danger "Do not leave SSH enabled in production"
-    SSH access and debug mode should only be used during development and testing. Before deploying to production, remove the `debug` block from your `caution.hcl`. Leaving SSH open exposes port 22 to the internet, and debug mode disables attestation verification. Both reduce the overall security of the system.
+    SSH access and debug mode should only be used during development and testing.
+    Remove the `debug` block for new production deployments and explicitly destroy
+    retained debug deployments afterward. Editing the file does not close SSH or
+    disable debug mode on existing instances. Leaving SSH open exposes port 22 to
+    the internet, and debug mode disables attestation verification.
 
 ## Connect to the host
 
@@ -116,6 +123,10 @@ sudo cat /var/log/user-data.log
 
     For a STEVE deployment, the application HTTP port is intentionally enclave-local and has no `vsock-proxy-<app-port>.service`. Check `vsock-proxy-49500.service` and Caddy instead. Attested TLS similarly keeps the application port inside the enclave and forwards port `443`.
 
+    With Attested TLS, host Caddy handles HTTP routing, not TLS certificate issuance.
+    Certificate issuance runs inside the enclave. Enclave console output is available
+    only in debug mode; do not weaken a production deployment merely to collect logs.
+
 ## Read enclave console output
 
 If debug mode is enabled, stream the enclave's stdout/stderr:
@@ -152,13 +163,28 @@ Before returning the app to production, remove the `debug` block from `caution.h
 # Remove the entire debug { } block, including ssh_keys
 ```
 
-Redeploy after removing debug access, then run:
+Commit the production-mode configuration and deploy it. On the `deployments`
+lifecycle, verify the new deployment, release any required secret shares, and
+activate it if the old deployment is still live:
 
 ```bash
-caution verify
+caution verify -d <production-deployment>
+# Only if encrypted secrets are configured:
+caution secret send-shard -d <production-deployment>
+# Only if the new deployment is not already live:
+caution apps switch -d <production-deployment>
 ```
 
-Verification should only be run against a production-mode enclave. Debug mode zeros out PCR values, so `caution verify` will fail while debug mode is enabled.
+Check production behavior, then explicitly remove each retained debug deployment:
+
+```bash
+caution apps destroy -d <debug-deployment>
+```
+
+Confirm cleanup completed. Removing the `debug` block and pushing alone leaves
+existing debug/SSH-enabled instances unchanged. Legacy apps replace the deployment;
+verify the replacement and confirm the old debug instance is gone there too.
+Verification must target a production-mode enclave: debug mode zeros out PCR values.
 
 ## Test locally with QEMU
 
@@ -312,4 +338,5 @@ Symptoms include `caution verify` failing with:
 
 Debug mode zeros out PCR values, so attestation cannot be verified while debug mode is enabled.
 
-Clean up debug access, redeploy, and verify again.
+Follow [Clean up debug access](#clean-up-debug-access): verify the production-mode
+replacement, activate it, and explicitly remove retained debug instances.

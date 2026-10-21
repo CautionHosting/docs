@@ -21,6 +21,10 @@ Write the Caution `caution.hcl`, and deploy or debug enclave apps locally and on
 - Attestation endpoint testing (`/attestation` request format, expected errors)
 - Production health check failures, SSH debug mode, vsock and service logs
 
+For example:
+
+> Configure `DATABASE_URL` as an encrypted secret using the [Add encrypted secrets guide](add-encrypted-secrets.md). Reuse the existing quorum bundle if present, package the required policy and ciphertext, and document verification and holder approval.
+
 ### `stagex-reproducible-builds`
 
 Reproducible, verifiable container images with [StageX](https://stagex.tools){:target="_blank"}.
@@ -69,6 +73,12 @@ done
     ---
 
     Configure how your application [runs on Caution](../reference/caution-hcl.md).
+
+- :lucide-key-round: **Add encrypted secrets**
+
+    ---
+
+    Configure [encrypted secrets and holder approvals](add-encrypted-secrets.md).
 
 - :lucide-bug: **Debug an enclave**
 

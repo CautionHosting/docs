@@ -22,11 +22,12 @@ A CNAME is a DNS alias, not an HTTP redirect. Requests continue to use
 `api.yourdomain.com`; DNS resolves that name through the managed target to the
 current app IP.
 
-Setting up a custom domain involves three steps:
+Setting up a custom domain involves these steps:
 
 1. Configure the custom hostname in `caution.hcl`.
 2. Deploy the app and copy its `DNS target`.
 3. Create a customer-owned CNAME pointing to that target.
+4. Verify and activate the deployment, then check DNS and HTTPS.
 
 !!! warning "This CNAME flow requires a subdomain"
     DNS standards do not allow a conventional CNAME at a zone apex such as
@@ -56,7 +57,7 @@ routing recognizes it. DNS alone does not configure application routing.
 
 ## Step 2: Deploy and get the DNS target
 
-Deploy or redeploy after changing `caution.hcl`:
+Commit the `caution.hcl` change, then deploy it:
 
 ```bash
 git push caution main
@@ -79,7 +80,8 @@ DNS target: <app-id>.apps.caution.sh
 Managed DNS: ready
 ```
 
-Wait for `Managed DNS: ready` before depending on the target. The output may
+`Managed DNS: ready` describes DNS publication, not application or TLS readiness.
+Wait for it before depending on the target. The output may
 also show the current public IP for diagnostics, but do not create a customer A
 record for that IP. The IP can change during the app lifecycle while the DNS
 target remains stable.
@@ -99,9 +101,25 @@ represent the same DNS name.
 Caution does not create, modify, or delete this record. It manages only the A
 record for the displayed `DNS target`.
 
-## Step 4: Verify DNS and HTTPS
+## Step 4: Verify, activate, and check HTTPS
 
-After your DNS provider publishes the CNAME, verify the complete chain:
+On the `deployments` lifecycle, changing the hostname and pushing creates a candidate
+if another deployment is live. The live deployment keeps its old routing until you
+[verify, release secrets, test and switch](deploy-updates.md):
+
+```sh
+caution verify -d <deployment>
+# If the app needs encrypted secrets, each holder releases a share:
+caution secret send-shard -d <deployment>
+caution apps switch -d <deployment>
+```
+
+If nothing is live, successful startup activates the deployment automatically, so
+no switch is needed. Legacy apps use replacement deployment instead. With Attested
+TLS, verify PCRs before switching and repeat verification after HTTPS becomes
+available to check the certificate binding.
+
+After activation and DNS publication, verify the complete chain:
 
 ```bash
 dig CNAME api.yourdomain.com +short
@@ -116,20 +134,24 @@ expire.
 
 !!! warning "Avoid repeated redeploys while HTTPS is failing"
     TLS certificate issuance is subject to certificate-authority rate limits.
-    A redeploy can request another certificate for the same hostname. Let's
+    A fresh host or enclave can need a new certificate for the same hostname. Let's
     Encrypt currently permits five certificates for the same exact set of
     hostnames in seven days, refilling one every 34 hours. If DNS resolves but
-    HTTPS certificate setup fails, stop redeploying, check the
-    [host Caddy logs](../reference/debug-enclave/running.md#inspect-enclave-startup)
+    HTTPS certificate setup fails, stop redeploying and switching, check the
+    mode-appropriate [startup logs](../reference/debug-enclave/running.md#inspect-enclave-startup)
     if debug access is already enabled, and wait until the reported retry time.
+    Host TLS issuance appears in host Caddy logs; Attested TLS issuance happens
+    inside the enclave, not in `caddy.service` on the host. Do not enable debug
+    mode on a production deployment merely to obtain console logs.
     Revoking old certificates does not reset the limit. See
     [Let's Encrypt rate limits](https://letsencrypt.org/docs/rate-limits/).
 
 ## Redeployment, suspension, and destruction
 
-- **Redeploy:** The same app ID keeps the same `DNS target`. If redeployment
-  allocates a different Elastic IP, Caution updates the managed A record after
-  the new deployment is ready. Your CNAME does not change.
+- **Push and switch:** For apps on the `deployments` lifecycle, an accepted changed
+  push runs a candidate beside the live deployment, and a
+  [switch](deploy-updates.md) moves the app's Elastic IP to it. The IP,
+  `DNS target` and your CNAME do not change.
 - **Suspend and resume:** Suspension retains the app's Elastic IP. Resumption
   normally reattaches it. If recovery produces a different IP, Caution checks
   readiness before publishing the change.
@@ -148,7 +170,9 @@ expire.
 ## Notes
 
 - TLS certificates are automatically provisioned for the configured custom
-  domain.
+  domain once DNS and ACME challenges succeed. See the mode-specific
+  [certificate behavior](deploy-updates.md#https-certificates); HTTPS may not be
+  ready immediately after activation.
 - Only one custom domain per deployment is currently supported.
 - Disable CDN or proxy TLS termination when the selected encryption mode
   requires TLS to terminate within the Caution deployment.

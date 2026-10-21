@@ -28,6 +28,7 @@ Fully managed means Caution manages the enclave lifecycle and underlying infrast
 - Infrastructure and billing
 - Standard Docker application builds
 - Enclave lifecycle management
+- [Candidate deployments and traffic switching](../guides/deploy-updates.md) for apps on the rollout-enabled `deployments` lifecycle; legacy apps retain replacement behavior
 - Network routing and public ingress
 - A stable managed DNS target that follows the app's current Elastic IP
 
@@ -39,6 +40,8 @@ Fully managed means Caution manages the enclave lifecycle and underlying infrast
 - Your application source code
 - `caution.hcl` configuration
 - Custom domain and its customer-owned CNAME (optional)
+- Candidate verification, secret release, application testing and switch approval
+- Data-migration compatibility and background-worker coordination for rollback
 
 </div>
 </div>
@@ -59,7 +62,11 @@ enclave "main" {
   }
 }
 
-# Example with source verification enabled
+```
+
+Or, with source verification enabled:
+
+```hcl
 enclave "main" {
   build {
     app_sources = ["https://git.example.com/myorg/myapp"]

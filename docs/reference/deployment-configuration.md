@@ -24,11 +24,18 @@ enclave "main" {
 
 These URLs and the deployed commit are published in the attestation response manifest. By default, verifiers use a local checkout at that commit; `--app-source-url` selects an explicit Git source instead.
 
-Without `app_sources`, third parties cannot independently reproduce and verify your deployment.
+`app_sources` helps verifiers discover the source; it does not grant repository
+access or establish trust. Even without these URLs, a verifier with the exact source
+can use a local checkout, `--app-source-url`, or `--from-tarball`. Keep repository
+credentials out of the published URLs.
 
 ## Network connectivity
 
-Caution supports three ways to expose your application to the network.
+Caution supports three ways to expose your application to the network. All use the
+same IPv4 [ingress and egress allowlists](caution-hcl.md#network-ports-traffic-and-tls).
+Ingress sources for `http.port` govern the application routes, not the public
+platform readiness and attestation endpoints. Omitted egress disables the guest
+outbound tunnel; restricted egress needs explicit permission for DNS when used.
 
 ### STEVE end-to-end encryption (recommended)
 
@@ -146,7 +153,19 @@ network {
 }
 ```
 
-The domain must resolve directly to the deployment, the application port must have an `ingress` rule, and outbound egress is required for certificate issuance. Do not place a CDN or other TLS-terminating proxy in front of the deployment.
+The domain must resolve directly to the deployment. The application port must have
+an `ingress` rule allowing `0.0.0.0/0`: restricted-source Attested TLS is currently
+unsupported. Use an upstream port other than 80 or 443, which enclave Caddy owns.
+Egress must permit the parent DNS relay at `10.0.100.1:53` over **UDP and TCP**, as
+well as certificate-authority connections; the platform does not add implicit
+exceptions. Standard startup points `/etc/resolv.conf` at this relay, and
+deployment-lifecycle TLS startup resolves the parent-provided
+`public-ipv4.caution.internal` before starting enclave Caddy. Allowing only an
+external resolver is not a substitute. The example intentionally allows broad
+egress; retain the parent DNS allowance when narrowing it, and identify the other
+required destinations first. See the [DNS egress rules](caution-hcl.md#egress).
+Use STEVE if application source restrictions are required. Do not place a CDN or
+other TLS-terminating proxy in front of the deployment.
 
 #### gRPC services
 
@@ -216,9 +235,13 @@ network {
 
 Use the port your application listens on. Do not declare ports in Caution's reserved `49500`-`49600` range.
 
-Each port your app exposes needs an `ingress` rule. The port named in `http` is reverse-proxied through Caddy with TLS termination on port 443; any other `ingress` ports are exposed as raw TCP (useful for P2P or binary protocols).
+Each port your app exposes needs an `ingress` rule. The port named in `http` is a
+private upstream, reverse-proxied through Caddy with TLS termination on port 443;
+it is not also exposed as a public raw listener. Rules covering that port set the
+HTTP/HTTPS application source allowlist. Other `ingress` ports are exposed as raw
+TCP with their own source restrictions (useful for P2P or binary protocols).
 
-This establishes a connection from the enclave to the host without STEVE encryption. Traffic is still protected by TLS, but the encryption terminates outside the enclave rather than inside it.
+This example intentionally omits `e2e_encryption`, selecting host TLS termination. HTTPS protects the client-to-host connection, but the host can read application requests and responses. Other raw ingress ports have no platform-provided TLS. Deployment verification alone does not make these connections end-to-end encrypted.
 
 Use this only when e2e encryption is not feasible for your use case.
 
@@ -227,8 +250,8 @@ Use this only when e2e encryption is not feasible for your use case.
 The `domain` value configures HTTP and TLS routing, but it does not create a
 record in your DNS provider. After deployment, point a customer-owned CNAME at
 the stable `DNS target` shown by the CLI or dashboard. Do not point an A record
-directly at the current Elastic IP: the IP can change on redeployment while the
-managed target remains stable. See [Set up a custom domain](../guides/set-up-a-custom-domain.md)
+directly at the current Elastic IP: the IP can change during the app's lifecycle
+while the managed target remains stable. See [Set up a custom domain](../guides/set-up-a-custom-domain.md)
 for the complete DNS and lifecycle behavior.
 
 ## Reproducibility requirements

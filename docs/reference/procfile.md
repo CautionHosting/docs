@@ -14,7 +14,9 @@ icon: lucide/file-clock
 The `Procfile` is a simple key-value configuration file that tells Caution how to run your application, which container build recipe to use, and what metadata to publish for verification. Place it in the root of your repository.
 
 ```yaml
-run: /app/server
+run: /app/server --port 3000
+ports: 3000
+http_port: 3000
 domain: your-domain.xyz
 app_sources: https://git.example.com/myorg/myapp
 ```
@@ -25,11 +27,11 @@ Use these fields to control how Caution locates container inputs, deploys, runs,
 
 ### Container input configuration
 
-!!! warning "Use `run` by default"
-    The `binary` field extracts only the specified binary from your container. It does not include config files, shared libraries, or other filesystem contents in the EIF. Use `binary` only for fully self-contained static binaries. For most applications, use `run`, which includes the full container filesystem in the EIF.
+Use `run` to select the startup command. The current deployment path includes the
+full container filesystem; legacy `binary` and `oci_tarball` fields are ignored.
 
 !!! warning "No `build` field or custom build command"
-    The legacy `build` Procfile field is no longer available. Caution builds the application container with `docker build -f <containerfile> .` from the repository root. It does not run a custom pre-build command or pass extra `--build-arg` values. Put required public build-time configuration in the Containerfile or in committed files copied into the image. Do not bake secrets into the image; use [Locksmith](../concepts/key-services.md) for secret values.
+    Procfile does not support a `build` field. Caution builds the application container with `docker build -f <containerfile> .` from the repository root. It does not run a custom pre-build command or pass extra `--build-arg` values. Put required public build-time configuration in the Containerfile or in committed files copied into the image. Do not bake secrets into the image; use [Locksmith](../concepts/key-services.md) for secret values.
 
 <div class="procfile-build-config-table" markdown>
 
@@ -37,8 +39,6 @@ Use these fields to control how Caution locates container inputs, deploys, runs,
 |-------|-------------|
 | `run` | **Required.** Command to execute your application. The full container filesystem is included in the EIF. |
 | `containerfile` | Path to a Containerfile/Dockerfile for building your app. Caution builds it with `docker build -f <containerfile> .` using the repository root as the build context. |
-| `oci_tarball` | Path to a pre-built OCI tarball. |
-| `binary` | Path to a static binary in the container. **Only that binary is extracted.** The rest of the container filesystem is not included in the EIF. Use this only for fully self-contained static binaries that do not depend on config files, shared libraries, or other files from the container. In most cases, use `run` instead. Incompatible with `locksmith: true`, which needs `/etc/caution/` in the filesystem. |
 
 </div>
 
@@ -49,8 +49,6 @@ Use these fields to control how Caution locates container inputs, deploys, runs,
 | Field | Description |
 |-------|-------------|
 | `app_sources` | Comma-separated git URLs for app source verification. Embedded in the enclave manifest for attestation. |
-| `enclave_sources` | Comma-separated git URLs for enclave source verification. |
-| `metadata` | Custom metadata string included in the manifest. |
 
 </div>
 
@@ -69,7 +67,6 @@ Resource values are defaults if not specified.
 |-------|---------|-------------|
 | `domain` | - | Custom subdomain for the deployment. Point its customer-owned CNAME at the stable `DNS target`; see [Set up a custom domain](../guides/set-up-a-custom-domain.md). |
 | `e2e` | `false` | Enable STEVE. Ordinary plaintext application routes are rejected by default. |
-| `locksmith` | `false` | Enable [Locksmith](../concepts/key-services.md) secret management. Runs locksmithd inside the enclave to receive sharded secrets via quorum. |
 | `debug` | `false` | Enable [debug mode](debug-enclave/running.md). Allows reading enclave console output but disables attestation verification. |
 | `no_cache` | `false` | Disable Docker build cache. |
 | `ssh_keys` | - | OpenSSH public keys for [host SSH access](debug-enclave/running.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
@@ -78,7 +75,6 @@ Resource values are defaults if not specified.
 | `managed_on_prem` | `false` | Enable bring-your-own-compute (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
 | `platform` | - | Compute platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
 | `aws_region` | - | AWS region for BYOC (for example `us-east-1`). Required when `managed_on_prem: true` and `platform: aws`. |
-| `aws_instance_type` | - | Optional BYOC override for the AWS instance type. |
 | `aws_vpc_id` | - | Optional existing VPC ID for BYOC deployments. |
 | `aws_subnet_id` | - | Optional existing subnet ID for BYOC deployments. |
 | `aws_security_group_id` | - | Optional existing security group ID for BYOC deployments. |
@@ -96,7 +92,7 @@ Current reserved/internal service ports:
 | `49500` | STEVE proxy for `/e2p/*` traffic (when `e2e: true`) |
 | `49501` | Auxiliary internal proxy slot |
 | `49502` | bootproofd internal attestation service, proxied to the public `/attestation` path |
-| `49504` | Locksmith shard receiver (when `locksmith: true`) |
+| `49504` | Locksmith shard receiver (enabled through HCL `env::vault`, not the ignored Procfile `locksmith` field) |
 
 The public attestation endpoint is the deployment's app URL plus `/attestation`; do not add `:49502` unless your operator explicitly exposes that internal port.
 
@@ -107,7 +103,9 @@ Use these examples as starting points. Port `3000` is only a placeholder; adjust
 ### Basic application
 
 ```yaml
-run: /app/server
+run: /app/server --port 3000
+ports: 3000
+http_port: 3000
 domain: api.example.com
 app_sources: https://git.example.com/example/api
 ```
@@ -146,37 +144,24 @@ Since only one port is specified, it is automatically used as the `http_port`.
 
 The legacy Procfile format has no plaintext-compatibility setting. `e2e: true` therefore uses fail-closed STEVE routing. If a bounded migration requires `allow_plaintext_fallback`, first run `caution apps migrate-procfile` and configure it in `caution.hcl`; keep the option unset for normal deployments.
 
-### With Locksmith secret management
+### Encrypted secrets and unsupported legacy fields
 
-```yaml
-run: /app/server --port 3000
-locksmith: true
-ports: 3000
-domain: secrets.example.com
-app_sources: https://git.example.com/example/secret-app
+Migrate to `caution.hcl` before enabling encrypted secrets:
+
+```sh
+caution apps migrate-procfile
 ```
 
-Before deploying, generate a quorum, run `caution secret encrypt` to write
-encrypted `.caution/secrets/*.asc` files, and add the bundle and secrets to
-your `Containerfile`:
+Then add `env::vault(...)` references and package the bundle, Keymaker policy and
+encrypted values as described in [Add encrypted secrets](../guides/add-encrypted-secrets.md).
+The current Procfile parser ignores `locksmith: true`; it does **not** enable
+Locksmith or deliver secrets. Migration does not reconstruct these ignored settings
+for you: add them explicitly and review the generated HCL before deploying.
 
-```dockerfile
-ADD .caution/quorum-bundle.json /etc/caution/bundle.json
-ADD .caution/secrets/ /etc/caution/secrets/
-```
-
-!!! warning "Do not combine `binary:` with Locksmith"
-    `binary:` extracts only the named binary and drops the rest of the
-    filesystem — including `/etc/caution/`. The bundle never reaches the EIF
-    and `locksmithd` panics at boot with `has bundle: No such file or
-    directory`. Use `run:` (full filesystem) when `locksmith: true`.
-
-After deploying, send shards with `caution secret send-shard` from the
-host-toolchain CLI build, which is the default `make install-cli` (also
-`make install-cli-host`). See
-[Key services](../concepts/key-services.md) for the full setup flow, why this
-build is not reproducibility-verified, and the current shard-sending build
-requirement.
+The current parser also ignores `binary`, `oci_tarball`, `enclave_sources`, `metadata`
+and `aws_instance_type`. Use the supported HCL fields for new deployments. Procfile
+cannot express guest egress allowlists, recovery-source restrictions, or the newer
+TLS and restart settings.
 
 ### Custom resources with multiple ports
 

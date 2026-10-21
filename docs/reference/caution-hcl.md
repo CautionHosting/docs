@@ -49,10 +49,16 @@ caution {
 
 enclave "main" {
   build     { }   # what to build
-  resources { }   # cpu / memory
+  resources {     # cpu / memory
+    cpu       = 2
+    memory_mb = 512
+  }
+  restart   { }   # host supervision after enclave termination
   network   { }   # ingress, egress, http
   debug     { }   # debug + ssh access
-  unit "default" { }   # the command to run
+  unit "default" {     # the command to run
+    command = "/app/server"
+  }
 }
 ```
 
@@ -63,7 +69,9 @@ enclave "main" {
 
 ### `unit` — the command to run
 
-The `unit "default"` block is **required**. Caution runs the command from the unit named `default`; a unit with any other name is ignored for startup.
+Define one `unit` block with a `command`. The unit can have any name; `default` is
+the conventional name. Caution runs the sole unit's command. Multiple units are
+rejected.
 
 ```hcl
 unit "default" {
@@ -79,12 +87,14 @@ unit "default" {
 |-------|-------------|
 | `command` | **Required.** Absolute path to the binary to execute. The full container filesystem is included in the EIF. |
 | `args` | List of arguments passed to `command`. |
-| `env` | Map of environment variables. Values must be string literals or function calls (see [Secrets](#secrets)). |
+| `env` | Map of runtime environment variables. Use string literals for public values or `env::vault(...)` for [secrets](#secrets). |
+
+**Recommended:** configure public runtime values here, alongside the command. String literals do not enable Locksmith and are not Docker build arguments. `/etc/environment` in the final image is an alternative for image-level runtime defaults, not an additional required step. See [Public environment variables](../guides/add-encrypted-secrets.md#public-environment-variables) for the distinction from build-time configuration.
 
 ### `build` — container input
 
-!!! warning "Use `command` by default, not `binary`"
-    The `binary` field extracts only the named binary from your container. It does not include config files, shared libraries, or other filesystem contents in the EIF. Use it only for fully self-contained static binaries; for most applications omit it and rely on the `unit` `command`, which includes the full container filesystem.
+Caution includes the full application container filesystem. Set its startup command
+in `unit "default"`; `build.binary` is not a supported HCL field.
 
 !!! note "No custom build command"
     Caution builds the container with `docker build -f <containerfile> .` from the repository root. It does not run a custom pre-build command or pass extra `--build-arg` values. Put public build-time configuration in the Containerfile. Do not bake secrets into the image; use [Locksmith](../concepts/key-services.md).
@@ -100,11 +110,13 @@ build {
 | Field | Default | Description |
 |-------|---------|-------------|
 | `containerfile` | `Containerfile`/`Dockerfile` at the root | Path to a Containerfile/Dockerfile, relative to the repository root. |
-| `binary` | - | Path to a static binary in the container. **Only that binary is extracted.** Use only for fully self-contained static binaries. |
 | `app_sources` | - | List of git URLs for app source verification. Embedded in the enclave manifest for attestation. |
 | `cache` | `true` | Set `false` to disable the Docker build cache. |
 
 ### `resources` — cpu and memory
+
+Omitting `resources` uses 2 vCPUs and 512 MB. If the block is present, both `cpu`
+and `memory_mb` are required; omitted fields do not receive individual defaults.
 
 ```hcl
 resources {
@@ -113,52 +125,197 @@ resources {
 }
 ```
 
+| Field | When block is omitted | Description |
+|-------|-----------------------|-------------|
+| `cpu` | `2` | **Required in the block.** Number of vCPUs. |
+| `memory_mb` | `512` | **Required in the block.** Memory allocation in MB. |
+
+### `restart` — enclave restart policy
+
+```hcl
+restart {
+  policy        = "always"
+  delay_seconds = 0
+}
+```
+
 | Field | Default | Description |
 |-------|---------|-------------|
-| `cpu` | `2` | Number of vCPUs. |
-| `memory_mb` | `512` | Memory allocation in MB. |
+| `policy` | `"on-failure"` | `"never"`, `"on-failure"`, or `"always"`. |
+| `delay_seconds` | `10` | Nonnegative integer seconds before relaunch, up to 4294967295. Zero adds no restart delay. Ignored for `"never"`. |
+
+Omitting the block, or either field, uses its default. Legacy Procfiles use the
+same defaults. Unknown fields, unknown policies, and fractional or negative delays
+are rejected.
+
+- `never`: do not automatically relaunch after termination, including launch failure.
+- `on-failure`: relaunch when the provider's supervised process fails. On Nitro,
+  this is the host launcher or enclave management process; an enclave crash or
+  selfnuke can appear as a successful management-process exit and will not
+  reliably trigger this policy.
+- `always`: relaunch after either successful or failed termination. Use this for
+  Keymaker and services that must return after enclave termination. It does not
+  cause periodic restarts or restart healthy enclaves after ordinary requests.
+
+Explicit service stop and Platform destroy operations suppress automatic relaunch.
+The host retains systemd's start-rate limits. Nitro also retains a two-second
+pre-start delay and enclave boot time, even with `delay_seconds = 0`.
+
+Nitro supervision tracks the actual enclave management PID. Host ingress proxies
+remain available across replacement, but requests during boot can fail; this
+setting does not queue or retry HTTP requests. Locksmith-backed applications must
+still recover their existing bundle and receive the required holder shares after
+replacement; restarting does not restore their secrets.
+
+The default preserves the previous `on-failure` setting, while correcting the
+process being supervised. Upgrade Platform and CLI support before deploying HCL
+that uses this block. Existing hosts require reprovisioning/replacement or an
+explicit host service update; editing HCL alone does not patch a running host.
 
 ### `network` — ports, traffic, and TLS
 
-The `network` block holds `ingress`/`egress` traffic rules and an optional `http` block for TLS termination. Repeat `ingress`/`egress` blocks to add more rules.
+The `network` block holds IPv4 `ingress` and `egress` allowlists, optional
+`recovery_ingress` sources, and an optional `http` block. Repeat the rule blocks
+to allow additional source/destination, protocol, and port combinations.
 
 ```hcl
 network {
   ingress {
-    cidr_ipv4   = "0.0.0.0/0"
+    cidr_ipv4   = "198.51.100.0/24"
     port        = 8080
     ip_protocol = "tcp"
   }
   ingress {
-    cidr_ipv4  = "0.0.0.0/0"
+    cidr_ipv4  = "203.0.113.0/24"
     start_port = 40000
     end_port   = 40005
   }
   egress {
-    cidr_ipv4 = "0.0.0.0/0"
+    cidr_ipv4   = "192.0.2.8/32"
+    ip_protocol = "tcp"
+    port        = 443
+  }
+  egress {
+    cidr_ipv4   = "10.0.100.1/32"
+    ip_protocol = "udp"
+    port        = 53
+  }
+  egress {
+    cidr_ipv4   = "10.0.100.1/32"
+    ip_protocol = "tcp"
+    port        = 53
+  }
+  recovery_ingress {
+    cidr_ipv4 = "203.0.113.8/32"
   }
 
   http {
     domain = "api.example.com"
     port   = 8080
+    # Host TLS termination: e2e_encryption is intentionally omitted.
   }
 }
 ```
 
-#### `ingress` / `egress`
+The `192.0.2.*`, `198.51.100.*`, and `203.0.113.*` addresses are documentation
+ranges: replace them with your actual destinations and client sources.
+`10.0.100.1` is the platform's parent DNS relay.
+
+#### Rule fields and validation
 
 | Field | Description |
 |-------|-------------|
-| `cidr_ipv4` | **Required.** Source/destination CIDR, e.g. `0.0.0.0/0`. |
-| `port` | A single port. Use instead of the range fields. |
-| `start_port` / `end_port` | An inclusive port range. Use instead of `port`. |
-| `ip_protocol` | Protocol, e.g. `tcp`. |
+| `cidr_ipv4` | **Required.** Source CIDR for ingress, destination CIDR for egress. Host bits are normalized to the network address. |
+| `port` | A single port from `1` to `65535`. Use instead of the range fields. |
+| `start_port` / `end_port` | A complete, inclusive, ascending port range. Use instead of `port`. |
+| `ip_protocol` | Ingress: `"tcp"` or `"6"`. Egress also accepts `"udp"`/`"17"` and `"all"`/`"-1"`. |
 
-Do not declare ports in the reserved `49500`-`49600` range (see [Reserved ports](#reserved-ports)).
+Omitting `ip_protocol` means TCP when ports are present, or all protocols for
+an egress rule without ports. TCP/UDP rules require a port or range;
+all-protocol rules must not specify ports. UDP ingress is not supported.
+Unknown rule fields, explicit null attributes, mixed port forms, zero ports,
+IPv6 CIDRs, and unsupported protocols are rejected rather than ignored.
+
+Limits are **40 declared rules** across ingress, egress, and explicit recovery
+sources (before deduplication), **32 distinct ingress ports**, and a **conservative
+calculated budget of 55 application/recovery security-group ingress rules**. HTTP
+routing can expand a declaration into multiple rules. The calculation reserves
+STEVE and recovery overhead even when those services are disabled, so it need not
+equal the actual generated rule count. Policies exceeding these limits are
+rejected, not truncated.
+
+#### `ingress`
+
+Raw TCP ports retain their own source CIDRs. Rules covering `http.port` instead
+set the allowed sources for the HTTP/HTTPS and STEVE application routes; that
+upstream port is not also exposed as a public raw listener. HTTP source checks
+use the connection's peer address, not forwarded headers. A reverse proxy's
+address is therefore the source seen by this check.
+
+Security groups and host filters enforce the same source/port restrictions;
+adding a more permissive security group does not bypass the host checks.
+Direct IPv6 application ingress is blocked. TCP 80 still serves the platform's
+public readiness and attestation endpoints: restricting application sources does
+not make those management endpoints private.
+
+Do not use TCP 22 or the reserved `49500`–`49600` range for application ingress.
+Ports 80 and 443 may only be private `http.port` upstreams, not raw listeners.
+Attested TLS needs a different upstream port because enclave Caddy owns 80/443.
+
+#### `egress`
+
+Omit all `egress` blocks (or use `egress = []`) to disable the guest's outbound
+tunnel. To allow all outbound IPv4 protocols and destinations, subject to the
+protected host/metadata exclusions below, explicitly choose:
+
+```hcl
+egress { cidr_ipv4 = "0.0.0.0/0" }
+```
+
+Restricted rules allow only their destination CIDRs, protocols, and ports, with
+stateful replies for allowed connections. IPv6 guest traffic, instance metadata,
+link-local credentials, and other parent-host services remain blocked even with
+broad egress. DHCP and explicitly permitted parent DNS are narrow exceptions.
+
+DNS is not implicitly allowed. Standard outbound-tunnel startup writes
+`nameserver 10.0.100.1` to `/etc/resolv.conf`. Permit the parent relay at
+`10.0.100.1:53` for **UDP and TCP** as shown above, or use rules that already cover
+those tuples. Allowing an external DNS server does not configure the guest to use
+it. Deployment-lifecycle Attested TLS startup also relies on the parent's
+`public-ipv4.caution.internal` answer before starting enclave Caddy; retain the
+parent DNS allowance when narrowing its egress. DNS permission is not a
+domain-name allowlist for application traffic.
+
+Source, helper, and EIF transfers use the API, builder, object storage, and parent
+host; they do not need guest S3/HTTPS exceptions. Parent-originated package and
+artifact operations are outside the guest egress policy.
+
+#### `recovery_ingress`
+
+Each block takes only `cidr_ipv4` and controls access to the Locksmith shard
+receiver when recovery is enabled. Omission inherits the HTTP application source
+CIDRs; `recovery_ingress = []` denies all sources. A recovery workload without
+HTTP must declare its recovery sources. These rules control connectivity, not
+shard authorization.
+
+#### Applying policy changes
+
+The CLI and API validate policies for new deployments. Policy installation must
+succeed before public proxies and enclave startup; tunnel restarts reapply the
+policy without removing its enforcement barrier. Existing hosts retain their
+installed policy. Deploy a new revision; for deployment-lifecycle apps, verify
+and switch to that candidate to apply its policy to live traffic. Retained
+deployments keep their original policies. See [Deploy and roll back updates](../guides/deploy-updates.md)
+for the verification, secret-release, and switch sequence.
+
+Historical reproduction retains the original configuration's build behavior;
+accepting it for verification does not make it valid for a new deployment.
+Network enforcement is a host/infrastructure control, not an enclave-attested
+guarantee against a malicious parent host.
 
 #### `http`
 
-The `http` block fronts one port with TLS on port 443. By default TLS terminates on the host; with [Attested TLS](deployment-configuration.md#attested-tls-compatibility-mode), it terminates inside the enclave.
+The `http` block fronts one port with TLS on port 443. **Omitting `e2e_encryption` selects host TLS termination:** the host can read application requests and responses. HTTPS alone does not protect them from the host. Choose `mode = "steve"` for client-integrated application-layer encryption, or `mode = "tls"` for [Attested TLS](deployment-configuration.md#attested-tls-compatibility-mode) with enclave TLS termination and periodic external certificate-binding verification.
 
 | Field | Description |
 |-------|-------------|
@@ -213,7 +370,17 @@ http {
 }
 ```
 
-Attested TLS requires egress for certificate issuance and periodic external verification of the attested certificate fingerprint. See [Deployment configuration](deployment-configuration.md#attested-tls-compatibility-mode) for the complete security procedure.
+Attested TLS requires egress permitting the parent DNS relay at `10.0.100.1:53`
+(UDP and TCP) and certificate-authority connections; there are no implicit DNS or
+ACME exceptions. Deployment-lifecycle startup needs the parent's
+`public-ipv4.caution.internal` answer, not just public DNS resolution.
+Its HTTP source policy must include
+`0.0.0.0/0`: restricted-source Attested TLS is currently rejected because
+challenge-only forwarding is not implemented. Use STEVE if restricted application
+sources are required rather than broadening access just to pass validation.
+Periodic external verification of the attested certificate fingerprint is also
+required. See [Deployment configuration](deployment-configuration.md#attested-tls-compatibility-mode)
+for the complete security procedure.
 
 For a gRPC application, set the upstream protocol to h2c (cleartext HTTP/2). Client connections still use TLS; only the enclave-local connection from Caddy to the application is cleartext:
 
@@ -241,14 +408,24 @@ unit "default" {
 }
 ```
 
-Before deploying, generate a quorum, run `caution secret encrypt` to write encrypted `.caution/secrets/*.asc` files, and add the bundle and secrets to your `Containerfile`:
+Before deploying, create or reuse a quorum bundle, run `caution secret encrypt`, and
+add the bundle, the Keymaker policy saved by the CLI and the encrypted values to the
+final application image:
 
 ```dockerfile
 ADD .caution/quorum-bundle.json /etc/caution/bundle.json
+ADD .caution/keymaker-pcr-policy.json /etc/caution/keymaker-pcr-policy.json
 ADD .caution/secrets/ /etc/caution/secrets/
 ```
 
-After deploying, send shards with `caution secret send-shard` from the host-toolchain CLI build, which is the default `make install-cli` (also `make install-cli-host`). See [Key services](../concepts/key-services.md) for the full setup flow.
+V0 bundles need a [one-time import](../guides/add-encrypted-secrets.md#import-a-v0-bundle)
+and are packaged without a Keymaker policy.
+
+After deploying, run `caution verify -d <deployment>`, then have enough holders
+release their shares to the same deployment with
+`caution secret send-shard -d <deployment>`. See [Add encrypted secrets](../guides/add-encrypted-secrets.md)
+for setup and [Deploy and roll back updates](../guides/deploy-updates.md) for the
+candidate verification, secret-release, and switch sequence.
 
 ### `debug` — console and SSH access
 
@@ -286,7 +463,7 @@ caution {
 
 ## Reserved ports
 
-The reserved app-facing range is `49500`-`49600`. User apps must not declare ports in that range in `ingress`, `egress`, `http`, or application startup commands. Choose the port your app already uses, as long as it is outside the reserved range.
+The reserved app-facing range is `49500`-`49600`. User apps must not declare ports in that range in `ingress`, `http`, or application startup commands. These listener reservations do not restrict remote destination ports in `egress`. TCP 22 is also unavailable for application ingress; ports 80 and 443 have the [HTTP upstream restrictions](#ingress) described above.
 
 Current reserved/internal service ports:
 

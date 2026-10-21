@@ -22,6 +22,8 @@ nav = [
 ]},
 { "How-to guides" = [
 { "Verify an app" = "guides/verify-an-app.md" },
+{ "Deploy and roll back updates" = "guides/deploy-updates.md" },
+{ "Add encrypted secrets" = "guides/add-encrypted-secrets.md" },
 { "Use STEVE clients" = "guides/use-steve-clients.md" },
 { "Containerize an app" = "guides/containerize-an-application.md" },
 { "Build with an AI agent" = "guides/build-with-an-ai-agent.md" },
@@ -47,6 +49,7 @@ nav = [
 { "Configuration" = "reference/deployment-configuration.md" },
 { "caution.hcl" = "reference/caution-hcl.md" },
 { "Procfile (legacy)" = "reference/procfile.md" },
+{ "S3 prebuilt components (operators)" = "reference/s3-prebuilt-components.md" },
 { "Deployment models" = [
 "reference/deployment-models/index.md",
 { "Fully managed" = "reference/fully-managed.md" },

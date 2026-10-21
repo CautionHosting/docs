@@ -98,7 +98,7 @@ From your application directory, run the following command to create a `caution.
 caution init
 ```
 
-`caution.hcl` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `caution.hcl` is already included. If you're deploying your own application, you'll need to create one. See the [caution.hcl reference](../reference/caution-hcl.md).
+`caution.hcl` defines how to run your application and which ports to expose. If you're using one of Caution's demo apps, a `caution.hcl` is already included. `caution init` generates a template if none exists; customize it for your application. See the [caution.hcl reference](../reference/caution-hcl.md).
 
 Commit the generated `caution.hcl` and `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
@@ -133,9 +133,43 @@ enclave "main" {
 }
 ```
 
+## Choose HTTP protection before deploying
+
+The generated template leaves `http` commented out: its ingress port is raw TCP, with no platform-provided TLS. Existing demo configurations may select a different mode; check their `http` and `e2e_encryption` blocks.
+
+For a basic HTTPS demo, add this `network` block inside your existing `enclave` block, replacing any existing `network` block. Use your application's listening port and your own domain:
+
+```hcl
+network {
+  ingress {
+    cidr_ipv4 = "0.0.0.0/0"
+    port      = 8080
+  }
+  http {
+    domain = "app.example.com"
+    port   = 8080
+    # Host TLS termination: e2e_encryption is intentionally omitted.
+  }
+}
+```
+
+!!! warning "This example selects host TLS, not end-to-end encryption"
+    TLS terminates on the host, which can read application requests and responses. Do not use this mode for traffic that must remain confidential from the host. Deployment verification does not change this transport boundary.
+
+Choose a protected mode before sending sensitive traffic:
+
+- **[STEVE (recommended)](../reference/deployment-configuration.md#steve-end-to-end-encryption-recommended):** add `e2e_encryption { mode = "steve" }` inside `http` and integrate a [STEVE client](../guides/use-steve-clients.md). Keep plaintext fallback disabled. Requests without STEVE are rejected except for the [documented bootstrap/public endpoints](../reference/deployment-configuration.md#plaintext-fallback).
+- **[Attested TLS](../reference/deployment-configuration.md#attested-tls-compatibility-mode):** use the complete linked configuration for ordinary HTTPS clients. Adding only
+  `e2e_encryption { mode = "tls" }` to the no-egress example above is insufficient:
+  enclave TLS requires egress. Follow its DNS/egress requirements and periodically verify the live attested certificate binding; ordinary HTTPS clients do not verify Nitro evidence themselves.
+
+Configure [domain DNS](../guides/set-up-a-custom-domain.md) after deployment. Other ingress ports remain raw interfaces and are not protected by the selected HTTP mode.
+
 ## Add environment variables
 
-If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and reference secrets with `env::vault` in your `caution.hcl`.
+For public runtime values, use string literals in `unit.env` in `caution.hcl`; no key service or quorum setup is needed. See [Public environment variables](../guides/add-encrypted-secrets.md#public-environment-variables) for an example and how runtime settings differ from build-time inputs.
+
+For secrets, follow [Add encrypted secrets](../guides/add-encrypted-secrets.md) before deploying: create a quorum bundle, encrypt the values, package the bundle, policy and ciphertext, and reference them with `env::vault`.
 
 Skip this step if your application does not need environment variables.
 
@@ -148,6 +182,12 @@ git push caution main
 ```
 
 Caution builds a reproducible enclave image with the standard Docker build and deploys it into the enclave.
+
+Check the lifecycle shown by `caution apps get`. When the operator's rollout is
+enabled for new apps, the `deployments` lifecycle automatically activates a deployment
+if nothing is live; otherwise a changed push creates a candidate that needs an
+explicit switch. Legacy apps still replace the running deployment. See
+[Deploy and roll back updates](../guides/deploy-updates.md).
 
 Deployment output includes a stable `DNS target` for the app. If you configured
 a custom domain in `caution.hcl`, create a CNAME from that subdomain to the DNS
@@ -162,13 +202,25 @@ From your application directory, reproduce the image and verify that the running
 caution verify
 ```
 
-Successful verification saves the verified PCR values to `.caution/trusted_hashes.json`. This file is required before sending locksmith shards and can be used by native STEVE clients — commit it alongside your other `.caution/` files.
+With only one running deployment, this saves verified PCRs to
+`.caution/trusted_hashes.json`. With multiple running deployments, explicitly use
+`caution verify -d <deployment>`; its trust file is
+`.caution/deployments/<deployment-id>/trusted_hashes.json`. Commit the appropriate
+trust file alongside your other `.caution/` files. Secret release must target the
+same verified deployment; see [release and activation](../guides/deploy-updates.md).
+Verification alone does not unlock secrets or prove application readiness.
 
 ## Next steps
 
 Your application is now running in a verified enclave. Here's what to explore next:
 
 <div class="grid cards" markdown>
+
+- :lucide-refresh-cw: **Deploy and roll back updates**
+
+    ---
+
+    Ship a [new version](../guides/deploy-updates.md) beside the live one, then switch.
 
 - :lucide-settings-2: **Deployment configuration**
 

@@ -4,7 +4,7 @@ icon: lucide/git-branch
 
 # Deployment patterns
 
-<p class="docs-home-intro">Learn how to choose between public, private, and fully private verification patterns based on who needs to verify your workload and how much source visibility you can allow.</p>
+<p class="docs-home-intro">Learn how to choose between public and private-source verification patterns based on who needs to verify your workload and how much source visibility you can allow.</p>
 
 ## Public verification
 
@@ -47,24 +47,23 @@ For internal systems where verification happens within your organization, source
 
 - **Internal APIs** - Microservices verify each other before exchanging sensitive data.
 
-## Fully private (BYOC)
+## Private-source BYOC {#fully-private-byoc}
 
-For maximum privacy, deploy to your own infrastructure using [bring your own compute](../reference/byoc.md). Source repositories never leave your network, and verification happens entirely within your VPC.
+[Bring your own compute](../reference/byoc.md) places the runtime infrastructure in
+your AWS account. It does **not** make the managed control plane private or
+self-hosted: the normal workflow still pushes application source to Caution for
+build and deployment orchestration.
 
-**How it works:**
+Source repositories may remain access-controlled, so only authorized verifiers can
+reproduce the application. However, configured source URLs and commit identifiers
+are published in the attestation response manifest, and public readiness and
+attestation routes are not hidden by an application-route ingress allowlist. Do not
+put repository credentials or other secrets in those URLs.
 
-1. Source code lives in internal repositories
-2. Caution manages the enclave lifecycle within your AWS account
-3. Verification happens inside your network
-4. No repository URLs or code are exposed externally
-
-**Example use cases:**
-
-- **Regulated industries** - Financial services or healthcare workloads where code and infrastructure must remain within controlled environments.
-
-- **Air-gapped systems** - High-security environments with no external network access.
-
-- **Proprietary algorithms** - Trading systems or ML models where the logic itself is a competitive advantage.
+Use BYOC when you need control over the runtime AWS account and network. If source
+code and control-plane operations must also remain inside your organization, assess
+the [self-hosted model](../reference/deployment-models/#self-host) separately. The
+managed BYOC quickstart is not an air-gapped deployment procedure.
 
 ## Choosing a pattern
 
@@ -72,7 +71,7 @@ For maximum privacy, deploy to your own infrastructure using [bring your own com
 |---------|-------------------|----------------|----------|
 | Public | Public repos | Anyone | Consumer-facing services, open-source projects |
 | Private | Private repos (auth required) | Your organization | Internal services, B2B platforms |
-| Fully private | Internal only | Your infrastructure | Regulated industries, proprietary systems |
+| Private-source BYOC | Private repositories; source is still supplied to the managed control plane | Authorized verifiers | Customer-owned runtime infrastructure |
 
 You can also combine patterns. A service might have public-facing components with open source code, while keeping proprietary business logic in private repositories that only internal services verify.
 

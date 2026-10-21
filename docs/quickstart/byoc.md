@@ -232,7 +232,7 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 | **EC2 Instance Role** | Allows enclave instances to read EIFs from the S3 bucket |
 | **Builder Role** | Allows builder instances to publish EIF objects into the S3 bucket |
 | **Launch Template** | Preconfigured template for enclave instances |
-| **Auto Scaling Group** | Manages enclave instances (starts at 0, Caution scales as needed) |
+| **Auto Scaling Group** | Provisioned at zero; the deployments lifecycle uses standalone instances and leaves it at zero. Legacy deployments use scaling. |
 | **Scoped IAM User** | Credentials for Caution, scoped to only these resources |
 
 </div>
@@ -241,9 +241,15 @@ Each normal `caution init --byoc` setup generates a new deployment ID and a dedi
 
 ## Add environment variables
 
-If your application needs environment variables, use [Key services](../concepts/key-services.md) before deploying. The guide covers non-encrypted variables for public configuration and encrypted variables for secrets, including how to deploy Keymaker, generate shard-holder OpenPGP keys, create a quorum bundle, encrypt values from `.env`, and reference secrets with `env::vault` in your `caution.hcl`.
+For public runtime values, use string literals in `unit.env` in `caution.hcl`; no key service or quorum setup is needed. See [Public environment variables](../guides/add-encrypted-secrets.md#public-environment-variables) for an example and how runtime settings differ from build-time inputs.
+
+For secrets, follow [Add encrypted secrets](../guides/add-encrypted-secrets.md) before deploying: create a quorum bundle, encrypt the values, package the bundle, policy and ciphertext, and reference them with `env::vault`.
 
 Skip this step if your application does not need environment variables.
+
+## Choose HTTP protection
+
+The same [HTTP protection choices](fully-managed.md#choose-http-protection-before-deploying) apply to BYOC: the generated template starts with raw TCP ingress, an `http` block without `e2e_encryption` terminates TLS on the host, and STEVE or Attested TLS must be explicitly selected for protection from the host. Check the mode before sending sensitive traffic.
 
 ## Deploy the application
 
@@ -254,6 +260,12 @@ git push caution main
 ```
 
 Caution builds a reproducible enclave image with the standard Docker build and deploys it into the AWS environment you provisioned.
+
+Check the lifecycle shown by `caution apps get`. When the operator's rollout is
+enabled for new apps, the `deployments` lifecycle automatically activates a deployment
+if nothing is live; otherwise a changed push creates a candidate that needs an
+explicit switch. Legacy apps still replace the running deployment. See
+[Deploy and roll back updates](../guides/deploy-updates.md).
 
 Deployment output includes a stable Caution-managed `DNS target`. If you
 configured a custom domain in `caution.hcl`, create a CNAME from that subdomain
@@ -268,7 +280,13 @@ From your application directory, reproduce the image and verify that the running
 caution verify
 ```
 
-Successful verification saves the verified PCR values to `.caution/trusted_hashes.json`. This file is required before sending locksmith shards and can be used by native STEVE clients — commit it alongside your other `.caution/` files.
+With only one running deployment, this saves verified PCRs to
+`.caution/trusted_hashes.json`. With multiple running deployments, explicitly use
+`caution verify -d <deployment>`; its trust file is
+`.caution/deployments/<deployment-id>/trusted_hashes.json`. Commit the appropriate
+trust file alongside your other `.caution/` files. Secret release must target the
+same verified deployment; see [release and activation](../guides/deploy-updates.md).
+Verification alone does not unlock secrets or prove application readiness.
 
 ## Cleanup
 
@@ -305,6 +323,12 @@ Your application is now running in a verified enclave in your own AWS account. H
     ---
 
     Run Caution enclaves in [your own AWS account](../reference/byoc.md).
+
+- :lucide-refresh-cw: **Deploy and roll back updates**
+
+    ---
+
+    Ship a [new version](../guides/deploy-updates.md) beside the live one, then switch.
 
 - :lucide-rocket: **Deployment configuration**
 

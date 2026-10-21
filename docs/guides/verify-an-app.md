@@ -75,6 +75,14 @@ caution verify
 
 The CLI infers the attestation endpoint from local Caution deployment state. It reads the app commit from the fresh response's unsigned manifest metadata, stages that commit from the local repository, reproduces the build, and verifies the resulting PCR values. If the manifest has no app commit, it stages local `HEAD`.
 
+To verify one deployment of the app, such as a candidate before you switch to it, name it:
+
+```bash
+caution verify -d 7f3a91c2
+```
+
+Its trust is saved to `.caution/deployments/<deployment-id>/trusted_hashes.json`. While several deployments run, `caution verify` without `-d` refuses. See [Deploy and roll back updates](deploy-updates.md).
+
 Current deployments also pin the Platform framework archive to an exact commit in the response manifest. Source-backed verification uses that deployed pin. A manifestless local build such as `caution apps build` instead queries the configured Platform API's public `/.well-known/caution/build-inputs` endpoint, pins the advertised Platform commit, and includes it in the local build cache identity. That endpoint reports operator-advertised current inputs; it is not app-specific or attested. For a deployed app, rely on the manifest-backed PCR verification result rather than the endpoint alone.
 
 ## Verify a remote app
@@ -94,6 +102,7 @@ Choose the mode that matches the source access you have.
 | Situation | Command |
 |-----------|---------|
 | You have the app repository checked out locally | `caution verify` |
+| You want one deployment of the app, such as a candidate | `caution verify -d <deployment>` |
 | You have the app repository and an explicit endpoint | `caution verify --attestation-url http://<host>/attestation` |
 | You have a Git URL instead of a local checkout | `caution verify --app-source-url git@git.example.com:org/app.git` |
 | You have an exact source archive | `caution verify --from-tarball source.tar.gz` |
@@ -171,12 +180,42 @@ Use the failure message to choose the next step:
 
 | Failure | What to do |
 |---------|------------|
-| Debug-mode warning | Remove the `debug` block from `caution.hcl`, redeploy, and verify again. |
+| Debug-mode warning | Deploy and verify a production-mode candidate, then switch if needed. Explicitly destroy retained debug instances; changing HCL does not remove them. See [debug cleanup](../reference/debug-enclave/running.md#clean-up-debug-access). |
 | Manifest has no app commit | The CLI uses local `HEAD`; confirm that it is the intended source before trusting the result. |
 | Manifest commit is unavailable locally | Fetch that commit, use `--app-source-url`, use `--from-tarball`, or use `--pcrs`. |
 | Private source unavailable | Provide an authorized Git URL with `--app-source-url`, or verify from an authorized local checkout. |
 | PCR mismatch | Treat the app as unverified. Confirm the source commit, build inputs, and deployment are the ones you intended; then retry with `--no-cache`. |
 | Attestation endpoint unreachable | Check the exact endpoint URL from deployment output or app operator instructions. |
+
+## Verify Caution key services
+
+[Encrypted secrets](add-encrypted-secrets.md) rely on two Caution services: Keymaker,
+which generates quorum bundles, and the key service, which handles passkey holders.
+Verify them the same way as an app:
+
+```sh
+caution verify --service keymaker
+caution verify --service key-service
+```
+
+The CLI discovers each service from Platform, shows its source, reproduces PCR0/1/2
+and checks fresh attestation before asking to save trust. For another Platform, set
+`CAUTION_BACKEND_URL` or `--url`. Trust is saved per Platform and reused by the
+`caution secret` commands. Rerun the command to approve a service upgrade; trust is
+never updated silently.
+
+This updates shared service trust, not project policy files. Explicit policy flags,
+`KEYMAKER_PCR_POLICY_PATH` and `.caution/keymaker-pcr-policy.json` take precedence
+over shared Keymaker trust; a project `.caution/recryptor-pcr-policy.json` also
+overrides shared key-service policy. When adopting a new Keymaker, explicitly
+review and update the project policy while preserving the policy needed to verify
+existing bundles. `secret init` refuses a selected policy that differs from the
+saved project policy.
+
+The public `/components` page on Platform shows each service's URL, readiness,
+attestation and policy checks, also as JSON under `services` in
+`/.well-known/caution/build-inputs`. The repository and commit shown there are
+reported by the service. Only the CLI's reproduction establishes trust.
 
 ## Verification and encryption
 

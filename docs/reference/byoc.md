@@ -22,6 +22,11 @@ For a side-by-side comparison with other deployment options, see [deployment mod
 
 In bring your own compute, Caution runs the standard Docker application build and manages the enclave lifecycle in your AWS account, while you retain control over the account, network boundaries, and where data resides.
 
+BYOC is not a private or air-gapped control plane: the normal Git deployment flow
+still supplies your source to Caution. Source URLs and commit metadata may be
+public in attestation responses even when repository access is restricted. See
+[private-source verification](../concepts/deployment-patterns.md#fully-private-byoc).
+
 <div class="two-column-list two-column-list--byoc-responsibility" markdown>
 <div markdown>
 
@@ -39,7 +44,7 @@ In bring your own compute, Caution runs the standard Docker application build an
 
 - Standard Docker application builds
 - Enclave lifecycle management
-- Deployment orchestration in your AWS account, including uploading EIFs to your S3 bucket, launch templates, and Elastic IP assignment
+- Deployment orchestration in your AWS account, including uploading EIFs to your S3 bucket. On the rollout-enabled `deployments` lifecycle, each deployment has its own EC2 instance and a [switch](../guides/deploy-updates.md) moves the stable Elastic IP; legacy apps keep replacement behavior.
 - A stable Caution-managed DNS target that follows the app's current Elastic IP
 
 </div>
@@ -49,7 +54,7 @@ In bring your own compute, Caution runs the standard Docker application build an
 
 To deploy with bring your own compute, you'll need a [containerized application](../guides/containerize-an-application.md), Docker, and AWS credentials for the target account. Caution builds from the repository root with `docker build -f <containerfile> .`; it does not run a custom `build` command or pass extra Docker build arguments. Public build-time values must be part of the image inputs, and secrets should use [Locksmith](../concepts/key-services.md).
 
-The deployment boundary looks like this:
+The deployment boundary for an app on the `deployments` lifecycle looks like this:
 
 ```mermaid
 flowchart TB
@@ -68,8 +73,8 @@ flowchart TB
     subgraph Aws["Your AWS account"]
         Iam["Scoped IAM user<br/>tag-limited permissions"]
         Env["Provisioned AWS environment<br/>VPC, S3, roles, launch template, ASG"]
-        Eip["Elastic IP<br/>assigned during deploy"]
-        Ec2["EC2 parent instance<br/>launched by ASG"]
+        Eip["Elastic IP<br/>held by the live deployment"]
+        Ec2["EC2 parent instance<br/>one per deployment"]
         Enclave["AWS Nitro Enclave<br/>application runtime"]
     end
 
@@ -103,11 +108,15 @@ Once you have everything in place, the setup flow looks like this:
 
 ### Tag-based resource scoping
 
-All resources are tagged with:
+Scoped resources carry the BYOC **environment** tag:
 
 ```text
-caution:deployment-id = <deployment-id>
+caution:deployment-id = <environment-id>
 ```
+
+This is the setup environment's identifier, not an individual blue-green deployment
+ID. Candidates and retained deployments within that environment share the delegated
+scope; the tag is not an isolation boundary between them.
 
 The IAM policy uses AWS condition keys to enforce scope:
 
@@ -118,19 +127,23 @@ The IAM policy uses AWS condition keys to enforce scope:
 
 - Read/write EIF images to the deployment's S3 bucket
 - Start/stop/terminate EC2 instances with the deployment tag
-- Create new instances via the ASG (automatically tagged)
+- Create tagged standalone EC2 instances for the deployments lifecycle; legacy deployments use the ASG
 - Manage volumes, security groups, and EIPs with the deployment tag
-- Scale the specific Auto Scaling Group
+- Scale the specific Auto Scaling Group where the legacy lifecycle uses it; blue-green leaves it at zero
 - Create and manage launch template versions
 
-### What the scoped credentials CANNOT do
+### Scope boundaries
 
-- Access any resources without the deployment tag
-- Access other S3 buckets
-- Modify other Auto Scaling Groups or launch templates
-- Access resources in other deployments
-- Escalate privileges or modify IAM policies
-- Access network resources outside the deployment VPC
+The setup policy constrains resource-changing operations to the delegated
+environment's tagged resources and applicable bucket, VPC, role and template
+permissions. It does not provide a separate credential boundary for each candidate.
+Do not interpret these mutation restrictions as a promise that every AWS discovery
+or describe operation is tag-filtered.
+
+Review the policy actually installed by your setup version when changing permissions;
+the [BYOC setup source](https://git.caution.co/public/bring-your-own-compute-setup)
+is the authoritative policy definition. Keep provisioning credentials separate
+from the scoped credentials used for routine deployments.
 
 ## Instance types
 
