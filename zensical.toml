@@ -312,3 +312,67 @@ link = "https://mstdn.social/@caution"
 # [[project.extra.social]]
 # icon = "fontawesome/brands/bluesky"
 # link = "https://bsky.app/profile/cautionco.bsky.social"
+
+# ----------------------------------------------------------------------------
+
+# Redirects for moved pages. Each entry generates a small redirect page at the
+
+# old URL.
+
+# ----------------------------------------------------------------------------
+
+[project.plugins.redirects.redirect_maps]
+"alpha.md" = "index.md"
+"guides/bring-your-own-cloud.md" = "quickstart/byoc.md"
+"guides/fully-managed.md" = "quickstart/fully-managed.md"
+"quickstart/bring-your-own-cloud.md" = "quickstart/byoc.md"
+"reference/bring-your-own-cloud.md" = "reference/byoc.md"
+"reference/containerizing.md" = "guides/containerize-an-application.md"
+"reference/custom-domains.md" = "guides/set-up-a-custom-domain.md"
+"reference/deployments.md" = "reference/deployment-configuration.md"
+"reference/managed-on-premises.md" = "reference/byoc.md"
+
+# ----------------------------------------------------------------------------
+
+# llms.txt for AI agents. Generates /llms.txt, /llms-full.txt and a Markdown
+
+# copy of every listed page at <page>/index.md. Pages are matched by the globs
+
+# below, so new pages in these folders are picked up automatically. Add new
+
+# top-level pages here explicitly.
+
+# Read more: https://llmstxt.org
+
+# ----------------------------------------------------------------------------
+
+[project.plugins.llmstxt]
+full_output = "llms-full.txt"
+markdown_description = '''
+Caution is a general-purpose verifiable confidential compute platform for deploying sensitive applications in secure enclaves. It helps teams deploy workloads to AWS Nitro Enclaves, verify source-to-enclave integrity with reproducible builds and hardware attestation, and optionally protect application data all the way into the enclave with end-to-end encryption.
+
+STEVE application routing is fail-closed by default: ordinary non-E2P application requests return `403 {"error":"e2e_required"}` without reaching the app. `allow_plaintext_fallback = true` is a legacy migration opt-in, not a secure default. In STEVE mode the application HTTP port remains enclave-local and is not separately exposed through VSOCK; public bootstrap, health, attestation, and explicitly configured raw ingress ports remain outside STEVE protection.
+
+Application containers are built with standard Docker, `docker build -f <containerfile> .`, from the repository root. The legacy Procfile `build` field is not available, and Caution does not pass extra Docker build arguments; public build-time values must be part of the image inputs. Secrets use a quorum bundle created in the dashboard or with `caution secret init`, with external PGP holders, passkey holders or both. `caution secret encrypt` encrypts `.env` values to `.caution/secrets/<KEY>.asc`; the image must include `.caution/quorum-bundle.json`, `.caution/keymaker-pcr-policy.json` and the `.asc` files under `/etc/caution/`. After deploying and running `caution verify`, enough holders release their shares with `caution secret send-shard`. Passkey holders trust Caution's key service; verify it with `caution verify --service key-service` and Keymaker with `caution verify --service keymaker`. `caution secret keygen ... --shoot-self-in-foot` writes unencrypted private keyrings and is for development only. `send-shard` requires the host-toolchain CLI build from `make install-cli`.
+
+For custom domains, configure the subdomain in `caution.hcl`, then create a customer-owned CNAME pointing to the stable `DNS target` shown after deployment. Do not create an A record to the current Elastic IP. Caution manages the target's A record across IP changes but never creates or removes the customer CNAME. Normal destruction withdraws managed DNS and drains its 60-second TTL before releasing the IP; `--force-delete` may leave provider resources for operator reconciliation after DNS is safe.
+
+Blue-green behavior applies only to apps on the `deployments` lifecycle; new managed and BYOC apps have separate operator rollout flags, both default off. An accepted changed single-branch push creates a candidate if a deployment is live; otherwise successful startup activates it automatically. Verify the candidate with `caution verify -d <deployment>`, release secrets with `caution secret send-shard -d <deployment>` using a matching preserved bundle, then make it live with `caution apps switch -d <deployment>`, which moves the stable IP and requires a passkey. Rollback needs a retained healthy, unlocked deployment and does not undo application data changes. After a switch timeout, inspect state and the serving endpoint before retrying. `caution apps destroy -d <deployment>` removes a non-live deployment; retained debug instances require explicit cleanup. Legacy apps keep replacement behavior, including after ordinary destroy/redeploy.
+
+Current deployments pin the Platform framework archive in the response manifest. Manifestless local builds resolve the current Platform commit from `/.well-known/caution/build-inputs`; this public endpoint is operator-advertised state, not app-specific attested evidence. Current STEVE clients bound protocol response sizes and do not automatically retry ambiguous protected requests; callers must apply their own idempotency policy.
+
+## Related links
+
+- [Caution source code](https://git.caution.co/public)
+- [Agent skills for Caution and StageX](https://git.caution.co/public/agentic-skills)
+- [Caution website](https://caution.co/)
+- [Caution dashboard](https://dashboard.caution.co/)
+- [Caution blog](https://caution.co/blog.html)
+'''
+
+[project.plugins.llmstxt.sections]
+"Get started" = ["what-is-caution.md", "quickstart/index.md", "quickstart/*.md"]
+"How-to guides" = ["guides/*.md"]
+"Concepts" = ["concepts/index.md", "concepts/*.md"]
+"Reference" = ["reference/index.md", "reference/*.md"]
+"Releases" = ["releases/index.md", "releases/*.md"]
