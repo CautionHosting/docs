@@ -18,6 +18,14 @@ Open http://localhost:5000. The server runs in your terminal, with local documen
 - `zensical.toml` — Site configuration and navigation. Add new pages to the navigation here.
 - `overrides/` — Custom theme templates.
 
+## AI agents
+
+The build generates `/llms.txt`, `/llms-full.txt` and a Markdown copy of each page at `<page>/index.md`, configured under `[project.plugins.llmstxt]` in `zensical.toml`. Pages in `quickstart/`, `guides/`, `concepts/`, `reference/` and `releases/` are included automatically; add new top-level pages to `sections` explicitly.
+
+## Moving a page
+
+Delete the old file, then add the old path to `redirect_maps` in `zensical.toml`.
+
 ## Commands
 
 - `make dev` — Build and start the local development server.
