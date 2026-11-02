@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS base
+FROM python:3.15-slim AS base
 WORKDIR /app
 RUN pip install --no-cache-dir zensical==0.0.73
 
