@@ -20,12 +20,10 @@ through [`8b5c89f7`](https://git.caution.co/public/platform/commit/8b5c89f7e8728
 - Builder cleanup now rechecks ownership and in-flight builds before terminating an apparently unowned instance, retaining it if the database check fails.
 - Reduced sensitive data in server diagnostics by removing raw build status, payment-provider error bodies and QR polling tokens from affected logs, and scrubbing known sensitive fields and URLs in Sentry events. Failed application-build log tails go to the deploy stream rather than server diagnostics.
 - Credit top-ups no longer restart apps suspended for unpaid invoices or reset their dunning state. Credit suspension and unpaid-invoice suspension remain separate.
-- Updated SSH, TLS, runtime and cryptography dependencies, preserving the SHA-2 requirement for RSA-signed HTTP requests.
+- Updated SSH, TLS, runtime and cryptography dependencies, preserving the SHA-2 requirement for RSA-signed HTTP requests. The `crypto-bigint 0.5.5` timing-side-channel advisory (`RUSTSEC-2026-0387`) remains an audit exception, with residual exposure in affected client-side OpenPGP and key-derivation operations.
 
 ## Rollout notes
 
 Apply database migrations `059_users_pending_email.sql` and `060_dbsc.sql` before running the updated API and gateway, even if DBSC stays disabled.
 
 `DBSC_ENABLED` defaults to `false`; enable it explicitly for HTTPS outside development. Browsers that do not register retain ordinary sessions without DBSC protection. Turning the flag off prevents new bindings but keeps refresh available for already-bound sessions.
-
-The `crypto-bigint 0.5.5` timing-side-channel advisory (`RUSTSEC-2026-0387`) remains an audit exception, with residual exposure in affected client-side OpenPGP and key-derivation operations.
