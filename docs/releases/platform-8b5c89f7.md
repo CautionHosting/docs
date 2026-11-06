@@ -2,7 +2,7 @@
 
 These notes cover changes from
 [`63d3fae4`](https://git.caution.co/public/platform/commit/63d3fae42f04c2327f147f58a60b0f041546562a)
-through [`8b5c89f7`](https://git.caution.co/public/platform/commit/8b5c89f7e8728d08cb453f29cd1b033a6c962b2a).
+through [`7edee03f`](https://git.caution.co/public/platform/commit/7edee03f4e63b6d0d95c19a52a33e50367435360).
 
 ## Features and improvements
 
@@ -21,3 +21,8 @@ through [`8b5c89f7`](https://git.caution.co/public/platform/commit/8b5c89f7e8728
 - Reduced sensitive data in server diagnostics by removing raw build status, payment-provider error bodies and QR polling tokens from affected logs, and scrubbing known sensitive fields and URLs in Sentry events. Failed application-build log tails go to the deploy stream rather than server diagnostics.
 - Credit top-ups no longer restart apps suspended for unpaid invoices or reset their dunning state. Credit suspension and unpaid-invoice suspension remain separate.
 - Updated SSH, TLS, runtime and cryptography dependencies, preserving the SHA-2 requirement for RSA-signed HTTP requests. The `crypto-bigint 0.5.5` timing-side-channel advisory (`RUSTSEC-2026-0387`) remains an audit exception, with residual exposure in affected client-side OpenPGP and key-derivation operations.
+- Migrated DBSC device-key verification to the patched `p256 0.14` line, restoring upstream security fixes while keeping device-key registration and refresh behavior unchanged.
+- Restored quorum bundle generation to return credential-limit errors to callers (an organization holder exceeding the 64-credential limit now produces a clear error instead of failing deeper in generation) and kept the underlying database contract in sync.
+- Propagated the Locksmith security-relevant lockfile pin through the enclave builder and aligned the secrets-operations and org-quorum documentation override guidance with it.
+- Enterprise (invoice-billed) organizations no longer receive duplicate payment-failure emails: the app no longer sends its own email on Paddle card-collection failures, since Paddle already emails the customer on each retry. Non-payment dunning for credit-based organizations is unchanged.
+- Enterprise (invoice-billed) organizations deploying bring-your-own-cloud enclaves are no longer blocked by prepaid credit checks. BYOC deploys for enterprise subscriptions no longer fail with "Insufficient credits for builder"; fully-managed deployments remain credit-gated for all organizations.
