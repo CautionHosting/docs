@@ -83,7 +83,12 @@ Put the values in a `.env` file and keep it out of Git:
 ```bash
 DATABASE_URL=postgres://user:password@db.example.com/app
 API_KEY=secret-api-token
+PASSPHRASE='two words'
 ```
+
+Quote values containing spaces, as shown above. The CLI uses shell-style parsing
+and keeps only the first word: `PASSPHRASE=two words` encrypts `two`, not
+`two words`.
 
 ```sh
 caution secret encrypt
