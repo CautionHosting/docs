@@ -71,7 +71,7 @@ Resource values are defaults if not specified.
 | `no_cache` | `false` | Disable Docker build cache. |
 | `ssh_keys` | - | OpenSSH public keys for [host SSH access](debug-enclave/running.md#add-ssh-access-to-the-host). Full key string, e.g. `ssh-ed25519 AAAA... user@host`. Opens port 22 on the instance. |
 | `ports` | - | Comma-separated application ports. With `e2e: true`, the HTTP application port remains enclave-local instead of receiving a separate VSOCK proxy; other ports are exposed through VSOCK and security-group ingress. Do not include ports in the reserved `49500`-`49600` range. |
-| `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. Defaults to the single port if only one is specified. |
+| `http_port` | - | Port to reverse proxy through Caddy (TLS termination on 443). Must be listed in `ports`. If omitted, defaults to the single port only when `domain` is also set. Without `domain`, set `http_port` explicitly to enable HTTP application routing. |
 | `managed_on_prem` | `false` | Enable bring-your-own-compute (BYOC) deployment settings in Procfile. Requires `platform` and provider-specific configuration. |
 | `platform` | - | Compute platform for BYOC. Currently supported value: `aws`. Required when `managed_on_prem: true`. |
 | `aws_region` | - | AWS region for BYOC (for example `us-east-1`). Required when `managed_on_prem: true` and `platform: aws`. |
