@@ -101,6 +101,8 @@ Once you have everything in place, the setup flow looks like this:
 2. Caution provisions an isolated environment in your AWS account and registers scoped credentials for the deployment.
 3. Deploy your application and let Caution manage the enclave lifecycle within that environment.
 
+By default, setup creates a dedicated `/16` VPC with public subnets across multiple availability zones. `caution init --byoc` accepts `--vpc-id vpc-xxx` to provision into an existing VPC instead, and `--subnet-ids subnet-a,subnet-b` (comma-separated, requires `--vpc-id`) to restrict which of the VPC's subnets are used; without it, every subnet in the VPC is used. The existing VPC is left untouched by teardown. See the [BYOC guide](../quickstart/byoc.md#use-an-existing-vpc-optional) for details and the manual-setup `VPC_ID`/`SUBNET_IDS` equivalents.
+
 !!! example "Setup guide"
     For the full step-by-step setup and deployment flow, see the [bring your own compute guide](../quickstart/byoc.md).
 

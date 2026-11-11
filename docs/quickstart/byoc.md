@@ -185,6 +185,22 @@ When you later run `caution teardown --byoc`, use the same provisioning identity
 
 Commit the generated `.caution/deployment.json` to your repository. The deployment file stores the Caution app resource ID so CLI commands can infer the target app from the repository.
 
+#### Use an existing VPC (optional)
+
+By default, `caution init --byoc` creates a dedicated `/16` VPC with public subnets across multiple availability zones. To provision into an existing VPC instead, pass `--vpc-id`:
+
+```bash
+caution init --byoc --vpc-id vpc-xxxxxxxx
+```
+
+To restrict which subnets of that VPC are used, pass a comma-separated list with `--subnet-ids` (requires `--vpc-id`):
+
+```bash
+caution init --byoc --vpc-id vpc-xxxxxxxx --subnet-ids subnet-aaaaaaaa,subnet-bbbbbbbb
+```
+
+Without `--subnet-ids`, the provisioner uses every subnet it finds in the VPC. Both flags are validated before the provisioner image is pulled and cannot be combined with `--config` (manual setup). The confirmation summary reports that an existing VPC will be used instead of a new dedicated one; teardown still removes the provisioner-created resources but leaves the existing VPC and its subnets untouched.
+
 ### Manual provisioning
 
 Use this path if you want more control over the AWS infrastructure setup before registering the deployment configuration with Caution.
@@ -209,7 +225,7 @@ docker run --rm \
 This provisions the required AWS infrastructure and writes `credentials.json.gpg` to the `out/` directory.
 
 !!! note "Use an existing VPC (Optional)"
-    If you want Caution to provision resources in an existing VPC (Virtual Private Cloud) instead of creating a new one, set `VPC_ID=vpc-xxxxxxxx` in your `.env` file before running the Docker command.
+    If you want Caution to provision resources in an existing VPC (Virtual Private Cloud) instead of creating a new one, set `VPC_ID=vpc-xxxxxxxx` in your `.env` file before running the Docker command. To restrict which subnets of that VPC are used, also set `SUBNET_IDS=subnet-aaaaaaaa,subnet-bbbbbbbb` (comma-separated); without it, every subnet in the VPC is used. The equivalent CLI flags are described under [CLI-guided provisioning](#use-an-existing-vpc-optional).
 
 To use the generated encrypted credentials, return to your application directory and run:
 
@@ -227,7 +243,7 @@ The setup flow creates an isolated environment for running enclaves in your AWS 
 
 | Resource | Purpose |
 |----------|---------|
-| **VPC** | Dedicated `/16` VPC with public subnets across multiple availability zones, internet gateway, and routing |
+| **VPC** | A dedicated `/16` VPC with public subnets across multiple availability zones, internet gateway, and routing — or an existing VPC you select with `--vpc-id` |
 | **S3 Bucket** | Stores enclave image files (EIFs). Named `caution-<deployment-id>-images`; one is created for each BYOC app setup |
 | **EC2 Instance Role** | Allows enclave instances to read EIFs from the S3 bucket |
 | **Builder Role** | Allows builder instances to publish EIF objects into the S3 bucket |
