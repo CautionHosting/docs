@@ -149,14 +149,19 @@ from the scoped credentials used for routine deployments.
 
 ## Instance types
 
-Caution automatically selects an appropriate Nitro Enclave-compatible instance based on your CPU and memory requirements:
+Caution selects the first Nitro Enclave-compatible instance in the order below that fits your CPU and memory requirements, after reserving resources for the parent instance:
 
 | Instance | vCPUs | Memory | Enclave capacity |
 |----------|-------|--------|------------------|
 | `m5.xlarge` | 4 | 16 GB | Up to 2 CPUs, 14 GB |
+| `r6i.xlarge` | 4 | 32 GB | Up to 2 CPUs, 30 GB |
 | `m5.2xlarge` | 8 | 32 GB | Up to 6 CPUs, 30 GB |
+| `r6i.2xlarge` | 8 | 64 GB | Up to 6 CPUs, 62 GB |
 | `m5.4xlarge` | 16 | 64 GB | Up to 14 CPUs, 62 GB |
+| `r6i.4xlarge` | 16 | 128 GB | Up to 14 CPUs, 126 GB |
 | `m5.8xlarge` | 32 | 128 GB | Up to 30 CPUs, 126 GB |
+| `r6i.8xlarge` | 32 | 256 GB | Up to 30 CPUs, 254 GB |
+| `r6i.12xlarge` | 48 | 384 GB | Up to 46 CPUs, 382 GB |
 
 The host instance reserves ~2 vCPUs and ~2 GB memory for the parent instance.
 
