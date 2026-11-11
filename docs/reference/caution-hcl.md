@@ -457,7 +457,7 @@ caution {
 | Field | Description |
 |-------|-------------|
 | `managed_credentials` | Path to a managed credentials file. |
-| `machine_type` | Host instance type. |
+| `machine_type` | Accepted but not used to select the host instance type. For BYOC sizing, set `cpu` and `memory_mb` in the enclave's `resources` block instead. |
 | `build_machine_type` | Builder instance type. |
 | `provider` | Provider block. `type` is currently `aws`; supports `region`, `vpc_id`, `subnet_ids`, `security_group_id`. |
 
