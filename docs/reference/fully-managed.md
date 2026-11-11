@@ -54,6 +54,8 @@ To deploy with fully managed, you'll need a [containerized application](../guide
 
 You will also need a `caution.hcl` that tells Caution how to run your application and, if needed, which Containerfile to build. The examples below show a minimal configuration, plus an optional `app_sources` entry for source verification.
 
+Fully managed deployments reject enclave CPU requests above **46 vCPUs**. When customizing resources, keep `cpu` in the enclave's `resources` block within this ceiling.
+
 ```hcl
 # Minimal caution.hcl
 enclave "main" {
