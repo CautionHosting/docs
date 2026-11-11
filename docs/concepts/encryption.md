@@ -16,7 +16,7 @@ For proper end-to-end encryption, data must remain protected all the way into th
 
 Caution uses [Secure Transport Encryption via Enclave (STEVE)](https://distrust.co/blog/steve.html){:target="_blank"}, a transparent proxy designed to work with existing applications.
 
-STEVE v2 establishes a per-session encrypted channel between a client SDK and the STEVE proxy inside an AWS Nitro Enclave. The outer TLS connection terminates on the untrusted host, but protected application data remains encrypted until it reaches STEVE inside the enclave.
+STEVE v2 establishes a per-session encrypted channel between a client SDK and the STEVE proxy inside an AWS Nitro Enclave. When the client uses HTTPS, the outer TLS connection terminates on the untrusted host, but protected application data remains encrypted until it reaches STEVE inside the enclave.
 
 Each deployment pins one key-exchange suite. X25519 is the compatibility default. X-Wing draft-10 combines ML-KEM-768 and X25519. Clients must pin the same suite as the deployment; STEVE does not negotiate or fall back to another suite.
 
@@ -53,7 +53,7 @@ Where client integration is possible, prefer STEVE. It provides the stronger des
 
 ## TLS and STEVE
 
-The data is additionally wrapped in TLS, which provides standard transport-layer guarantees such as domain trust. TLS is complementary to end-to-end encryption, not a replacement for it.
+HTTPS adds an outer TLS layer to STEVE, providing standard transport-layer guarantees such as WebPKI domain authentication when used with a configured domain. The host also serves the STEVE route over HTTP for allowed application sources, even when a domain is configured; those requests are not automatically redirected to HTTPS. Configure a domain and use its `https://` URL when you need the additional TLS protection. TLS is complementary to STEVE's application-layer encryption, not a replacement for it.
 
 ## See also
 
