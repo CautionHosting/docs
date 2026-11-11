@@ -73,6 +73,11 @@ Add an SSH key so you can authenticate your Caution deployments:
 
 === "CLI"
 
+    `--from-agent` imports an existing key; it does not generate or load one.
+    Ensure your SSH agent is running and load your key with `ssh-add` first.
+    Check with `ssh-add -L`: the CLI considers public-key lines beginning with
+    `ssh-` and fails if none are found.
+
     ```bash
     caution ssh-keys add --from-agent
     ```
