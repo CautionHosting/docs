@@ -78,9 +78,9 @@ Build tools that embed timestamps, build IDs, or hostnames produce non-reproduci
 
 ### Differing StageX image digests
 
-The generated `Containerfile.eif` pins StageX images by digest. If these digests change between builds (e.g. because you regenerated the Containerfile), the EIFs will differ.
+The generated `Containerfile.eif` pins StageX images by digest. Different builder templates can use different pins, so compare these inputs when diagnosing an EIF mismatch.
 
-**Fix:** Commit the generated `Containerfile.eif` to your repository so that the pinned digests are version-controlled.
+**Check:** Inspect `Containerfile.eif` in the build directory printed by `caution apps build` and compare its StageX `FROM` digests between builds. Committing the generated file to your application repository does not pin future enclave builds: when rebuilding the EIF, the builder renders a new copy from its selected templates.
 
 ## Also see
 
